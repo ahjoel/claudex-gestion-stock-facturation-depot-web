@@ -1,34 +1,21 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import Tooltip from '@mui/material/Tooltip'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
-import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContentText from '@mui/material/DialogContentText'
 import Snackbar from '@mui/material/Snackbar'
 import Alert, { AlertColor } from '@mui/material/Alert'
-import Icon from 'src/@core/components/icon'
-import TableHeader from 'src/gestion-bars/views/produits/list/TableHeader'
-import AddProduitDrawer from 'src/gestion-bars/views/produits/list/AddProduitDrawer'
+import SaveAltIcon from '@mui/icons-material/SaveAlt'
 import { t } from 'i18next'
 import Produit from 'src/gestion-bars/logic/models/Produit'
 import ProduitService from 'src/gestion-bars/logic/services/ProduitService'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { LoadingButton } from '@mui/lab'
-import Model from 'src/gestion-bars/logic/models/Model'
-import Fournisseur from 'src/gestion-bars/logic/models/Fournisseur'
-import ModelService from 'src/gestion-bars/logic/services/ModelService'
-import FournisseurService from 'src/gestion-bars/logic/services/FournisseurService'
 
 // import PdfDocument from 'src/gestion-bars/views/pdfMake/PdfDocument'
 import TemplateListeDesProduits from 'src/gestion-bars/views/pdfMake/TemplateListeDesProduits'
+import { CardHeader, Divider } from '@mui/material'
 
 interface CellType {
   row: Produit
@@ -38,69 +25,13 @@ interface ColumnType {
   [key: string]: any
 }
 
-const ProduitList = () => {
+const ListeDesProduits = () => {
   const produitService = new ProduitService()
-  const modelService = new ModelService()
-  const fournisseurService = new FournisseurService()
-  const modelId = 0
-  const fournisseurId = 0
-
-  // Delete Confirmation - State
-  const [sendDelete, setSendDelete] = useState<boolean>(false)
-  const [open, setOpen] = useState<boolean>(false)
-  const handleClose = () => setOpen(false)
-  const [comfirmationMessage, setComfirmationMessage] = useState<string>('')
-  const [comfirmationFunction, setComfirmationFunction] = useState<() => void>(() => console.log(' .... '))
-
-  const handleDeleteProduit = (produit: Produit) => {
-    setCurrentProduit(produit)
-    setComfirmationMessage('Voulez-vous réellement supprimer ce produit ?')
-    setComfirmationFunction(() => () => deleteProduit(produit))
-    setOpen(true)
-  }
-
-  const deleteProduit = async (produit: Produit) => {
-    setSendDelete(true)
-
-    try {
-      const rep = await produitService.delete(produit.id)
-
-      if (rep === null) {
-        setSendDelete(false)
-        handleChange()
-        handleClose()
-        setOpenNotification(true)
-        setTypeMessage('success')
-        setMessage('Produit supprimé avec succes')
-      } else {
-        setSendDelete(false)
-        setOpenNotification(true)
-        setTypeMessage('error')
-        setMessage('Produit non trouvé')
-      }
-    } catch (error) {
-      console.error('Erreur lors de la suppression :', error)
-      setSendDelete(false)
-      setOpenNotification(true)
-      setTypeMessage('error')
-      setMessage('Une erreur est survenue')
-    }
-  }
-
-  // Search State
-  const [value, setValue] = useState<string>('')
 
   // Notifications - snackbar
   const [openNotification, setOpenNotification] = useState<boolean>(false)
   const [typeMessage, setTypeMessage] = useState('info')
   const [message, setMessage] = useState('')
-
-  const handleSuccess = (message: string, type = 'success') => {
-    setOpenNotification(true)
-    setTypeMessage(type)
-    const messageTrans = t(message)
-    setMessage(messageTrans)
-  }
 
   const handleCloseNotification = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -113,16 +44,11 @@ const ProduitList = () => {
   const [statusProduits, setStatusProduits] = useState<boolean>(true)
   const [produits, setProduits] = useState<Produit[]>([])
   const [columns, setColumns] = useState<ColumnType[]>([])
-  const [addProduitOpen, setAddProduitOpen] = useState<boolean>(false)
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
   const [total, setTotal] = useState(40)
-  const [currentProduit, setCurrentProduit] = useState<null | Produit>(null)
-
-  const [models, setModels] = useState<Model[]>([])
-  const [fournisseurs, setFournisseurs] = useState<Fournisseur[]>([])
 
   // Display of columns according to user roles in the Datagrid
-  const getColumns = (handleUpdateProduit: (produit: Produit) => void) => {
+  const getColumns = () => {
     const colArray: ColumnType[] = [
       {
         flex: 0.15,
@@ -399,58 +325,6 @@ const ProduitList = () => {
             </Box>
           )
         }
-      },
-      {
-        flex: 0.1,
-        minWidth: 50,
-        sortable: false,
-        field: 'actions',
-        renderHeader: () => (
-          <Tooltip title={t('Actions')}>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              {t('Actions')}
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Tooltip title='Mettre à jour un produit'>
-              <IconButton
-                size='small'
-                sx={{ color: 'text.primary' }}
-                onClick={() => {
-                  handleUpdateProduit(row)
-                }}
-              >
-                <Box sx={{ display: 'flex', color: theme => theme.palette.success.main }}>
-                  <Icon icon='tabler:edit' />
-                </Box>
-              </IconButton>
-            </Tooltip>
-
-            <Tooltip title='Supprimer'>
-              <IconButton
-                size='small'
-                sx={{ color: 'text.primary' }}
-                onClick={() => {
-                  handleDeleteProduit(row)
-                }}
-              >
-                <Box sx={{ display: 'flex', color: theme => theme.palette.error.main }}>
-                  <Icon icon='tabler:trash' />
-                </Box>
-              </IconButton>
-            </Tooltip>
-          </Box>
-        )
       }
     ]
 
@@ -462,46 +336,9 @@ const ProduitList = () => {
     const result = await produitService.listProduits({ page: page + 1, length: pageSize })
 
     if (result.success) {
-      const queryLowered = value.toLowerCase()
-      const filteredData = (result.data as Produit[]).filter(produit => {
-        return (
-          produit.code.toLowerCase().includes(queryLowered) ||
-          produit.name.toLowerCase().includes(queryLowered) ||
-          produit.description.toLowerCase().includes(queryLowered) ||
-          (produit.model && produit.model.toString().toLowerCase().includes(queryLowered)) ||
-          (produit.fournisseur && produit.fournisseur.toString().toLowerCase().includes(queryLowered)) ||
-          produit.pv.toString().toLowerCase().includes(queryLowered) ||
-          produit.stock_min.toString().toLowerCase().includes(queryLowered)
-        )
-      })
-
-      setProduits(filteredData)
+      setProduits(result.data as Produit[])
       setStatusProduits(false)
       setTotal(Number(result.total))
-    } else {
-      setOpenNotification(true)
-      setTypeMessage('error')
-      setMessage(result.description)
-    }
-  }
-
-  const handleLoadingModels = async () => {
-    const result = await modelService.readAllModels()
-
-    if (result.success) {
-      setModels(result.data as Model[])
-    } else {
-      setOpenNotification(true)
-      setTypeMessage('error')
-      setMessage(result.description)
-    }
-  }
-
-  const handleLoadingFournisseurs = async () => {
-    const result = await fournisseurService.readAllFournisseurs()
-
-    if (result.success) {
-      setFournisseurs(result.data as Fournisseur[])
     } else {
       setOpenNotification(true)
       setTypeMessage('error')
@@ -516,29 +353,9 @@ const ProduitList = () => {
   // Control search data in datagrid
   useEffect(() => {
     handleChange()
-    handleLoadingModels()
-    handleLoadingFournisseurs()
-    setColumns(getColumns(handleUpdateProduit))
-  }, [value])
-
-  const handleFilter = useCallback((val: string) => {
-    setValue(val)
+    setColumns(getColumns())
   }, [])
 
-  // Show Modal
-  const toggleAddProduitDrawer = () => setAddProduitOpen(!addProduitOpen)
-
-  // Add Data
-  const handleCreateProduit = () => {
-    setCurrentProduit(null)
-    toggleAddProduitDrawer()
-  }
-
-  // Update Data
-  const handleUpdateProduit = (produit: Produit) => {
-    setCurrentProduit(produit)
-    toggleAddProduitDrawer()
-  }
   const [downloadCount, setDownloadCount] = useState(0)
 
   const handleDownload = () => {
@@ -554,18 +371,34 @@ const ProduitList = () => {
     <Grid container spacing={6.5}>
       <Grid item xs={12}>
         <Card>
-          <TableHeader
-            value={value}
-            handleFilter={handleFilter}
-            toggle={handleCreateProduit}
-            onReload={() => {
-              setValue('')
-              handleChange()
+          <CardHeader title='Liste des ventes' sx={{ fontSize: '60px' }} />
+          <Divider sx={{ m: '0 !important' }}></Divider>
+          <Box
+            sx={{
+              py: 4,
+              px: 6,
+              rowGap: 2,
+              columnGap: 4,
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'right',
+              justifyContent: 'flex-end'
             }}
-            onDownload={() => {
-              handleDownload()
-            }}
-          />
+          >
+            <Box sx={{ display: 'flex', alignItems: 'right' }}>
+              <Button
+                onClick={() => {
+                  handleDownload()
+                }}
+                variant='contained'
+                sx={{ height: '38px' }}
+              >
+                <span style={{ marginRight: '0.2rem' }}>Exporter la liste</span>
+                <SaveAltIcon />
+              </Button>
+            </Box>
+          </Box>
+
           {downloadCount > 0 && (
             <TemplateListeDesProduits data={produits as never[]} fileName={`Liste_des_produits_${downloadCount}`} />
           )}
@@ -587,19 +420,6 @@ const ProduitList = () => {
         </Card>
       </Grid>
 
-      {/* Add or Update Right Modal */}
-      <AddProduitDrawer
-        open={addProduitOpen}
-        toggle={toggleAddProduitDrawer}
-        onChange={handleChange}
-        currentProduit={currentProduit}
-        onSuccess={handleSuccess}
-        models={models}
-        modelId={modelId}
-        fournisseurs={fournisseurs}
-        fournisseurId={fournisseurId}
-      />
-
       {/* Notification */}
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -616,42 +436,8 @@ const ProduitList = () => {
           {message}
         </Alert>
       </Snackbar>
-
-      {/* Delete Modal Confirmation */}
-      <Dialog
-        open={open}
-        disableEscapeKeyDown
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-dialog-description'
-        onClose={(event, reason) => {
-          if (reason === 'backdropClick') {
-            handleClose()
-          }
-        }}
-      >
-        <DialogTitle id='alert-dialog-title'>{t('Confirmation')}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id='alert-dialog-description'>{t(comfirmationMessage)}</DialogContentText>
-        </DialogContent>
-        <DialogActions className='dialog-actions-dense'>
-          <Button onClick={handleClose} color='secondary'>
-            {t('Cancel')}
-          </Button>
-          <LoadingButton
-            onClick={() => {
-              comfirmationFunction()
-            }}
-            loading={sendDelete}
-            endIcon={<DeleteIcon />}
-            variant='contained'
-            color='error'
-          >
-            {t('Supprimer')}
-          </LoadingButton>
-        </DialogActions>
-      </Dialog>
     </Grid>
   )
 }
 
-export default ProduitList
+export default ListeDesProduits

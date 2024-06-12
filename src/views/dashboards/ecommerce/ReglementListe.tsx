@@ -1,25 +1,31 @@
-import React, { useState, useEffect } from 'react'
-import Tooltip from '@mui/material/Tooltip'
+import { useCallback, useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
-import Grid from '@mui/material/Grid'
-import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
+import CardContent from '@mui/material/CardContent'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContentText from '@mui/material/DialogContentText'
-import Snackbar from '@mui/material/Snackbar'
-import Alert, { AlertColor } from '@mui/material/Alert'
-import Icon from 'src/@core/components/icon'
 import { t } from 'i18next'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { LoadingButton } from '@mui/lab'
+import CustomTextField from 'src/@core/components/mui/text-field'
+import {
+  Alert,
+  AlertColor,
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  Snackbar
+} from '@mui/material'
+import AutorenewIcon from '@mui/icons-material/Autorenew'
+import Icon from 'src/@core/components/icon'
 import Reglement from 'src/gestion-bars/logic/models/Reglement'
 import ReglementService from 'src/gestion-bars/logic/services/ReglementService'
+import { LoadingButton } from '@mui/lab'
 
 interface CellType {
   row: Reglement
@@ -29,7 +35,8 @@ interface ColumnType {
   [key: string]: any
 }
 
-const ReglementList = () => {
+const ReglementListe = () => {
+  const [value, setValue] = useState<string>('')
   const reglementService = new ReglementService()
   const userData = JSON.parse(window.localStorage.getItem('userData') as string)
   const profile = userData?.profile
@@ -354,7 +361,17 @@ const ReglementList = () => {
     const result = await reglementService.listReglements({ page: page + 1, length: pageSize })
 
     if (result.success) {
-      const filteredData = result.data as Reglement[]
+      const queryLowered = value.toLowerCase()
+      const filteredData = (result.data as Reglement[]).filter(reglement => {
+        return (
+          reglement.createdAt.toLowerCase().includes(queryLowered) ||
+          reglement.codeFacture.toLowerCase().includes(queryLowered) ||
+          reglement.client.toLowerCase().includes(queryLowered) ||
+          reglement.firstname.toString().toLowerCase().includes(queryLowered) ||
+          reglement.lastname.toString().toLowerCase().includes(queryLowered) ||
+          reglement.totalFacture.toString().toLowerCase().includes(queryLowered)
+        )
+      })
       setReglements(filteredData)
       setStatusReglements(false)
       setTotal(Number(result.total))
@@ -373,6 +390,10 @@ const ReglementList = () => {
   useEffect(() => {
     handleChange()
     setColumns(getColumns(handleDeleteReglement))
+  }, [value])
+
+  const handleFilter = useCallback((val: string) => {
+    setValue(val)
   }, [])
 
   // Pagination
@@ -381,26 +402,55 @@ const ReglementList = () => {
   }, [paginationModel])
 
   return (
-    <Grid container spacing={6.5}>
-      <Grid item xs={12}>
-        <Card>
-          {/* <TableHeader value={value} handleFilter={handleFilter} /> */}
-          <DataGrid
-            autoHeight
-            loading={statusReglements}
-            rowHeight={62}
-            rows={reglements as never[]}
-            columns={columns as GridColDef<never>[]}
-            disableRowSelectionOnClick
-            pageSizeOptions={[10, 25, 50]}
-            pagination
-            paginationMode='server'
-            rowCount={total}
-            paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
+    <Card>
+      <CardContent
+        sx={{ gap: 4, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}
+      >
+        <Typography variant='h4' sx={{ mb: 0.5 }}>
+          {t('Liste des Règlements')}
+        </Typography>
+
+        <Box sx={{ gap: 4, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+          <CustomTextField
+            value={value}
+            placeholder={t('Search') as string}
+            onChange={e => handleFilter(e.target.value)}
           />
-        </Card>
-      </Grid>
+
+          <Button
+            sx={{ marginLeft: '5px' }}
+            size='small'
+            variant='contained'
+            onClick={() => {
+              setValue('')
+              handleChange()
+            }}
+          >
+            <AutorenewIcon />
+          </Button>
+        </Box>
+      </CardContent>
+
+      {statusReglements ? (
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '20px' }}>
+          <CircularProgress />
+        </div>
+      ) : (
+        <DataGrid
+          autoHeight
+          loading={statusReglements}
+          rowHeight={62}
+          rows={reglements as never[]}
+          columns={columns as GridColDef<never>[]}
+          disableRowSelectionOnClick
+          pageSizeOptions={[10, 25, 50]}
+          pagination
+          paginationMode='server'
+          rowCount={total}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+        />
+      )}
 
       {/* Notification */}
       <Snackbar
@@ -452,8 +502,8 @@ const ReglementList = () => {
           </LoadingButton>
         </DialogActions>
       </Dialog>
-    </Grid>
+    </Card>
   )
 }
 
-export default ReglementList
+export default ReglementListe

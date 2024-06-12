@@ -16,7 +16,7 @@ import Snackbar from '@mui/material/Snackbar'
 import Alert, { AlertColor } from '@mui/material/Alert'
 import Icon from 'src/@core/components/icon'
 import { t } from 'i18next'
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from '@mui/icons-material/Delete'
 import { LoadingButton } from '@mui/lab'
 import Reglement from 'src/gestion-bars/logic/models/Reglement'
 import ReglementService from 'src/gestion-bars/logic/services/ReglementService'
@@ -36,14 +36,16 @@ const ReglementList = () => {
 
   // Delete Confirmation - State
   const [sendDelete, setSendDelete] = useState<boolean>(false)
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false)
   const handleClose = () => setOpen(false)
   const [comfirmationMessage, setComfirmationMessage] = useState<string>('')
   const [comfirmationFunction, setComfirmationFunction] = useState<() => void>(() => console.log(' .... '))
 
   const handleDeleteReglement = (reglement: Reglement) => {
     setCurrentReglement(reglement)
-    setComfirmationMessage(`Voulez-vous réellement supprimer cet reglement de : ${reglement.totalFacture} F CFA pour la facture : ${reglement.codeFacture} ?`)
+    setComfirmationMessage(
+      `Voulez-vous réellement supprimer cet reglement de : ${reglement.totalFacture} F CFA pour la facture : ${reglement.codeFacture} ?`
+    )
     setComfirmationFunction(() => () => deleteReglement(reglement))
     setOpen(true)
   }
@@ -58,35 +60,35 @@ const ReglementList = () => {
         setSendDelete(false)
         handleChange()
         handleClose()
-        setOpenNotification(true);
-        setTypeMessage("success");
+        setOpenNotification(true)
+        setTypeMessage('success')
         setMessage('Reglement supprimé avec succes')
       } else {
         setSendDelete(false)
-        setOpenNotification(true);
-        setTypeMessage("error");
+        setOpenNotification(true)
+        setTypeMessage('error')
         setMessage('Reglement non trouvé')
       }
     } catch (error) {
-      console.error("Erreur lors de la suppression :", error);
+      console.error('Erreur lors de la suppression :', error)
       setSendDelete(false)
-      setOpenNotification(true);
-      setTypeMessage("error");
+      setOpenNotification(true)
+      setTypeMessage('error')
       setMessage('Une erreur est survenue')
     }
   }
 
   // Notifications - snackbar
-  const [openNotification, setOpenNotification] = useState<boolean>(false);
-  const [typeMessage, setTypeMessage] = useState("info");
-  const [message, setMessage] = useState("");
+  const [openNotification, setOpenNotification] = useState<boolean>(false)
+  const [typeMessage, setTypeMessage] = useState('info')
+  const [message, setMessage] = useState('')
 
   const handleCloseNotification = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
-      setOpenNotification(false);
+      setOpenNotification(false)
     }
-    setOpenNotification(false);
-  };
+    setOpenNotification(false)
+  }
 
   const [statusReglements, setStatusReglements] = useState<boolean>(true)
   const [reglements, setReglements] = useState<Reglement[]>([])
@@ -105,7 +107,6 @@ const ReglementList = () => {
         field: 'createdAt',
         renderHeader: () => (
           <Tooltip title='Date de creation'>
-
             <Typography
               noWrap
               sx={{
@@ -144,7 +145,6 @@ const ReglementList = () => {
         field: 'client',
         renderHeader: () => (
           <Tooltip title='Client'>
-
             <Typography
               noWrap
               sx={{
@@ -180,11 +180,10 @@ const ReglementList = () => {
         }
       },
       {
-        flex: 0.20,
+        flex: 0.2,
         field: 'codeFacture',
         renderHeader: () => (
           <Tooltip title='Code Facture'>
-
             <Typography
               noWrap
               sx={{
@@ -224,7 +223,6 @@ const ReglementList = () => {
         field: 'total',
         renderHeader: () => (
           <Tooltip title='Total Facture'>
-
             <Typography
               noWrap
               sx={{
@@ -261,11 +259,10 @@ const ReglementList = () => {
         }
       },
       {
-        flex: 0.20,
+        flex: 0.2,
         field: 'auteur',
         renderHeader: () => (
           <Tooltip title='Auteur'>
-
             <Typography
               noWrap
               sx={{
@@ -306,7 +303,6 @@ const ReglementList = () => {
         field: 'actions',
         renderHeader: () => (
           <Tooltip title={t('Actions')}>
-
             <Typography
               noWrap
               sx={{
@@ -321,20 +317,22 @@ const ReglementList = () => {
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => (
-          <Box sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
           >
-
-            {(profile === "ADMINISTRATEUR" || profile === "SUPER-ADMIN") && (
+            {(profile === 'ADMINISTRATEUR' || profile === 'SUPER-ADMIN') && (
               <Tooltip title='Supprimer le règlement'>
                 <IconButton
                   size='small'
                   sx={{ color: 'text.primary' }}
                   onClick={() => {
-                    { handleDeleteReglement(row) }
+                    {
+                      handleDeleteReglement(row)
+                    }
                   }}
                 >
                   <Box sx={{ display: 'flex', color: theme => theme.palette.info.main }}>
@@ -353,17 +351,16 @@ const ReglementList = () => {
 
   // Axios call to loading Data
   const getListReglements = async (page: number, pageSize: number) => {
-
     const result = await reglementService.listReglements({ page: page + 1, length: pageSize })
 
     if (result.success) {
-      const filteredData = (result.data as Reglement[])
+      const filteredData = result.data as Reglement[]
       setReglements(filteredData)
       setStatusReglements(false)
       setTotal(Number(result.total))
     } else {
-      setOpenNotification(true);
-      setTypeMessage("error");
+      setOpenNotification(true)
+      setTypeMessage('error')
       setMessage(result.description)
     }
   }
@@ -377,7 +374,6 @@ const ReglementList = () => {
     handleChange()
     setColumns(getColumns(handleDeleteReglement))
   }, [])
-
 
   // Pagination
   useEffect(() => {
@@ -407,8 +403,18 @@ const ReglementList = () => {
       </Grid>
 
       {/* Notification */}
-      <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} open={openNotification} onClose={handleCloseNotification} autoHideDuration={5000}>
-        <Alert onClose={handleCloseNotification} severity={typeMessage as AlertColor} variant="filled" sx={{ width: '100%' }}>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={openNotification}
+        onClose={handleCloseNotification}
+        autoHideDuration={5000}
+      >
+        <Alert
+          onClose={handleCloseNotification}
+          severity={typeMessage as AlertColor}
+          variant='filled'
+          sx={{ width: '100%' }}
+        >
           {message}
         </Alert>
       </Snackbar>
@@ -434,10 +440,12 @@ const ReglementList = () => {
             {t('Cancel')}
           </Button>
           <LoadingButton
-            onClick={() => { comfirmationFunction(); }}
+            onClick={() => {
+              comfirmationFunction()
+            }}
             loading={sendDelete}
             endIcon={<DeleteIcon />}
-            variant="contained"
+            variant='contained'
             color='error'
           >
             {t('Supprimer')}

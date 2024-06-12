@@ -20,7 +20,7 @@ import AddFournisseurDrawer from 'src/gestion-bars/views/fournisseurs/list/AddFo
 import { t } from 'i18next'
 import Fournisseur from 'src/gestion-bars/logic/models/Fournisseur'
 import FournisseurService from 'src/gestion-bars/logic/services/FournisseurService'
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from '@mui/icons-material/Delete'
 import { LoadingButton } from '@mui/lab'
 
 interface CellType {
@@ -36,7 +36,7 @@ const FournisseurList = () => {
 
   // Delete Confirmation - State
   const [sendDelete, setSendDelete] = useState<boolean>(false)
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false)
   const handleClose = () => setOpen(false)
   const [comfirmationMessage, setComfirmationMessage] = useState<string>('')
   const [comfirmationFunction, setComfirmationFunction] = useState<() => void>(() => console.log(' .... '))
@@ -58,20 +58,20 @@ const FournisseurList = () => {
         setSendDelete(false)
         handleChange()
         handleClose()
-        setOpenNotification(true);
-        setTypeMessage("success");
+        setOpenNotification(true)
+        setTypeMessage('success')
         setMessage('Fournisseur supprimé avec succes')
       } else {
         setSendDelete(false)
-        setOpenNotification(true);
-        setTypeMessage("error");
+        setOpenNotification(true)
+        setTypeMessage('error')
         setMessage('Fournisseur non trouvé')
       }
     } catch (error) {
-      console.error("Erreur lors de la suppression :", error);
+      console.error('Erreur lors de la suppression :', error)
       setSendDelete(false)
-      setOpenNotification(true);
-      setTypeMessage("error");
+      setOpenNotification(true)
+      setTypeMessage('error')
       setMessage('Une erreur est survenue')
     }
   }
@@ -80,23 +80,23 @@ const FournisseurList = () => {
   const [value, setValue] = useState<string>('')
 
   // Notifications - snackbar
-  const [openNotification, setOpenNotification] = useState<boolean>(false);
-  const [typeMessage, setTypeMessage] = useState("info");
-  const [message, setMessage] = useState("");
+  const [openNotification, setOpenNotification] = useState<boolean>(false)
+  const [typeMessage, setTypeMessage] = useState('info')
+  const [message, setMessage] = useState('')
 
   const handleSuccess = (message: string, type = 'success') => {
-    setOpenNotification(true);
-    setTypeMessage(type);
+    setOpenNotification(true)
+    setTypeMessage(type)
     const messageTrans = t(message)
     setMessage(messageTrans)
-  };
+  }
 
   const handleCloseNotification = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
-      setOpenNotification(false);
+      setOpenNotification(false)
     }
-    setOpenNotification(false);
-  };
+    setOpenNotification(false)
+  }
 
   // Loading Agencies Data, Datagrid and pagination - State
   const [statusFournisseurs, setStatusFournisseurs] = useState<boolean>(true)
@@ -116,7 +116,6 @@ const FournisseurList = () => {
         field: 'name',
         renderHeader: () => (
           <Tooltip title={t('Name')}>
-
             <Typography
               noWrap
               sx={{
@@ -156,7 +155,6 @@ const FournisseurList = () => {
         field: 'description',
         renderHeader: () => (
           <Tooltip title={t('Description')}>
-
             <Typography
               noWrap
               sx={{
@@ -198,7 +196,6 @@ const FournisseurList = () => {
         field: 'actions',
         renderHeader: () => (
           <Tooltip title={t('Actions')}>
-
             <Typography
               noWrap
               sx={{
@@ -214,7 +211,6 @@ const FournisseurList = () => {
         ),
         renderCell: ({ row }: CellType) => (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-
             <Tooltip title='Mettre à jour un fournisseur'>
               <IconButton
                 size='small'
@@ -242,7 +238,6 @@ const FournisseurList = () => {
                 </Box>
               </IconButton>
             </Tooltip>
-
           </Box>
         )
       }
@@ -253,7 +248,6 @@ const FournisseurList = () => {
 
   // Axios call to loading Data
   const getListFournisseurs = async (page: number, pageSize: number) => {
-
     const result = await fournisseurService.listFournisseurs({ page: page + 1, length: pageSize })
 
     if (result.success) {
@@ -269,8 +263,8 @@ const FournisseurList = () => {
       setStatusFournisseurs(false)
       setTotal(Number(result.total))
     } else {
-      setOpenNotification(true);
-      setTypeMessage("error");
+      setOpenNotification(true)
+      setTypeMessage('error')
       setMessage(result.description)
     }
   }
@@ -314,7 +308,15 @@ const FournisseurList = () => {
     <Grid container spacing={6.5}>
       <Grid item xs={12}>
         <Card>
-          <TableHeader value={value} handleFilter={handleFilter} toggle={handleCreateFournisseur} />
+          <TableHeader
+            value={value}
+            handleFilter={handleFilter}
+            toggle={handleCreateFournisseur}
+            onReload={() => {
+              setValue('')
+              handleChange()
+            }}
+          />
 
           <DataGrid
             autoHeight
@@ -330,16 +332,31 @@ const FournisseurList = () => {
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
           />
-
         </Card>
       </Grid>
 
       {/* Add or Update Right Modal */}
-      <AddFournisseurDrawer open={addFournisseurOpen} toggle={toggleAddFournisseurDrawer} onChange={handleChange} currentFournisseur={currentFournisseur} onSuccess={handleSuccess} />
+      <AddFournisseurDrawer
+        open={addFournisseurOpen}
+        toggle={toggleAddFournisseurDrawer}
+        onChange={handleChange}
+        currentFournisseur={currentFournisseur}
+        onSuccess={handleSuccess}
+      />
 
       {/* Notification */}
-      <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} open={openNotification} onClose={handleCloseNotification} autoHideDuration={5000}>
-        <Alert onClose={handleCloseNotification} severity={typeMessage as AlertColor} variant="filled" sx={{ width: '100%' }}>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={openNotification}
+        onClose={handleCloseNotification}
+        autoHideDuration={5000}
+      >
+        <Alert
+          onClose={handleCloseNotification}
+          severity={typeMessage as AlertColor}
+          variant='filled'
+          sx={{ width: '100%' }}
+        >
           {message}
         </Alert>
       </Snackbar>
@@ -365,17 +382,18 @@ const FournisseurList = () => {
             {t('Cancel')}
           </Button>
           <LoadingButton
-            onClick={() => { comfirmationFunction(); }}
+            onClick={() => {
+              comfirmationFunction()
+            }}
             loading={sendDelete}
             endIcon={<DeleteIcon />}
-            variant="contained"
+            variant='contained'
             color='error'
           >
             {t('Supprimer')}
           </LoadingButton>
         </DialogActions>
       </Dialog>
-
     </Grid>
   )
 }

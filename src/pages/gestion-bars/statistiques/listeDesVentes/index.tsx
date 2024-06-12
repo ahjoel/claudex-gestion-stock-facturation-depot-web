@@ -3,23 +3,16 @@ import Tooltip from '@mui/material/Tooltip'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
-import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContentText from '@mui/material/DialogContentText'
 import Snackbar from '@mui/material/Snackbar'
 import Alert, { AlertColor } from '@mui/material/Alert'
-import Icon from 'src/@core/components/icon'
-import { t } from 'i18next'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { LoadingButton } from '@mui/lab'
+import SaveAltIcon from '@mui/icons-material/SaveAlt'
 import Reglement from 'src/gestion-bars/logic/models/Reglement'
 import ReglementService from 'src/gestion-bars/logic/services/ReglementService'
+import { CardHeader, Divider } from '@mui/material'
+import TemplateListeDesVentes from 'src/gestion-bars/views/pdfMake/TemplateListeDesVentes'
 
 interface CellType {
   row: Reglement
@@ -31,52 +24,6 @@ interface ColumnType {
 
 const ReglementList = () => {
   const reglementService = new ReglementService()
-  const userData = JSON.parse(window.localStorage.getItem('userData') as string)
-  const profile = userData?.profile
-
-  // Delete Confirmation - State
-  const [sendDelete, setSendDelete] = useState<boolean>(false)
-  const [open, setOpen] = useState<boolean>(false)
-  const handleClose = () => setOpen(false)
-  const [comfirmationMessage, setComfirmationMessage] = useState<string>('')
-  const [comfirmationFunction, setComfirmationFunction] = useState<() => void>(() => console.log(' .... '))
-
-  const handleDeleteReglement = (reglement: Reglement) => {
-    setCurrentReglement(reglement)
-    setComfirmationMessage(
-      `Voulez-vous réellement supprimer cet reglement de : ${reglement.totalFacture} F CFA pour la facture : ${reglement.codeFacture} ?`
-    )
-    setComfirmationFunction(() => () => deleteReglement(reglement))
-    setOpen(true)
-  }
-
-  const deleteReglement = async (reglement: Reglement) => {
-    setSendDelete(true)
-
-    try {
-      const rep = await reglementService.delete(reglement.id)
-
-      if (rep === null) {
-        setSendDelete(false)
-        handleChange()
-        handleClose()
-        setOpenNotification(true)
-        setTypeMessage('success')
-        setMessage('Reglement supprimé avec succes')
-      } else {
-        setSendDelete(false)
-        setOpenNotification(true)
-        setTypeMessage('error')
-        setMessage('Reglement non trouvé')
-      }
-    } catch (error) {
-      console.error('Erreur lors de la suppression :', error)
-      setSendDelete(false)
-      setOpenNotification(true)
-      setTypeMessage('error')
-      setMessage('Une erreur est survenue')
-    }
-  }
 
   // Notifications - snackbar
   const [openNotification, setOpenNotification] = useState<boolean>(false)
@@ -100,7 +47,7 @@ const ReglementList = () => {
   const [currentReglement, setCurrentReglement] = useState<null | Reglement>(null)
 
   // Display of columns according to user roles in the Datagrid
-  const getColumns = (handleDeleteReglement: (reglement: Reglement) => void) => {
+  const getColumns = () => {
     const colArray: ColumnType[] = [
       {
         flex: 0.15,
@@ -296,53 +243,6 @@ const ReglementList = () => {
             </Box>
           )
         }
-      },
-      {
-        flex: 0.15,
-        sortable: false,
-        field: 'actions',
-        renderHeader: () => (
-          <Tooltip title={t('Actions')}>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              {t('Actions')}
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => (
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            {(profile === 'ADMINISTRATEUR' || profile === 'SUPER-ADMIN') && (
-              <Tooltip title='Supprimer le règlement'>
-                <IconButton
-                  size='small'
-                  sx={{ color: 'text.primary' }}
-                  onClick={() => {
-                    {
-                      handleDeleteReglement(row)
-                    }
-                  }}
-                >
-                  <Box sx={{ display: 'flex', color: theme => theme.palette.info.main }}>
-                    <Icon icon='tabler:trash' />
-                  </Box>
-                </IconButton>
-              </Tooltip>
-            )}
-          </Box>
-        )
       }
     ]
 
@@ -372,8 +272,14 @@ const ReglementList = () => {
   // Control search data in datagrid
   useEffect(() => {
     handleChange()
-    setColumns(getColumns(handleDeleteReglement))
+    setColumns(getColumns())
   }, [])
+
+  const [downloadCount, setDownloadCount] = useState(0)
+
+  const handleDownload = () => {
+    setDownloadCount(downloadCount + 1)
+  }
 
   // Pagination
   useEffect(() => {
@@ -384,6 +290,38 @@ const ReglementList = () => {
     <Grid container spacing={6.5}>
       <Grid item xs={12}>
         <Card>
+          <CardHeader title='Liste des ventes' sx={{ fontSize: '60px' }} />
+          <Divider sx={{ m: '0 !important' }}></Divider>
+          <Box
+            sx={{
+              py: 4,
+              px: 6,
+              rowGap: 2,
+              columnGap: 4,
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'right',
+              justifyContent: 'flex-end'
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'right' }}>
+              <Button
+                onClick={() => {
+                  handleDownload()
+                }}
+                variant='contained'
+                sx={{ height: '38px' }}
+              >
+                <span style={{ marginRight: '0.2rem' }}>Exporter la liste</span>
+                <SaveAltIcon />
+              </Button>
+            </Box>
+          </Box>
+
+          {downloadCount > 0 && (
+            <TemplateListeDesVentes data={reglements as never[]} fileName={`Liste_des_reglements_${downloadCount}`} />
+          )}
+
           {/* <TableHeader value={value} handleFilter={handleFilter} /> */}
           <DataGrid
             autoHeight
@@ -418,40 +356,6 @@ const ReglementList = () => {
           {message}
         </Alert>
       </Snackbar>
-
-      {/* Delete Modal Confirmation */}
-      <Dialog
-        open={open}
-        disableEscapeKeyDown
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-dialog-description'
-        onClose={(event, reason) => {
-          if (reason === 'backdropClick') {
-            handleClose()
-          }
-        }}
-      >
-        <DialogTitle id='alert-dialog-title'>{t('Confirmation')}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id='alert-dialog-description'>{t(comfirmationMessage)}</DialogContentText>
-        </DialogContent>
-        <DialogActions className='dialog-actions-dense'>
-          <Button onClick={handleClose} color='secondary'>
-            {t('Cancel')}
-          </Button>
-          <LoadingButton
-            onClick={() => {
-              comfirmationFunction()
-            }}
-            loading={sendDelete}
-            endIcon={<DeleteIcon />}
-            variant='contained'
-            color='error'
-          >
-            {t('Supprimer')}
-          </LoadingButton>
-        </DialogActions>
-      </Dialog>
     </Grid>
   )
 }

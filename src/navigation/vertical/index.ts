@@ -106,11 +106,36 @@ const navigation = (): VerticalNavItemsType => {
     icon: ''
   }
 
-  // const Reglementsrc = {
-  //   title: `Règlements - RC`,
-  //   icon: 'tabler:affiliate',
-  //   path: '/gestion-bars/rc/reglements/list'
-  // }
+  const Statistiques = {
+    title: 'Statistiques',
+    icon: 'tabler:file-plus',
+    children: [
+      {
+        title: 'Statistique des ventes',
+        path: '/gestion-bars/statistiques/listeDesVentes/'
+      },
+      {
+        title: 'Stats par producteurs',
+        path: '/device-financing/orders/list'
+      },
+      {
+        title: 'Liste des produits',
+        path: '/gestion-bars/statistiques/listeDesProduits/'
+      },
+      {
+        title: 'Archivage facture',
+        path: '/device-financing/orders/list'
+      },
+      {
+        title: 'Inventaire stock vente',
+        path: '/device-financing/orders/list'
+      },
+      {
+        title: 'Caisse mensuelle',
+        path: '/device-financing/orders/list'
+      }
+    ]
+  }
 
   const Users = {
     title: `Liste des utilisateurs`,
@@ -140,21 +165,30 @@ const navigation = (): VerticalNavItemsType => {
   godMode && navArray.push(Reglements)
   godMode && navArray.push(Users)
 
+  godMode && navArray.push(Separator)
+  godMode && navArray.push(Statistiques)
+
   // GERANT
   gerantMode && navArray.push(Model)
   gerantMode && navArray.push(Fournisseur)
   gerantMode && navArray.push(Produit)
 
+  gerantMode && navArray.push(SeparatorR1)
   gerantMode && navArray.push(StockEntreeR1)
   gerantMode && navArray.push(StockEntreeR1Dispo)
   gerantMode && navArray.push(FactureEnCours)
 
+  gerantMode && navArray.push(SeparatorRC)
   gerantMode && navArray.push(StockEntreeRC)
   gerantMode && navArray.push(StockEntreeRCDispo)
   gerantMode && navArray.push(FactureEnCoursrc)
 
+  gerantMode && navArray.push(Separator)
   gerantMode && navArray.push(Factures)
   gerantMode && navArray.push(Reglements)
+
+  gerantMode && navArray.push(Separator)
+  gerantMode && navArray.push(Statistiques)
 
   // gerantMode && navArray.push(Facturesrc)
   // gerantMode && navArray.push(Reglementsrc)
@@ -172,6 +206,7 @@ const navigation = (): VerticalNavItemsType => {
   adminMode && navArray.push(StockEntreeRCDispo)
   adminMode && navArray.push(FactureEnCoursrc)
 
+  adminMode && navArray.push(Separator)
   adminMode && navArray.push(Factures)
   adminMode && navArray.push(Reglements)
 
@@ -180,15 +215,20 @@ const navigation = (): VerticalNavItemsType => {
 
   adminMode && navArray.push(Users)
 
+  adminMode && navArray.push(Separator)
+  adminMode && navArray.push(Statistiques)
+
   // FACTURIER-R1
   facturierR1Mode && navArray.push(StockEntreeR1Dispo)
   facturierR1Mode && navArray.push(FactureEnCours)
   facturierR1Mode && navArray.push(Factures)
+  facturierR1Mode && navArray.push(Statistiques)
 
   // FACTURIER-RC
   facturierRCMode && navArray.push(StockEntreeRCDispo)
   facturierRCMode && navArray.push(FactureEnCoursrc)
   facturierRCMode && navArray.push(Facturesrc)
+  facturierRCMode && navArray.push(Statistiques)
 
   return navArray
 }
