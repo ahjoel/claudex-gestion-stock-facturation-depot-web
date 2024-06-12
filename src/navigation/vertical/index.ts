@@ -198,10 +198,12 @@ const navigation = (): VerticalNavItemsType => {
   adminMode && navArray.push(Fournisseur)
   adminMode && navArray.push(Produit)
 
+  adminMode && navArray.push(Separator)
   adminMode && navArray.push(StockEntreeR1)
   adminMode && navArray.push(StockEntreeR1Dispo)
   adminMode && navArray.push(FactureEnCours)
 
+  adminMode && navArray.push(Separator)
   adminMode && navArray.push(StockEntreeRC)
   adminMode && navArray.push(StockEntreeRCDispo)
   adminMode && navArray.push(FactureEnCoursrc)
