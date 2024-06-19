@@ -17,7 +17,7 @@ import Alert, { AlertColor } from '@mui/material/Alert'
 import Icon from 'src/@core/components/icon'
 import TableHeader from 'src/gestion-bars/views/factures/TableHeader'
 import { t } from 'i18next'
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from '@mui/icons-material/Delete'
 import { LoadingButton } from '@mui/lab'
 import Facture from 'src/gestion-bars/logic/models/Facture'
 import FactureService from 'src/gestion-bars/logic/services/FactureService'
@@ -29,9 +29,10 @@ import ProduitService from 'src/gestion-bars/logic/services/ProduitService'
 import Produit from 'src/gestion-bars/logic/models/Produit'
 import AddFactureDetailDrawer from 'src/gestion-bars/views/factures/AddFactureDetailDrawer'
 import SortieR1Service from 'src/gestion-bars/logic/services/SortieR1Service'
-import PaymentIcon from '@mui/icons-material/Payment';
-import PrintIcon from '@mui/icons-material/Print';
-
+import PaymentIcon from '@mui/icons-material/Payment'
+import PrintIcon from '@mui/icons-material/Print'
+import ClientService from 'src/gestion-bars/logic/services/ClientService'
+import Client from 'src/gestion-bars/logic/models/Client'
 
 interface CellType {
   row: Facture
@@ -46,64 +47,65 @@ interface ColumnType {
 }
 
 interface Styles {
-  [key: string]: React.CSSProperties;
+  [key: string]: React.CSSProperties
 }
 
 const styles: Styles = {
   '*': {
     fontSize: '10px',
-    fontFamily: 'Times New Roman',
+    fontFamily: 'Times New Roman'
   },
   'td, th, tr, table': {
     borderTop: '1px solid black',
-    borderCollapse: 'collapse',
+    borderCollapse: 'collapse'
   },
   '.description': {
     width: '180px',
     maxWidth: '180px',
-    textAlign: "justify"
+    textAlign: 'justify'
   },
   '.quantity': {
     width: '50px',
     maxWidth: '50px',
     wordBreak: 'break-all',
-    textAlign: "center"
+    textAlign: 'center'
   },
   '.price': {
     width: '65px',
     maxWidth: '65px',
     wordBreak: 'break-all',
-    textAlign: "center"
+    textAlign: 'center'
   },
   '.total': {
     fontWeight: 'bold',
     width: '85px',
     textAlign: 'center',
-    alignContent: 'center',
+    alignContent: 'center'
   },
   '.centered': {
     textAlign: 'center',
-    alignContent: 'center',
+    alignContent: 'center'
   },
   '.colTotal': {
     fontWeight: 'bold',
     textAlign: 'center',
-    alignContent: 'center',
+    alignContent: 'center'
   },
   '.ticket': {
     width: '300px',
-    maxWidth: '300px',
+    maxWidth: '300px'
   },
   img: {
     maxWidth: 'inherit',
-    width: 'inherit',
-  },
-};
+    width: 'inherit'
+  }
+}
 
 const FactureList = () => {
   const factureService = new FactureService()
   const mouvementService = new SortieR1Service()
   const produitService = new ProduitService()
+  const clientService = new ClientService()
   const userData = JSON.parse(window.localStorage.getItem('userData') as string)
   const profile = userData?.profile
   const stock = userData?.zone
@@ -111,9 +113,9 @@ const FactureList = () => {
   // Delete Confirmation - State
   const [sendDelete, setSendDelete] = useState<boolean>(false)
   const [sendPayement, setSendPayement] = useState<boolean>(false)
-  const [open, setOpen] = useState<boolean>(false);
-  const [openPayement, setOpenPayement] = useState<boolean>(false);
-  const [openPrint, setOpenPrint] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false)
+  const [openPayement, setOpenPayement] = useState<boolean>(false)
+  const [openPrint, setOpenPrint] = useState<boolean>(false)
   const handleClose = () => setOpen(false)
   const handleClosePayement = () => setOpenPayement(false)
   const handleClosePrint = () => setOpenPrint(false)
@@ -146,20 +148,20 @@ const FactureList = () => {
         setSendPayement(false)
         handleChange()
         handleClosePayement()
-        setOpenNotification(true);
-        setTypeMessage("success");
+        setOpenNotification(true)
+        setTypeMessage('success')
         setMessage('Facture réglée avec succès, vous pouvez le télécharger')
       } else {
         setSendPayement(false)
-        setOpenNotification(true);
-        setTypeMessage("error");
+        setOpenNotification(true)
+        setTypeMessage('error')
         setMessage('Facture non trouvé')
       }
     } catch (error) {
-      console.error("Erreur lors du reglement de facture :", error);
+      console.error('Erreur lors du reglement de facture :', error)
       setSendPayement(false)
-      setOpenNotification(true);
-      setTypeMessage("error");
+      setOpenNotification(true)
+      setTypeMessage('error')
       setMessage('Une erreur est survenue')
     }
   }
@@ -181,20 +183,20 @@ const FactureList = () => {
         setSendDelete(false)
         handleChange()
         handleClose()
-        setOpenNotification(true);
-        setTypeMessage("success");
+        setOpenNotification(true)
+        setTypeMessage('success')
         setMessage('Facture supprimé avec succes')
       } else {
         setSendDelete(false)
-        setOpenNotification(true);
-        setTypeMessage("error");
+        setOpenNotification(true)
+        setTypeMessage('error')
         setMessage('Facture non trouvé')
       }
     } catch (error) {
-      console.error("Erreur lors de la suppression :", error);
+      console.error('Erreur lors de la suppression :', error)
       setSendDelete(false)
-      setOpenNotification(true);
-      setTypeMessage("error");
+      setOpenNotification(true)
+      setTypeMessage('error')
       setMessage('Une erreur est survenue')
     }
   }
@@ -217,20 +219,20 @@ const FactureList = () => {
         handleChange()
         getDetailsFacture()
         handleClose()
-        setOpenNotification(true);
-        setTypeMessage("success");
+        setOpenNotification(true)
+        setTypeMessage('success')
         setMessage('Produit supprimé avec succes')
       } else {
         setSendDelete(false)
-        setOpenNotification(true);
-        setTypeMessage("error");
+        setOpenNotification(true)
+        setTypeMessage('error')
         setMessage('Produit non trouvé')
       }
     } catch (error) {
-      console.error("Erreur lors de la suppression :", error);
+      console.error('Erreur lors de la suppression :', error)
       setSendDelete(false)
-      setOpenNotification(true);
-      setTypeMessage("error");
+      setOpenNotification(true)
+      setTypeMessage('error')
       setMessage('Une erreur est survenue')
     }
   }
@@ -240,29 +242,30 @@ const FactureList = () => {
   const [valueDetFact, setValueDetFact] = useState<string>('')
 
   // Notifications - snackbar
-  const [openNotification, setOpenNotification] = useState<boolean>(false);
-  const [typeMessage, setTypeMessage] = useState("info");
-  const [message, setMessage] = useState("");
+  const [openNotification, setOpenNotification] = useState<boolean>(false)
+  const [typeMessage, setTypeMessage] = useState('info')
+  const [message, setMessage] = useState('')
 
   const handleSuccess = (message: string, type = 'success') => {
-    setOpenNotification(true);
-    setTypeMessage(type);
+    setOpenNotification(true)
+    setTypeMessage(type)
     const messageTrans = t(message)
     setMessage(messageTrans)
-  };
+  }
 
   const handleCloseNotification = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
-      setOpenNotification(false);
+      setOpenNotification(false)
     }
-    setOpenNotification(false);
-  };
+    setOpenNotification(false)
+  }
 
   // Loading Agencies Data, Datagrid and pagination - State
   const stockR1 = true
   const [statusFactures, setStatusFactures] = useState<boolean>(true)
   const [factures, setFactures] = useState<Facture[]>([])
   const [produits, setProduits] = useState<Produit[]>([])
+  const [clients, setClients] = useState<Client[]>([])
   const [columns, setColumns] = useState<ColumnType[]>([])
   const [addFactureOpen, setAddFactureOpen] = useState<boolean>(false)
   const [addFactureDetailOpen, setAddFactureDetailOpen] = useState<boolean>(false)
@@ -271,7 +274,7 @@ const FactureList = () => {
   const [currentFacture, setCurrentFacture] = useState<null | Facture>(null)
   const [currentFactureDetail, setCurrentFactureDetail] = useState<null | FactureDetail>(null)
 
-  const [openFacture, setOpenFacture] = useState(false);
+  const [openFacture, setOpenFacture] = useState(false)
   const [statusFactureDetail, setStatusFactureDetail] = useState<boolean>(true)
   const [statusFactureDetailPrint, setStatusFactureDetailPrint] = useState<boolean>(true)
   const [facturesDetails, setFacturesDetails] = useState<FactureDetail[]>([])
@@ -292,23 +295,26 @@ const FactureList = () => {
     setEtatFacture(etat)
     setIdFacture(idFact)
     setOpenFacture(true)
-  };
+  }
 
   const handleOpenModalPrintFacture = (arecode: string, totalfacture: string) => {
     setCode(arecode)
     setTotalFacture(totalfacture)
     setOpenPrint(true)
-  };
+  }
 
   // Display of columns according to user roles in the Datagrid
-  const getColumns = (handleUpdateFacture: (facture: Facture) => void, handleDeleteFacture: (facture: Facture) => void, handlePayementFacture: (facture: Facture) => void) => {
+  const getColumns = (
+    handleUpdateFacture: (facture: Facture) => void,
+    handleDeleteFacture: (facture: Facture) => void,
+    handlePayementFacture: (facture: Facture) => void
+  ) => {
     const colArray: ColumnType[] = [
       {
         flex: 0.15,
         field: 'code',
         renderHeader: () => (
           <Tooltip title='Code'>
-
             <Typography
               noWrap
               sx={{
@@ -347,7 +353,6 @@ const FactureList = () => {
         field: 'createdAt',
         renderHeader: () => (
           <Tooltip title='Date creation'>
-
             <Typography
               noWrap
               sx={{
@@ -382,11 +387,10 @@ const FactureList = () => {
         }
       },
       {
-        flex: 0.10,
+        flex: 0.1,
         field: 'client',
         renderHeader: () => (
           <Tooltip title='Client'>
-
             <Typography
               noWrap
               sx={{
@@ -414,7 +418,7 @@ const FactureList = () => {
                     color: 'primary.main'
                   }}
                 >
-                  {client}
+                  {client.toString()}
                 </Typography>
               </Box>
             </Box>
@@ -426,7 +430,6 @@ const FactureList = () => {
         field: 'tax',
         renderHeader: () => (
           <Tooltip title='Tax'>
-
             <Typography
               noWrap
               sx={{
@@ -466,7 +469,6 @@ const FactureList = () => {
         field: 'nbproduit',
         renderHeader: () => (
           <Tooltip title='Nombre(s) Produit(s)'>
-
             <Typography
               noWrap
               sx={{
@@ -507,7 +509,6 @@ const FactureList = () => {
         field: 'totalfacture',
         renderHeader: () => (
           <Tooltip title='Montant Facture'>
-
             <Typography
               noWrap
               sx={{
@@ -543,11 +544,10 @@ const FactureList = () => {
         }
       },
       {
-        flex: 0.10,
+        flex: 0.1,
         field: 'statut',
         renderHeader: () => (
           <Tooltip title='Statut'>
-
             <Typography
               noWrap
               sx={{
@@ -583,12 +583,50 @@ const FactureList = () => {
         }
       },
       {
-        flex: 0.20,
+        flex: 0.1,
+        field: 'stock',
+        renderHeader: () => (
+          <Tooltip title='Stock'>
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                fontSize: '0.8125rem'
+              }}
+            >
+              Statut
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellType) => {
+          const { stock } = row
+
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: 'none',
+                    color: 'primary.main'
+                  }}
+                >
+                  {stock}
+                </Typography>
+              </Box>
+            </Box>
+          )
+        }
+      },
+      {
+        flex: 0.2,
         sortable: false,
         field: 'actions',
         renderHeader: () => (
           <Tooltip title={t('Actions')}>
-
             <Typography
               noWrap
               sx={{
@@ -603,19 +641,22 @@ const FactureList = () => {
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => (
-          <Box sx={{
-            display: 'flex',
-            justifyContent: 'center', // Centrer horizontalement
-            alignItems: 'center', // Centrer verticalement
-          }}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center', // Centrer horizontalement
+              alignItems: 'center' // Centrer verticalement
+            }}
           >
-            {row.statut === "impayée" && (
+            {row.statut === 'impayée' && (
               <Tooltip title='Régler la facture'>
                 <IconButton
                   size='small'
                   sx={{ color: 'text.primary' }}
                   onClick={() => {
-                    { handlePayementFacture(row) }
+                    {
+                      handlePayementFacture(row)
+                    }
                   }}
                 >
                   <Box sx={{ display: 'flex', color: theme => theme.palette.info.main }}>
@@ -629,7 +670,9 @@ const FactureList = () => {
               <IconButton
                 size='small'
                 sx={{ color: 'text.primary' }}
-                onClick={() => { handleOpenModalFacture(row.code, row.statut, row.id) }}
+                onClick={() => {
+                  handleOpenModalFacture(row.code, row.statut, row.id)
+                }}
               >
                 <Box sx={{ display: 'flex', color: theme => theme.palette.info.main }}>
                   <Icon icon='tabler:list' />
@@ -637,7 +680,7 @@ const FactureList = () => {
               </IconButton>
             </Tooltip>
 
-            {row.statut === "impayée" && (
+            {row.statut === 'impayée' && (
               <Tooltip title='Mettre à jour la facture'>
                 <IconButton
                   size='small'
@@ -653,22 +696,20 @@ const FactureList = () => {
               </Tooltip>
             )}
 
-            {row.statut === "impayée" && (
-              (profile === "ADMINISTRATEUR" || profile === "SUPER-ADMIN") && (
-                <Tooltip title='Supprimer'>
-                  <IconButton
-                    size='small'
-                    sx={{ color: 'text.primary' }}
-                    onClick={() => {
-                      handleDeleteFacture(row)
-                    }}
-                  >
-                    <Box sx={{ display: 'flex', color: theme => theme.palette.error.main }}>
-                      <Icon icon='tabler:trash' />
-                    </Box>
-                  </IconButton>
-                </Tooltip>
-              )
+            {row.statut === 'impayée' && (profile === 'ADMINISTRATEUR' || profile === 'SUPER-ADMIN') && (
+              <Tooltip title='Supprimer'>
+                <IconButton
+                  size='small'
+                  sx={{ color: 'text.primary' }}
+                  onClick={() => {
+                    handleDeleteFacture(row)
+                  }}
+                >
+                  <Box sx={{ display: 'flex', color: theme => theme.palette.error.main }}>
+                    <Icon icon='tabler:trash' />
+                  </Box>
+                </IconButton>
+              </Tooltip>
             )}
 
             <Tooltip title='Voir la facture'>
@@ -682,7 +723,6 @@ const FactureList = () => {
                 </Box>
               </IconButton>
             </Tooltip>
-
           </Box>
         )
       }
@@ -811,7 +851,7 @@ const FactureList = () => {
         }
       },
       {
-        flex: 0.10,
+        flex: 0.1,
 
         // minWidth: 50,
         field: 'qte',
@@ -854,7 +894,7 @@ const FactureList = () => {
         }
       },
       {
-        flex: 0.10,
+        flex: 0.1,
 
         // minWidth: 50,
         field: 'pv',
@@ -903,7 +943,6 @@ const FactureList = () => {
         field: 'action',
         renderHeader: () => (
           <Tooltip title={t('Action')}>
-
             <Typography
               noWrap
               sx={{
@@ -919,7 +958,6 @@ const FactureList = () => {
         ),
         renderCell: ({ row }: CellTypeFacture) => (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-
             <Tooltip title='Mettre à jour un produit de facture'>
               <IconButton
                 size='small'
@@ -947,91 +985,29 @@ const FactureList = () => {
                 </Box>
               </IconButton>
             </Tooltip>
-
           </Box>
         )
       }
     ]
-
-    // if (updateDevicesStock || deleteDevicesStock) {
-    //   colArray.push(
-    //     {
-    //       flex: 0.1,
-    //       minWidth: 50,
-    //       sortable: false,
-    //       field: 'actions',
-    //       renderHeader: () => (
-    //         <Tooltip title={t('Actions')}>
-    //           <Typography
-    //             noWrap
-    //             sx={{
-    //               fontWeight: 500,
-    //               letterSpacing: '1px',
-    //               textTransform: 'uppercase',
-    //               fontSize: '0.8125rem'
-    //             }}
-    //           >
-    //             {t('Actions')}
-    //           </Typography>
-    //         </Tooltip>
-    //       ),
-    //       renderCell: ({ row }: CellTypeFacture) => (
-    //         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-    //           {updateDevicesStock && (
-    //             <Tooltip title={t('Update a device')}>
-    //               <IconButton
-    //                 size='small'
-    //                 sx={{ color: 'text.primary' }}
-    //                 onClick={() => {
-    //                   handleUpdateStock(row)
-    //                 }}
-    //               >
-    //                 <Box sx={{ display: 'flex', color: theme => theme.palette.success.main }}>
-    //                   <Icon icon='tabler:edit' />
-    //                 </Box>
-    //               </IconButton>
-    //             </Tooltip>
-    //           )}
-
-    //           {deleteDevicesStock && (
-    //             <Tooltip title={t('Delete')}>
-    //               <IconButton
-    //                 size='small'
-    //                 sx={{ color: 'text.primary' }}
-    //                 onClick={() => {
-    //                   handleDeleteStock(row)
-    //                 }}
-    //               >
-    //                 <Box sx={{ display: 'flex', color: theme => theme.palette.error.main }}>
-    //                   <Icon icon='tabler:trash' />
-    //                 </Box>
-    //               </IconButton>
-    //             </Tooltip>
-    //           )}
-    //         </Box>
-    //       )
-    //     }
-    //   )
-    // }
 
     return colArray
   }
 
   // Axios call to loading Data
   const getListFactures = async (page: number, pageSize: number) => {
-
     const result = await factureService.listFactures({ page: page + 1, length: pageSize })
 
     if (result.success) {
       const queryLowered = value.toLowerCase()
       const filteredData = (result.data as Facture[]).filter(facture => {
         return (
-          facture.code.toLowerCase().includes(queryLowered) ||
+          facture.code.toString().toLowerCase().includes(queryLowered) ||
           facture.createdAt.toLowerCase().includes(queryLowered) ||
-          facture.client.toLowerCase().includes(queryLowered) ||
+          facture.client.toString().toLowerCase().includes(queryLowered) ||
           facture.taxe.toString().toLowerCase().includes(queryLowered) ||
           facture.nbproduit.toLowerCase().includes(queryLowered) ||
-          facture.statut.toLowerCase().includes(queryLowered)
+          facture.statut.toLowerCase().includes(queryLowered) ||
+          facture.stock.toLowerCase().includes(queryLowered)
         )
       })
 
@@ -1039,8 +1015,8 @@ const FactureList = () => {
       setStatusFactures(false)
       setTotal(Number(result.total))
     } else {
-      setOpenNotification(true);
-      setTypeMessage("error");
+      setOpenNotification(true)
+      setTypeMessage('error')
       setMessage(result.description)
     }
   }
@@ -1064,27 +1040,27 @@ const FactureList = () => {
       setFacturesDetails(filteredData)
       setStatusFactures(false)
     } else {
-      setOpenNotification(true);
-      setTypeMessage("error")
-      setMessage("Une erreur est survenue lors du chargement des produits de facture")
+      setOpenNotification(true)
+      setTypeMessage('error')
+      setMessage('Une erreur est survenue lors du chargement des produits de facture')
     }
   }
 
   const handlePrint = () => {
     // Masquer les éléments que vous ne souhaitez pas imprimer
-    const dialogActions = document.querySelector('.dialog-actions-dense') as HTMLElement | null;
+    const dialogActions = document.querySelector('.dialog-actions-dense') as HTMLElement | null
     if (dialogActions) {
-      dialogActions.style.display = 'none';
+      dialogActions.style.display = 'none'
     }
 
     // Imprimer la fenêtre actuelle
-    window.print();
+    window.print()
 
     // Rétablir l'affichage des éléments masqués après l'impression
     if (dialogActions) {
-      dialogActions.style.display = 'flex';
+      dialogActions.style.display = 'flex'
     }
-  };
+  }
 
   const getDetailsFactureForPrint = async () => {
     setStatusFactureDetailPrint(true)
@@ -1094,9 +1070,9 @@ const FactureList = () => {
       setStatusFactureDetailPrint(false)
       setFacturesDetailsPrint(result.data as FactureDetail[])
     } else {
-      setOpenNotification(true);
-      setTypeMessage("error")
-      setMessage("Une erreur est survenue lors du chargement des produits de facture")
+      setOpenNotification(true)
+      setTypeMessage('error')
+      setMessage('Une erreur est survenue lors du chargement des produits de facture')
     }
   }
 
@@ -1109,14 +1085,27 @@ const FactureList = () => {
     getDetailsFacture()
   }
 
+  const handleLoadingClients = async () => {
+    const result = await clientService.listClientslongue()
+
+    if (result.success) {
+      setClients(result.data as Client[])
+    } else {
+      setOpenNotification(true)
+      setTypeMessage('error')
+      setMessage(result.description)
+    }
+  }
+
   const handleLoadingProduits = async () => {
-    const result = await produitService.readAllProduits()
+    const result =
+      stock === 'R1' ? await produitService.listProduitsLongue() : await produitService.listProduitsRcLongue()
 
     if (result.success) {
       setProduits(result.data as Produit[])
     } else {
       setOpenNotification(true)
-      setTypeMessage("error")
+      setTypeMessage('error')
       setMessage(result.description)
     }
   }
@@ -1125,6 +1114,7 @@ const FactureList = () => {
   useEffect(() => {
     handleChange()
     handleLoadingProduits()
+    handleLoadingClients()
     setColumns(getColumns(handleUpdateFacture, handleDeleteFacture, handlePayementFacture))
   }, [value])
 
@@ -1167,7 +1157,14 @@ const FactureList = () => {
     <Grid container spacing={6.5}>
       <Grid item xs={12}>
         <Card>
-          <TableHeader value={value} handleFilter={handleFilter} />
+          <TableHeader
+            value={value}
+            handleFilter={handleFilter}
+            onReload={() => {
+              setValue('')
+              handleChange()
+            }}
+          />
           <DataGrid
             autoHeight
             loading={statusFactures}
@@ -1190,7 +1187,9 @@ const FactureList = () => {
           open={openFacture}
           maxWidth='md'
           scroll='body'
-          onClose={() => { setOpenFacture(false) }}
+          onClose={() => {
+            setOpenFacture(false)
+          }}
         >
           <DialogContent
             sx={{
@@ -1201,7 +1200,9 @@ const FactureList = () => {
           >
             <IconButton
               size='small'
-              onClick={() => { setOpenFacture(false) }}
+              onClick={() => {
+                setOpenFacture(false)
+              }}
               sx={{ position: 'absolute', right: '1rem', top: '1rem' }}
             >
               <Icon icon='tabler:x' />
@@ -1212,11 +1213,15 @@ const FactureList = () => {
               </Typography>
             </Box>
 
-            <TableHeaderDetail value={valueDetFact} handleFilterDetail={handleFilterDet} toggle={handleAddProduitFacture} etatFacture={etatFacture} />
+            <TableHeaderDetail
+              value={valueDetFact}
+              handleFilterDetail={handleFilterDet}
+              toggle={handleAddProduitFacture}
+              etatFacture={etatFacture}
+            />
 
             <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
               <Box sx={{ height: 500, width: '100%' }}>
-
                 {statusFactureDetail ? (
                   <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '20px' }}>
                     <CircularProgress />
@@ -1231,11 +1236,11 @@ const FactureList = () => {
                     pagination
                     paginationModel={paginationModelFacture}
                     onPaginationModelChange={setPaginationModelFacture}
-                  />)}
+                  />
+                )}
               </Box>
             </Box>
           </DialogContent>
-
         </Dialog>
 
         {/* Print Facture Modal */}
@@ -1249,42 +1254,67 @@ const FactureList = () => {
           aria-describedby='alert-dialog-description'
           onClose={(event, reason) => {
             if (reason === 'backdropClick') {
-              handleClosePrint();
+              handleClosePrint()
             }
           }}
         >
           <DialogContent>
-            <div className="ticket" style={styles['.ticket']}>
-              <img src="./logo.png" alt="Logo" style={styles.img} />
-              <p className="centered" style={styles['.centered']}>CLAUDEX-BAR<br />AGOE AMANDETA EPP Amandeta Face Antenne Togocom<br />Tel : (+228) 92 80 26 38</p>
+            <div className='ticket' style={styles['.ticket']}>
+              {/* <img src='./logo.png' alt='Logo' style={styles.img} /> */}
+              <p className='centered' style={styles['.centered']}>
+                CLAUDEX-BAR
+                <br />
+                AGOE AMANDETA EPP Amandeta Face Antenne Togocom
+                <br />
+                Tel : (+228) 92 80 26 38
+              </p>
               <table style={styles['td, th, tr, table']}>
                 <thead>
                   <tr>
-                    <th className="quantity" style={styles['.quantity']}>Qte</th>
-                    <th className="description" style={styles['.description']}>Description</th>
-                    <th className="price" style={styles['.price']}>PV</th>
+                    <th className='quantity' style={styles['.quantity']}>
+                      Qte
+                    </th>
+                    <th className='description' style={styles['.description']}>
+                      Description
+                    </th>
+                    <th className='price' style={styles['.price']}>
+                      PV
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {!statusFactureDetailPrint ? (
-                    facturesDetailsPrint?.map((facturesDetp) => (
+                    facturesDetailsPrint?.map(facturesDetp => (
                       <tr key={facturesDetp.id}>
-                        <td className="quantity" style={styles['.quantity']}>{facturesDetp.qte}</td>
-                        <td className="description" style={styles['.description']}>{facturesDetp.produit}{' '}{facturesDetp.modele}</td>
-                        <td className="price" style={styles['.price']}>{facturesDetp.pv.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")}{' '}F</td>
+                        <td className='quantity' style={styles['.quantity']}>
+                          {facturesDetp.qte}
+                        </td>
+                        <td className='description' style={styles['.description']}>
+                          {facturesDetp.produit} {facturesDetp.modele}
+                        </td>
+                        <td className='price' style={styles['.price']}>
+                          {facturesDetp.pv.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} F
+                        </td>
                       </tr>
                     ))
-                  ) : <CircularProgress />}
+                  ) : (
+                    <CircularProgress />
+                  )}
 
                   <tr>
-                    <td className="quantity" style={styles['.quantity']}></td>
-                    <td className="description" style={styles['.colTotal']}>TOTAL (XOF) : </td>
-                    <td className="price" style={styles['.total']}>{totalFacture.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")} F</td>
+                    <td className='quantity' style={styles['.quantity']}></td>
+                    <td className='description' style={styles['.colTotal']}>
+                      TOTAL (XOF) :{' '}
+                    </td>
+                    <td className='price' style={styles['.total']}>
+                      {totalFacture.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} F
+                    </td>
                   </tr>
-
                 </tbody>
               </table>
-              <p className="centered" style={styles['.centered']}>Merci de votre commande !</p>
+              <p className='centered' style={styles['.centered']}>
+                Merci de votre commande !
+              </p>
             </div>
           </DialogContent>
 
@@ -1292,30 +1322,65 @@ const FactureList = () => {
             <Button variant='contained' onClick={handleClosePrint} color='secondary'>
               {t('Cancel')}
             </Button>
-            <Button variant='contained' onClick={handlePrint}><span>Imprimer</span>{' '}<PrintIcon /></Button>
+            <Button variant='contained' onClick={handlePrint}>
+              <span>Imprimer</span> <PrintIcon />
+            </Button>
           </DialogActions>
-
         </Dialog>
-
       </Grid>
 
       {/* Add or Update Right Modal */}
-      <AddFactureDrawer open={addFactureOpen} toggle={toggleAddFactureDrawer} onEdit={handleChange} currentFacture={currentFacture} onSuccess={handleSuccess} />
+      <AddFactureDrawer
+        open={addFactureOpen}
+        toggle={toggleAddFactureDrawer}
+        onEdit={handleChange}
+        clients={clients}
+        currentFacture={currentFacture}
+        onSuccess={handleSuccess}
+      />
 
       {/* Ajouter un produit sur une facture impayée */}
-      {stock ? (
-        etatFacture === "impayée" && (
-          <AddFactureDetailDrawer open={addFactureDetailOpen} toggle={toggleAddFactureDetailDrawer} onAdd={handleChangeFactureAndDetail} products={produits} codeFact={code} stock={stockR1} factureId={idFacture} currentFactureDetail={currentFactureDetail} onSuccess={handleSuccess} />
-        )
-      ) : (
-        etatFacture === "impayée" && (
-          <AddFactureDetailDrawer open={addFactureDetailOpen} toggle={toggleAddFactureDetailDrawer} onAdd={handleChangeFactureAndDetail} products={produits} codeFact={code} stock={!stockR1} factureId={idFacture} currentFactureDetail={currentFactureDetail} onSuccess={handleSuccess} />
-        )
-      )}
+      {stock
+        ? etatFacture === 'impayée' && (
+            <AddFactureDetailDrawer
+              open={addFactureDetailOpen}
+              toggle={toggleAddFactureDetailDrawer}
+              onAdd={handleChangeFactureAndDetail}
+              products={produits}
+              codeFact={code}
+              stock={stockR1}
+              factureId={idFacture}
+              currentFactureDetail={currentFactureDetail}
+              onSuccess={handleSuccess}
+            />
+          )
+        : etatFacture === 'impayée' && (
+            <AddFactureDetailDrawer
+              open={addFactureDetailOpen}
+              toggle={toggleAddFactureDetailDrawer}
+              onAdd={handleChangeFactureAndDetail}
+              products={produits}
+              codeFact={code}
+              stock={!stockR1}
+              factureId={idFacture}
+              currentFactureDetail={currentFactureDetail}
+              onSuccess={handleSuccess}
+            />
+          )}
 
       {/* Notification */}
-      <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} open={openNotification} onClose={handleCloseNotification} autoHideDuration={5000}>
-        <Alert onClose={handleCloseNotification} severity={typeMessage as AlertColor} variant="filled" sx={{ width: '100%' }}>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={openNotification}
+        onClose={handleCloseNotification}
+        autoHideDuration={5000}
+      >
+        <Alert
+          onClose={handleCloseNotification}
+          severity={typeMessage as AlertColor}
+          variant='filled'
+          sx={{ width: '100%' }}
+        >
           {message}
         </Alert>
       </Snackbar>
@@ -1341,10 +1406,12 @@ const FactureList = () => {
             {t('Cancel')}
           </Button>
           <LoadingButton
-            onClick={() => { comfirmationFunction(); }}
+            onClick={() => {
+              comfirmationFunction()
+            }}
             loading={sendDelete}
             endIcon={<DeleteIcon />}
-            variant="contained"
+            variant='contained'
             color='error'
           >
             {t('Supprimer')}
@@ -1366,17 +1433,21 @@ const FactureList = () => {
       >
         <DialogTitle id='alert-dialog-title'>Confirmation de Payement</DialogTitle>
         <DialogContent>
-          <DialogContentText id='alert-dialog-description' sx={{ color: "black" }} >{t(comfirmationMessagePayement)}</DialogContentText>
+          <DialogContentText id='alert-dialog-description' sx={{ color: 'black' }}>
+            {t(comfirmationMessagePayement)}
+          </DialogContentText>
         </DialogContent>
         <DialogActions className='dialog-actions-dense'>
           <Button onClick={handleClosePayement} color='secondary'>
             {t('Cancel')}
           </Button>
           <LoadingButton
-            onClick={() => { comfirmationPayement(); }}
+            onClick={() => {
+              comfirmationPayement()
+            }}
             loading={sendPayement}
             endIcon={<PaymentIcon />}
-            variant="contained"
+            variant='contained'
             color='info'
           >
             Régler

@@ -15,8 +15,8 @@ import DialogContentText from '@mui/material/DialogContentText'
 import Snackbar from '@mui/material/Snackbar'
 import Alert, { AlertColor } from '@mui/material/Alert'
 import Icon from 'src/@core/components/icon'
-import TableHeader from 'src/gestion-bars/views/produits/list/TableHeader'
-import AddProduitDrawer from 'src/gestion-bars/views/produits/list/AddProduitDrawer'
+import TableHeader from 'src/gestion-bars/views/rc/produitsrc/list/TableHeader'
+import AddProduitDrawer from 'src/gestion-bars/views/rc/produitsrc/list/AddProduitDrawer'
 import { t } from 'i18next'
 import Produit from 'src/gestion-bars/logic/models/Produit'
 import ProduitService from 'src/gestion-bars/logic/services/ProduitService'
@@ -201,7 +201,7 @@ const ProduitList = () => {
         }
       },
       {
-        flex: 0.18,
+        flex: 0.2,
         field: 'description',
         renderHeader: () => (
           <Tooltip title='Description'>
@@ -492,7 +492,7 @@ const ProduitList = () => {
 
   // Axios call to loading Data
   const getListProduits = async (page: number, pageSize: number) => {
-    const result = await produitService.listProduits({ page: page + 1, length: pageSize })
+    const result = await produitService.listProduitsRc({ page: page + 1, length: pageSize })
 
     if (result.success) {
       const queryLowered = value.toLowerCase()

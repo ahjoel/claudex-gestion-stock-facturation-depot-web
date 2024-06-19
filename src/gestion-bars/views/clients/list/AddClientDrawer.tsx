@@ -14,26 +14,22 @@ import { t } from 'i18next'
 import { useEffect, useState } from 'react'
 import { LoadingButton } from '@mui/lab'
 import SaveIcon from '@mui/icons-material/Save'
-import { MenuItem, TextField } from '@mui/material'
-import Facture from 'src/gestion-bars/logic/models/Facture'
-import FactureService from 'src/gestion-bars/logic/services/FactureService'
-import CustomTextField from 'src/@core/components/mui/text-field'
+import { TextField } from '@mui/material'
+import ClientService from 'src/gestion-bars/logic/services/ClientService'
 import Client from 'src/gestion-bars/logic/models/Client'
 
 interface ModelData {
   id?: number
-  code: string
-  client_id: number
-  taxe: number
+  name: string
+  description: string
 }
 
-interface SidebarAddFactureType {
+interface SidebarAddClientType {
   open: boolean
   toggle: () => void
-  onEdit: () => void
-  clients: Client[]
+  onChange: () => void
   onSuccess: (data: any) => void
-  currentFacture: null | Facture
+  currentClient: null | Client
 }
 
 const Header = styled(Box)<BoxProps>(({ theme }) => ({
@@ -44,19 +40,40 @@ const Header = styled(Box)<BoxProps>(({ theme }) => ({
 }))
 
 const schema = yup.object().shape({
-  code: yup.string().required(() => 'Le champ code facture est obligatoire'),
-  client_id: yup.number().required(() => 'Le champ client est obligatoire')
+  description: yup
+    .string()
+    .min(3, obj => {
+      if (obj.value.length === 0) {
+        return t('Description field is required')
+      } else if (obj.value.length > 0 && obj.value.length < obj.min) {
+        return t('invalid description')
+      } else {
+        return ''
+      }
+    })
+    .required(),
+  name: yup
+    .string()
+    .min(3, obj => {
+      if (obj.value.length === 0) {
+        return t('Name field is required')
+      } else if (obj.value.length > 0 && obj.value.length < obj.min) {
+        return t('Name must be at least 3 characters')
+      } else {
+        return ''
+      }
+    })
+    .required()
 })
 
 const defaultValues = {
-  code: '',
-  client_id: 0,
-  taxe: 0
+  name: '',
+  description: ''
 }
 
-const SidebarAddFacture = (props: SidebarAddFactureType) => {
+const SidebarAddClient = (props: SidebarAddClientType) => {
   // ** Props
-  const { open, toggle, onEdit, onSuccess, clients, currentFacture } = props
+  const { open, toggle, onChange, onSuccess, currentClient } = props
 
   const [send, setSend] = useState<boolean>(false)
   let infoTranslate
@@ -83,22 +100,35 @@ const SidebarAddFacture = (props: SidebarAddFactureType) => {
   } = useForm({ defaultValues, mode: 'onChange', resolver: yupResolver(schema) })
 
   const onSubmit = async (data: ModelData) => {
-    const factureService = new FactureService()
+    const clientService = new ClientService()
     setSend(true)
 
     const sendData = {
-      code: data.code,
-      client_id: Number(data.client_id),
-      taxe: data.taxe
+      name: data.name,
+      description: data.description
     }
 
-    if (id != -1) {
-      factureService
-        .updateFacture({ ...sendData, id }, id)
+    if (id === -1) {
+      const result = await clientService.createClient(sendData)
+      setSend(false)
+
+      if (result.success) {
+        onChange()
+        reset()
+        toggle()
+        onSuccess('Registration completed successfully')
+      } else {
+        setOpenNotification(true)
+        setTypeMessage('error')
+        setMessage(result.description)
+      }
+    } else {
+      clientService
+        .updateClient({ ...sendData, id }, id)
         .then(rep => {
           setSend(false)
           if (rep) {
-            onEdit()
+            onChange()
             reset()
             toggle()
             onSuccess('Change completed successfully')
@@ -127,12 +157,11 @@ const SidebarAddFacture = (props: SidebarAddFactureType) => {
 
   useEffect(() => {
     reset({
-      code: currentFacture !== null ? currentFacture?.code : '',
-      client_id: currentFacture && currentFacture?.client_id !== undefined ? currentFacture.client_id : 0,
-      taxe: currentFacture !== null ? currentFacture?.taxe : 0
+      name: currentClient !== null ? currentClient?.name : '',
+      description: currentClient !== null ? currentClient?.description : ''
     })
-    setId(currentFacture !== null ? currentFacture?.id : -1)
-  }, [open, currentFacture])
+    setId(currentClient !== null ? currentClient?.id : -1)
+  }, [open, currentClient])
 
   return (
     <Drawer
@@ -144,7 +173,7 @@ const SidebarAddFacture = (props: SidebarAddFactureType) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
     >
       <Header>
-        <Typography variant='h6'>{id === -1 ? 'Ajout de facture' : 'Modification de facture'}</Typography>
+        <Typography variant='h5'>{id === -1 ? 'Ajout de client' : 'Modification de client'}</Typography>
         <IconButton
           size='small'
           onClick={handleClose}
@@ -164,7 +193,7 @@ const SidebarAddFacture = (props: SidebarAddFactureType) => {
       <Box sx={{ p: theme => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)} autoComplete='off'>
           <Controller
-            name='code'
+            name='name'
             control={control}
             rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
@@ -172,38 +201,15 @@ const SidebarAddFacture = (props: SidebarAddFactureType) => {
                 fullWidth
                 value={value}
                 sx={{ mb: 4 }}
-                label='Code'
+                label={t('Name')}
                 onChange={onChange}
-                error={Boolean(errors.code)}
-                {...(errors.code && { helperText: errors.code.message })}
+                error={Boolean(errors.name)}
+                {...(errors.name && { helperText: errors.name.message })}
               />
             )}
           />
           <Controller
-            name='client_id'
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { value, onChange } }) => (
-              <CustomTextField
-                fullWidth
-                select
-                label='Client'
-                sx={{ mb: 4 }}
-                error={Boolean(errors.client_id)}
-                {...(errors.client_id && { helperText: errors.client_id.message })}
-                SelectProps={{ value: value, onChange: e => onChange(e) }}
-              >
-                <MenuItem value=''>Sélectionnez la table client</MenuItem>
-                {clients?.map(client => (
-                  <MenuItem key={client.id} value={client.id}>
-                    {client.name}
-                  </MenuItem>
-                ))}
-              </CustomTextField>
-            )}
-          />
-          <Controller
-            name='taxe'
+            name='description'
             control={control}
             rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
@@ -211,10 +217,10 @@ const SidebarAddFacture = (props: SidebarAddFactureType) => {
                 fullWidth
                 value={value}
                 sx={{ mb: 4 }}
-                label='Tax'
+                label={t('description')}
                 onChange={onChange}
-                error={Boolean(errors.taxe)}
-                {...(errors.taxe && { helperText: errors.taxe.message })}
+                error={Boolean(errors.description)}
+                {...(errors.description && { helperText: errors.description.message })}
               />
             )}
           />
@@ -248,4 +254,4 @@ const SidebarAddFacture = (props: SidebarAddFactureType) => {
   )
 }
 
-export default SidebarAddFacture
+export default SidebarAddClient

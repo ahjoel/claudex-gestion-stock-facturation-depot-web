@@ -13,7 +13,6 @@ import TableHeader from 'src/gestion-bars/views/entreeR1Dispo/list/TableHeader'
 import EntreeR1Service from 'src/gestion-bars/logic/services/EntreeR1Service'
 import EntreeR1Dispo from 'src/gestion-bars/logic/models/EntreeR1Dispo'
 
-
 interface CellType {
   row: EntreeR1Dispo
 }
@@ -22,7 +21,6 @@ interface ColumnType {
   [key: string]: any
 }
 
-
 const EntreeR1List = () => {
   const entreeR1Service = new EntreeR1Service()
 
@@ -30,9 +28,9 @@ const EntreeR1List = () => {
   const [value, setValue] = useState<string>('')
 
   // Notifications - snackbar
-  const [openNotification, setOpenNotification] = useState<boolean>(false);
-  const [typeMessage, setTypeMessage] = useState("info");
-  const [message, setMessage] = useState("");
+  const [openNotification, setOpenNotification] = useState<boolean>(false)
+  const [typeMessage, setTypeMessage] = useState('info')
+  const [message, setMessage] = useState('')
 
   // const handleSuccess = (message: string, type = 'success') => {
   //   setOpenNotification(true);
@@ -43,10 +41,10 @@ const EntreeR1List = () => {
 
   const handleCloseNotification = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
-      setOpenNotification(false);
+      setOpenNotification(false)
     }
-    setOpenNotification(false);
-  };
+    setOpenNotification(false)
+  }
 
   // Loading Agencies Data, Datagrid and pagination - State
   const [statusEntreeR1, setStatusEntreeR1] = useState<boolean>(true)
@@ -63,7 +61,6 @@ const EntreeR1List = () => {
         field: 'produit',
         renderHeader: () => (
           <Tooltip title='Produit'>
-
             <Typography
               noWrap
               sx={{
@@ -103,7 +100,6 @@ const EntreeR1List = () => {
         field: 'model',
         renderHeader: () => (
           <Tooltip title='Model'>
-
             <Typography
               noWrap
               sx={{
@@ -143,7 +139,6 @@ const EntreeR1List = () => {
         field: 'fournisseur',
         renderHeader: () => (
           <Tooltip title='Fournisseur'>
-
             <Typography
               noWrap
               sx={{
@@ -183,7 +178,6 @@ const EntreeR1List = () => {
         field: 'pv',
         renderHeader: () => (
           <Tooltip title='Prix de vente'>
-
             <Typography
               noWrap
               sx={{
@@ -223,7 +217,6 @@ const EntreeR1List = () => {
         field: 'st_dispo',
         renderHeader: () => (
           <Tooltip title='Quantité Disponible'>
-
             <Typography
               noWrap
               sx={{
@@ -263,7 +256,6 @@ const EntreeR1List = () => {
         field: 'stockMinimal',
         renderHeader: () => (
           <Tooltip title='Stock'>
-
             <Typography
               noWrap
               sx={{
@@ -299,12 +291,11 @@ const EntreeR1List = () => {
         }
       },
       {
-        flex: 0.20,
+        flex: 0.2,
         sortable: false,
         field: 'actions',
         renderHeader: () => (
           <Tooltip title='Actions'>
-
             <Typography
               noWrap
               sx={{
@@ -320,11 +311,10 @@ const EntreeR1List = () => {
         ),
         renderCell: ({ row }: CellType) => (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-
             <Tooltip title='Créer une facture avec ce produit du stock'>
               <IconButton
                 size='small'
-                sx={{ color: 'text.primary', ":hover": "none" }}
+                sx={{ color: 'text.primary', ':hover': 'none' }}
                 onClick={() => {
                   handleAddToCart(row)
                 }}
@@ -344,7 +334,6 @@ const EntreeR1List = () => {
 
   // Axios call to loading Data
   const getListEntreesR1Dispo = async (page: number, pageSize: number) => {
-
     const result = await entreeR1Service.listEntreesR1Dispo({ page: page + 1, length: pageSize })
 
     if (result.success) {
@@ -352,7 +341,7 @@ const EntreeR1List = () => {
 
       const filteredData = (result.data as EntreeR1Dispo[]).filter(entree => {
         return (
-          entree.produit && entree.produit.toString().toLowerCase().includes(queryLowered) ||
+          (entree.produit && entree.produit.toString().toLowerCase().includes(queryLowered)) ||
           entree.model.toString().toLowerCase().includes(queryLowered) ||
           entree.fournisseur.toLowerCase().includes(queryLowered) ||
           entree.st_dispo.toString().toLowerCase().includes(queryLowered) ||
@@ -364,8 +353,8 @@ const EntreeR1List = () => {
       setStatusEntreeR1(false)
       setTotal(Number(result.total))
     } else {
-      setOpenNotification(true);
-      setTypeMessage("error");
+      setOpenNotification(true)
+      setTypeMessage('error')
       setMessage(result.description)
     }
   }
@@ -390,7 +379,7 @@ const EntreeR1List = () => {
     const stockDispo = Number(entreeR1Dispo.st_dispo)
 
     if (stockDispo >= stockMinimal) {
-      const cartProductArray = JSON.parse(localStorage.getItem('cart1') || '[]');
+      const cartProductArray = JSON.parse(localStorage.getItem('cart1') || '[]')
 
       // Créer un nouvel objet pour le produit à ajouter au panier
       const productToCart = {
@@ -401,33 +390,34 @@ const EntreeR1List = () => {
         pv: Number(entreeR1Dispo.pv),
         stockDispo: Number(entreeR1Dispo.st_dispo),
         quantity: 1
-      };
+      }
 
       // Vérifier si le produit existe déjà dans le panier
-      const existingProductIndex = cartProductArray.findIndex((item: { productId: number }) => item.productId === productToCart.productId);
+      const existingProductIndex = cartProductArray.findIndex(
+        (item: { productId: number }) => item.productId === productToCart.productId
+      )
 
       // Si le produit existe déjà dans le panier, ne l'ajoute pas à nouveau
       if (existingProductIndex === -1) {
         // Ajouter le nouveau produit au panier
-        cartProductArray.push(productToCart);
+        cartProductArray.push(productToCart)
 
         // Mettre à jour le localStorage avec le nouveau panier
-        localStorage.setItem('cart1', JSON.stringify(cartProductArray));
-        setOpenNotification(true);
+        localStorage.setItem('cart1', JSON.stringify(cartProductArray))
+        setOpenNotification(true)
         setTypeMessage('success')
         setMessage('Produit ajouté à la facture en cours')
       } else {
-        setOpenNotification(true);
+        setOpenNotification(true)
         setTypeMessage('error')
         setMessage('Produit existe déja sur la facture en cours')
       }
     } else {
-      setOpenNotification(true);
+      setOpenNotification(true)
       setTypeMessage('error')
       setMessage('Le stock disponible est insuffisant pour créer une facture')
     }
   }
-
 
   // Pagination
   useEffect(() => {
@@ -438,7 +428,14 @@ const EntreeR1List = () => {
     <Grid container spacing={6.5}>
       <Grid item xs={12}>
         <Card>
-          <TableHeader value={value} handleFilter={handleFilter} />
+          <TableHeader
+            value={value}
+            handleFilter={handleFilter}
+            onReload={() => {
+              setValue('')
+              handleChange()
+            }}
+          />
 
           <DataGrid
             autoHeight
@@ -454,17 +451,25 @@ const EntreeR1List = () => {
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
           />
-
         </Card>
       </Grid>
 
       {/* Notification */}
-      <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} open={openNotification} onClose={handleCloseNotification} autoHideDuration={5000}>
-        <Alert onClose={handleCloseNotification} severity={typeMessage as AlertColor} variant="filled" sx={{ width: '100%' }}>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={openNotification}
+        onClose={handleCloseNotification}
+        autoHideDuration={5000}
+      >
+        <Alert
+          onClose={handleCloseNotification}
+          severity={typeMessage as AlertColor}
+          variant='filled'
+          sx={{ width: '100%' }}
+        >
           {message}
         </Alert>
       </Snackbar>
-
     </Grid>
   )
 }

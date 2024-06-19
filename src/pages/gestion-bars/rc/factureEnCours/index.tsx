@@ -32,6 +32,7 @@ import * as yup from 'yup'
 import axios from 'src/configs/axios-config'
 import { getHeadersInformation } from 'src/gestion-bars/logic/utils/constant'
 import router from 'next/router'
+import Client from 'src/gestion-bars/logic/models/Client'
 
 interface CellType {
   row: StorageData
@@ -40,7 +41,7 @@ interface CellType {
 interface FactureData {
   id?: number
   code: string
-  client: string
+  client_id: string
 }
 
 interface ColumnType {
@@ -48,18 +49,19 @@ interface ColumnType {
 }
 
 const schema = yup.object().shape({
-  client: yup.string().required(() => 'Table est obligatoire')
+  client_id: yup.string().required(() => 'Le champ client est obligatoire')
 })
 
 const defaultValues = {
   code: '',
-  client: ''
+  client_id: ''
 }
 
 const FactureEnCours = () => {
   // Notifications - snackbar
 
   const [factureCode, setFactureCode] = useState<string>('')
+  const [clients, setClients] = useState<Client[]>([])
   const [openNotification, setOpenNotification] = useState<boolean>(false)
   const [openNotificationSuccess, setOpenNotificationSuccess] = useState<boolean>(false)
   const [typeMessage, setTypeMessage] = useState('info')
@@ -95,6 +97,25 @@ const FactureEnCours = () => {
   //   const messageTrans = t(message)
   //   setMessage(messageTrans)
   // };
+
+  const loadClients = async () => {
+    try {
+      const response = await axios.get(`clients/all?page=1&length=1000`, {
+        headers: {
+          ...getHeadersInformation()
+        }
+      })
+
+      if (response.data.status === 200 && response.data.message === 'SUCCESS') {
+        setClients(response.data.data.clients)
+      }
+    } catch (error) {
+      console.error('Error submitting data:', error)
+      setOpenNotification(true)
+      setTypeMessage('error')
+      setMessage('Une erreur est survenue')
+    }
+  }
 
   const handleCloseNotification = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -240,8 +261,7 @@ const FactureEnCours = () => {
   ) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.2,
-        minWidth: 200,
+        flex: 0.15,
         field: 'product',
         renderHeader: () => (
           <Tooltip title='Produit'>
@@ -259,7 +279,7 @@ const FactureEnCours = () => {
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { product } = row
+          const { product, model } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -273,44 +293,7 @@ const FactureEnCours = () => {
                 >
                   {product}
                 </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        flex: 0.15,
-        minWidth: 200,
-        field: 'model',
-        renderHeader: () => (
-          <Tooltip title='Model'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Model
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { model } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
+                <Typography noWrap variant='body2' sx={{ color: 'text.disabled' }}>
                   {model}
                 </Typography>
               </Box>
@@ -319,8 +302,7 @@ const FactureEnCours = () => {
         }
       },
       {
-        flex: 0.15,
-        minWidth: 200,
+        flex: 0.1,
         field: 'fournisseur',
         renderHeader: () => (
           <Tooltip title='Fournisseur'>
@@ -333,7 +315,7 @@ const FactureEnCours = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Fournisseur
+              Fournis.
             </Typography>
           </Tooltip>
         ),
@@ -359,8 +341,7 @@ const FactureEnCours = () => {
         }
       },
       {
-        flex: 0.15,
-        minWidth: 200,
+        flex: 0.1,
         field: 'quantity',
         renderHeader: () => (
           <Tooltip title='Quantité'>
@@ -373,7 +354,7 @@ const FactureEnCours = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Quantité
+              Qté
             </Typography>
           </Tooltip>
         ),
@@ -399,8 +380,7 @@ const FactureEnCours = () => {
         }
       },
       {
-        flex: 0.15,
-        minWidth: 200,
+        flex: 0.2,
         field: 'total',
         renderHeader: () => (
           <Tooltip title='Total'>
@@ -443,8 +423,7 @@ const FactureEnCours = () => {
         }
       },
       {
-        flex: 0.15,
-        minWidth: 50,
+        flex: 0.2,
         sortable: false,
         field: 'actions',
         renderHeader: () => (
@@ -475,8 +454,7 @@ const FactureEnCours = () => {
         )
       },
       {
-        flex: 0.15,
-        minWidth: 50,
+        flex: 0.18,
         sortable: false,
         field: 'suppression',
         renderHeader: () => (
@@ -532,8 +510,8 @@ const FactureEnCours = () => {
 
     const sendData = {
       code: factureCode,
-      client: data.client,
-      tax: 0
+      client_id: data.client_id + '',
+      tax: 0 + ''
     }
 
     if (cartData) {
@@ -626,6 +604,7 @@ const FactureEnCours = () => {
   // Control search data in datagrid
   useEffect(() => {
     loadCodefacture()
+    loadClients()
     refresh()
     setColumns(getColumns(handleActionAjouter, handleActionRetrancher, handleActionSupprimer))
   }, [])
@@ -637,7 +616,7 @@ const FactureEnCours = () => {
           <Card>
             <Box
               sx={{
-                py: 4,
+                py: 3,
                 px: 6,
                 rowGap: 2,
                 columnGap: 4,
@@ -665,22 +644,23 @@ const FactureEnCours = () => {
               />
 
               <Controller
-                name='client'
+                name='client_id'
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     select
-                    sx={{ mr: 4 }}
-                    error={Boolean(errors.client)}
-                    {...(errors.client && { helperText: errors.client.message })}
+                    sx={{ mr: 0 }}
+                    error={Boolean(errors.client_id)}
+                    {...(errors.client_id && { helperText: errors.client_id.message })}
                     SelectProps={{ value: value, onChange: e => onChange(e) }}
                   >
                     <MenuItem value=''>Sélectionnez la table client</MenuItem>
-                    <MenuItem value='TABLE 1'>TABLE 1</MenuItem>
-                    <MenuItem value='TABLE 2'>TABLE 2</MenuItem>
-                    <MenuItem value='TABLE 3'>TABLE 3</MenuItem>
-                    <MenuItem value='TABLE 4'>TABLE 4</MenuItem>
+                    {clients?.map(client => (
+                      <MenuItem key={client.id} value={client.id}>
+                        {client.name}
+                      </MenuItem>
+                    ))}
                   </CustomTextField>
                 )}
               />

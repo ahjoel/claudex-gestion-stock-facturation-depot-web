@@ -25,6 +25,12 @@ const navigation = (): VerticalNavItemsType => {
     path: '/gestion-bars/models/list'
   }
 
+  const Client = {
+    title: 'Liste des clients',
+    icon: 'tabler:affiliate',
+    path: '/gestion-bars/clients/list'
+  }
+
   const Fournisseur = {
     title: 'Liste des fournisseurs',
     icon: 'tabler:affiliate',
@@ -32,9 +38,15 @@ const navigation = (): VerticalNavItemsType => {
   }
 
   const Produit = {
-    title: 'Liste des produits',
+    title: 'Liste des produits - R1',
     icon: 'tabler:affiliate',
     path: '/gestion-bars/produits/list'
+  }
+
+  const ProduitRc = {
+    title: 'Liste des produits - RC',
+    icon: 'tabler:affiliate',
+    path: '/gestion-bars/rc/produitsrc/list'
   }
 
   const StockEntreeR1 = {
@@ -115,24 +127,36 @@ const navigation = (): VerticalNavItemsType => {
         path: '/gestion-bars/statistiques/listeDesVentes/'
       },
       {
-        title: 'Stats par producteurs',
-        path: '/device-financing/orders/list'
-      },
-      {
         title: 'Liste des produits',
         path: '/gestion-bars/statistiques/listeDesProduits/'
       },
       {
-        title: 'Archivage facture',
-        path: '/device-financing/orders/list'
-      },
-      {
-        title: 'Inventaire stock vente',
-        path: '/device-financing/orders/list'
-      },
-      {
         title: 'Caisse mensuelle',
-        path: '/device-financing/orders/list'
+        path: '/gestion-bars/statistiques/listeCaisseMensuelle'
+      },
+      {
+        title: 'Stat Producteurs - R1',
+        path: '/gestion-bars/statistiques/listeDesStatsParProducteursR1/'
+      },
+      {
+        title: 'Stat Producteurs - RC',
+        path: '/gestion-bars/statistiques/listeDesStatsParProducteursRC/'
+      },
+      {
+        title: 'Archivage facture - R1',
+        path: '/gestion-bars/statistiques/listeDesArchivesFactureR1/'
+      },
+      {
+        title: 'Archivage facture - RC',
+        path: '/gestion-bars/statistiques/listeDesArchivesFactureRC/'
+      },
+      {
+        title: 'Invent. stock vente - R1',
+        path: '/gestion-bars/statistiques/listeDesInventairesStockVenteR1/'
+      },
+      {
+        title: 'Invent. stock vente - RC',
+        path: '/gestion-bars/statistiques/listeDesInventairesStockVenteRC/'
       }
     ]
   }
@@ -148,14 +172,16 @@ const navigation = (): VerticalNavItemsType => {
   // SUPER-ADMIN
   godMode && navArray.push(Model)
   godMode && navArray.push(Fournisseur)
-  godMode && navArray.push(Produit)
+  godMode && navArray.push(Client)
 
   godMode && navArray.push(SeparatorR1)
+  godMode && navArray.push(Produit)
   godMode && navArray.push(StockEntreeR1)
   godMode && navArray.push(StockEntreeR1Dispo)
   godMode && navArray.push(FactureEnCours)
 
   godMode && navArray.push(SeparatorRC)
+  godMode && navArray.push(ProduitRc)
   godMode && navArray.push(StockEntreeRC)
   godMode && navArray.push(StockEntreeRCDispo)
   godMode && navArray.push(FactureEnCoursrc)
@@ -171,14 +197,16 @@ const navigation = (): VerticalNavItemsType => {
   // GERANT
   gerantMode && navArray.push(Model)
   gerantMode && navArray.push(Fournisseur)
-  gerantMode && navArray.push(Produit)
+  gerantMode && navArray.push(Client)
 
   gerantMode && navArray.push(SeparatorR1)
+  gerantMode && navArray.push(Produit)
   gerantMode && navArray.push(StockEntreeR1)
   gerantMode && navArray.push(StockEntreeR1Dispo)
   gerantMode && navArray.push(FactureEnCours)
 
   gerantMode && navArray.push(SeparatorRC)
+  gerantMode && navArray.push(ProduitRc)
   gerantMode && navArray.push(StockEntreeRC)
   gerantMode && navArray.push(StockEntreeRCDispo)
   gerantMode && navArray.push(FactureEnCoursrc)
@@ -196,14 +224,16 @@ const navigation = (): VerticalNavItemsType => {
   // ADMINISTRATEUR
   adminMode && navArray.push(Model)
   adminMode && navArray.push(Fournisseur)
-  adminMode && navArray.push(Produit)
+  adminMode && navArray.push(Client)
 
   adminMode && navArray.push(Separator)
+  adminMode && navArray.push(Produit)
   adminMode && navArray.push(StockEntreeR1)
   adminMode && navArray.push(StockEntreeR1Dispo)
   adminMode && navArray.push(FactureEnCours)
 
   adminMode && navArray.push(Separator)
+  adminMode && navArray.push(ProduitRc)
   adminMode && navArray.push(StockEntreeRC)
   adminMode && navArray.push(StockEntreeRCDispo)
   adminMode && navArray.push(FactureEnCoursrc)

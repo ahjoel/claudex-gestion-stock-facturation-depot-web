@@ -126,6 +126,30 @@ export default class MainService {
     })
   }
 
+  updateClient(object: any, id: number) {
+    // console.log('object :: ', object)
+
+    return new Promise((resolve, reject) => {
+      axios
+        .put(`${this.url}`, object, {
+          headers: {
+            ...getHeadersInformation()
+          }
+        })
+        .then(response => {
+          console.log(id)
+
+          // console.log(response.data.data)
+          resolve(response.data.data)
+        })
+        .catch(error => {
+          this.errorManagement(error)
+          reject(error)
+          resolve(false)
+        })
+    })
+  }
+
   updateFournisseur(object: any, id: number) {
     // console.log('object :: ', object)
 
@@ -425,6 +449,39 @@ export default class MainService {
     return result
   }
 
+  async createClient(object: any) {
+    const result = {
+      success: false,
+      code: -1,
+      status: '',
+      description: '',
+      data: []
+    }
+
+    try {
+      const response = await axios.post(`${this.url}`, object, {
+        headers: {
+          ...getHeadersInformation()
+        }
+      })
+
+      if (response.data.status === 200) {
+        result.success = true
+        result.code = response.data.status
+        result.data = response.data.data
+      } else {
+        result.description = response.data.description
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+
+      // Handle general network errors or other exceptions
+      result.description = 'Une erreur est survenue.'
+    }
+
+    return result
+  }
+
   async createFournisseur(object: any) {
     const result = {
       success: false,
@@ -504,6 +561,39 @@ export default class MainService {
 
     try {
       const response = await axios.post(`${this.url}`, object, {
+        headers: {
+          ...getHeadersInformation()
+        }
+      })
+
+      if (response.data.status === 200) {
+        result.success = true
+        result.code = response.data.status
+        result.data = response.data.data
+      } else {
+        result.description = response.data.description
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+
+      // Handle general network errors or other exceptions
+      result.description = 'Une erreur est survenue.'
+    }
+
+    return result
+  }
+
+  async createProduitRc(object: any) {
+    const result = {
+      success: false,
+      code: -1,
+      status: '',
+      description: '',
+      data: []
+    }
+
+    try {
+      const response = await axios.post(`${this.url}/rc`, object, {
         headers: {
           ...getHeadersInformation()
         }
@@ -724,6 +814,80 @@ export default class MainService {
     return result
   }
 
+  async listClients(object: any = { page: 1, length: 10 }) {
+    const result = {
+      success: false,
+      code: -1,
+      status: '',
+      description: '',
+      data: [],
+      total: ''
+    }
+
+    try {
+      const response = await axios.get(`${this.url}/all?page=${object.page}&length=${object.length}`, {
+        headers: {
+          ...getHeadersInformation()
+        }
+      })
+
+      // console.log(`${this.url}/all`);
+
+      if (response.data.status === 200) {
+        result.success = true
+        result.code = response.data.status
+        result.data = response.data.data.clients
+        result.total = response.data.data.clientsNumber
+      } else {
+        result.description = response.data.description
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+
+      // Handle general network errors or other exceptions
+      result.description = 'Une erreur est survenue.'
+    }
+
+    return result
+  }
+
+  async listClientslongue(object: any = { page: 1, length: 100000 }) {
+    const result = {
+      success: false,
+      code: -1,
+      status: '',
+      description: '',
+      data: [],
+      total: ''
+    }
+
+    try {
+      const response = await axios.get(`${this.url}/all?page=${object.page}&length=${object.length}`, {
+        headers: {
+          ...getHeadersInformation()
+        }
+      })
+
+      // console.log(`${this.url}/all`);
+
+      if (response.data.status === 200) {
+        result.success = true
+        result.code = response.data.status
+        result.data = response.data.data.clients
+        result.total = response.data.data.clientsNumber
+      } else {
+        result.description = response.data.description
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+
+      // Handle general network errors or other exceptions
+      result.description = 'Une erreur est survenue.'
+    }
+
+    return result
+  }
+
   async readAllModels(object: any = { page: 1, length: 500 }) {
     const result = {
       success: false,
@@ -836,6 +1000,154 @@ export default class MainService {
   }
 
   async listProduits(object: any = { page: 1, length: 10 }) {
+    const result = {
+      success: false,
+      code: -1,
+      status: '',
+      description: '',
+      data: [],
+      total: ''
+    }
+
+    try {
+      const response = await axios.get(`${this.url}/all?page=${object.page}&length=${object.length}`, {
+        headers: {
+          ...getHeadersInformation()
+        }
+      })
+
+      // console.log(`${this.url}/all`);
+
+      if (response.data.status === 200) {
+        result.success = true
+        result.code = response.data.status
+        result.data = response.data.data.produits
+        result.total = response.data.data.produitNumber
+      } else {
+        result.description = response.data.description
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+
+      // Handle general network errors or other exceptions
+      result.description = 'Une erreur est survenue.'
+    }
+
+    return result
+  }
+
+  // async StatParProducteur(object: any = { page: 1, length: 10 }) {
+  //   const result = {
+  //     success: false,
+  //     code: -1,
+  //     status: '',
+  //     description: '',
+  //     data: [],
+  //     total: ''
+  //   }
+
+  //   try {
+  //     const response = await axios.get(`${this.url}/all?page=${object.page}&length=${object.length}`, {
+  //       headers: {
+  //         ...getHeadersInformation()
+  //       }
+  //     })
+
+  //     // console.log(`${this.url}/all`);
+
+  //     if (response.data.status === 200) {
+  //       result.success = true
+  //       result.code = response.data.status
+  //       result.data = response.data.data.produits
+  //       result.total = response.data.data.produitNumber
+  //     } else {
+  //       result.description = response.data.description
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error)
+
+  //     // Handle general network errors or other exceptions
+  //     result.description = 'Une erreur est survenue.'
+  //   }
+
+  //   return result
+  // }
+
+  async listProduitsRc(object: any = { page: 1, length: 10 }) {
+    const result = {
+      success: false,
+      code: -1,
+      status: '',
+      description: '',
+      data: [],
+      total: ''
+    }
+
+    try {
+      const response = await axios.get(`${this.url}/all/rc?page=${object.page}&length=${object.length}`, {
+        headers: {
+          ...getHeadersInformation()
+        }
+      })
+
+      // console.log(`${this.url}/all`);
+
+      if (response.data.status === 200) {
+        result.success = true
+        result.code = response.data.status
+        result.data = response.data.data.produits
+        result.total = response.data.data.produitNumber
+      } else {
+        result.description = response.data.description
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+
+      // Handle general network errors or other exceptions
+      result.description = 'Une erreur est survenue.'
+    }
+
+    return result
+  }
+
+  async listProduitsRcLongue(object: any = { page: 1, length: 100000 }) {
+    const result = {
+      success: false,
+      code: -1,
+      status: '',
+      description: '',
+      data: [],
+      total: ''
+    }
+
+    try {
+      const response = await axios.get(`${this.url}/all/rc?page=${object.page}&length=${object.length}`, {
+        headers: {
+          ...getHeadersInformation()
+        }
+      })
+
+      // console.log(`${this.url}/all`);
+
+      if (response.data.status === 200) {
+        result.success = true
+        result.code = response.data.status
+        result.data = response.data.data.produits
+        result.total = response.data.data.produitNumber
+      } else {
+        result.description = response.data.description
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+
+      // Handle general network errors or other exceptions
+      result.description = 'Une erreur est survenue.'
+    }
+
+    return result
+  }
+
+  async listProduitsLongue(object: any = { page: 1, length: 100000 }) {
     const result = {
       success: false,
       code: -1,

@@ -1,15 +1,13 @@
-import Client from './Client'
 import MainModel from './MainModel'
 
-export default class Facture extends MainModel {
+export default class StatArchive extends MainModel {
   code: string
-  client_id: number
-  client: Client | string
+  client: string
+  date_creation: string
   taxe: number
-  nbproduit: string
-  totalfacture: string
+  nbproduit: number
+  totalfacture: number
   statut: string
-  stock: string
 
   constructor(
     id = -1,
@@ -20,23 +18,21 @@ export default class Facture extends MainModel {
     deletedBy = null,
     deletedAt = '',
     code = '',
-    client_id = 0,
-    client = new Client(),
-    taxe = 0,
-    nbproduit = '',
-    totalfacture = '',
     statut = '',
-    stock = ''
+    client = '',
+    date_creation = '',
+    taxe = 0,
+    nbproduit = 0,
+    totalfacture = 0
   ) {
     super(id, createdBy, createdAt, updatedBy, updatedAt, deletedBy, deletedAt)
 
     this.code = code
-    this.client_id = client_id
     this.client = client
+    this.statut = statut
+    this.date_creation = date_creation
     this.taxe = taxe
     this.nbproduit = nbproduit
     this.totalfacture = totalfacture
-    this.statut = statut
-    this.stock = stock
   }
 }

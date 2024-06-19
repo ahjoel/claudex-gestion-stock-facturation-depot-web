@@ -21,7 +21,7 @@ import { t } from 'i18next'
 import Produit from 'src/gestion-bars/logic/models/Produit'
 import ProduitService from 'src/gestion-bars/logic/services/ProduitService'
 import EntreeR1Service from 'src/gestion-bars/logic/services/EntreeR1Service'
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from '@mui/icons-material/Delete'
 import { LoadingButton } from '@mui/lab'
 import EntreeR1 from 'src/gestion-bars/logic/models/EntreeR1'
 
@@ -40,7 +40,7 @@ const EntreeR1List = () => {
 
   // Delete Confirmation - State
   const [sendDelete, setSendDelete] = useState<boolean>(false)
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false)
   const handleClose = () => setOpen(false)
   const [comfirmationMessage, setComfirmationMessage] = useState<string>('')
   const [comfirmationFunction, setComfirmationFunction] = useState<() => void>(() => console.log(' .... '))
@@ -62,20 +62,20 @@ const EntreeR1List = () => {
         setSendDelete(false)
         handleChange()
         handleClose()
-        setOpenNotification(true);
-        setTypeMessage("success");
+        setOpenNotification(true)
+        setTypeMessage('success')
         setMessage('Produit du stock supprimé avec succes')
       } else {
         setSendDelete(false)
-        setOpenNotification(true);
-        setTypeMessage("error");
+        setOpenNotification(true)
+        setTypeMessage('error')
         setMessage('Produit du stock non trouvé')
       }
     } catch (error) {
-      console.error("Erreur lors de la suppression :", error);
+      console.error('Erreur lors de la suppression :', error)
       setSendDelete(false)
-      setOpenNotification(true);
-      setTypeMessage("error");
+      setOpenNotification(true)
+      setTypeMessage('error')
       setMessage('Une erreur est survenue')
     }
   }
@@ -84,23 +84,23 @@ const EntreeR1List = () => {
   const [value, setValue] = useState<string>('')
 
   // Notifications - snackbar
-  const [openNotification, setOpenNotification] = useState<boolean>(false);
-  const [typeMessage, setTypeMessage] = useState("info");
-  const [message, setMessage] = useState("");
+  const [openNotification, setOpenNotification] = useState<boolean>(false)
+  const [typeMessage, setTypeMessage] = useState('info')
+  const [message, setMessage] = useState('')
 
   const handleSuccess = (message: string, type = 'success') => {
-    setOpenNotification(true);
-    setTypeMessage(type);
+    setOpenNotification(true)
+    setTypeMessage(type)
     const messageTrans = t(message)
     setMessage(messageTrans)
-  };
+  }
 
   const handleCloseNotification = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
-      setOpenNotification(false);
+      setOpenNotification(false)
     }
-    setOpenNotification(false);
-  };
+    setOpenNotification(false)
+  }
 
   // Loading Agencies Data, Datagrid and pagination - State
   const [statusEntreeR1, setStatusEntreeR1] = useState<boolean>(true)
@@ -121,7 +121,6 @@ const EntreeR1List = () => {
         field: 'code',
         renderHeader: () => (
           <Tooltip title='Code'>
-
             <Typography
               noWrap
               sx={{
@@ -160,7 +159,6 @@ const EntreeR1List = () => {
         field: 'createdAt',
         renderHeader: () => (
           <Tooltip title='Date creation'>
-
             <Typography
               noWrap
               sx={{
@@ -196,11 +194,10 @@ const EntreeR1List = () => {
         }
       },
       {
-        flex: 0.20,
+        flex: 0.2,
         field: 'produit',
         renderHeader: () => (
           <Tooltip title='Produit'>
-
             <Typography
               noWrap
               sx={{
@@ -236,11 +233,10 @@ const EntreeR1List = () => {
         }
       },
       {
-        flex: 0.20,
+        flex: 0.2,
         field: 'model',
         renderHeader: () => (
           <Tooltip title='Model'>
-
             <Typography
               noWrap
               sx={{
@@ -276,11 +272,10 @@ const EntreeR1List = () => {
         }
       },
       {
-        flex: 0.20,
+        flex: 0.2,
         field: 'fournisseur',
         renderHeader: () => (
           <Tooltip title='Fournisseur'>
-
             <Typography
               noWrap
               sx={{
@@ -320,7 +315,6 @@ const EntreeR1List = () => {
         field: 'qte',
         renderHeader: () => (
           <Tooltip title='Quantité'>
-
             <Typography
               noWrap
               sx={{
@@ -356,11 +350,10 @@ const EntreeR1List = () => {
         }
       },
       {
-        flex: 0.10,
+        flex: 0.1,
         field: 'stock',
         renderHeader: () => (
           <Tooltip title='Stock'>
-
             <Typography
               noWrap
               sx={{
@@ -401,7 +394,6 @@ const EntreeR1List = () => {
         field: 'actions',
         renderHeader: () => (
           <Tooltip title={t('Actions')}>
-
             <Typography
               noWrap
               sx={{
@@ -417,7 +409,6 @@ const EntreeR1List = () => {
         ),
         renderCell: ({ row }: CellType) => (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-
             <Tooltip title='Mettre à jour un produit du stock'>
               <IconButton
                 size='small'
@@ -445,7 +436,6 @@ const EntreeR1List = () => {
                 </Box>
               </IconButton>
             </Tooltip>
-
           </Box>
         )
       }
@@ -456,7 +446,6 @@ const EntreeR1List = () => {
 
   // Axios call to loading Data
   const getListEntreesR1 = async (page: number, pageSize: number) => {
-
     const result = await entreeR1Service.listEntreesR1({ page: page + 1, length: pageSize })
 
     if (result.success) {
@@ -466,7 +455,7 @@ const EntreeR1List = () => {
         return (
           entree.code.toString().toLowerCase().includes(queryLowered) ||
           entree.createdAt.toString().toLowerCase().includes(queryLowered) ||
-          entree.produit && entree.produit.toString().toLowerCase().includes(queryLowered) ||
+          (entree.produit && entree.produit.toString().toLowerCase().includes(queryLowered)) ||
           entree.model.toString().toLowerCase().includes(queryLowered) ||
           entree.fournisseur.toLowerCase().includes(queryLowered) ||
           entree.qte.toString().toLowerCase().includes(queryLowered) ||
@@ -478,24 +467,23 @@ const EntreeR1List = () => {
       setStatusEntreeR1(false)
       setTotal(Number(result.total))
     } else {
-      setOpenNotification(true);
-      setTypeMessage("error");
+      setOpenNotification(true)
+      setTypeMessage('error')
       setMessage(result.description)
     }
   }
 
   const handleLoadingProduits = async () => {
-    const result = await produitService.readAllProduits()
+    const result = await produitService.listProduitsLongue()
 
     if (result.success) {
       setProduits(result.data as Produit[])
     } else {
-      setOpenNotification(true);
-      setTypeMessage("error");
+      setOpenNotification(true)
+      setTypeMessage('error')
       setMessage(result.description)
     }
   }
-
 
   const handleChange = async () => {
     getListEntreesR1(0, 10)
@@ -536,7 +524,15 @@ const EntreeR1List = () => {
     <Grid container spacing={6.5}>
       <Grid item xs={12}>
         <Card>
-          <TableHeader value={value} handleFilter={handleFilter} toggle={handleCreateEntreeR1} />
+          <TableHeader
+            value={value}
+            handleFilter={handleFilter}
+            toggle={handleCreateEntreeR1}
+            onReload={() => {
+              setValue('')
+              handleChange()
+            }}
+          />
 
           <DataGrid
             autoHeight
@@ -552,16 +548,33 @@ const EntreeR1List = () => {
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
           />
-
         </Card>
       </Grid>
 
       {/* Add or Update Right Modal */}
-      <AddEntreeR1Drawer open={addEntreeR1Open} toggle={toggleAddEntreeR1Drawer} onChange={handleChange} currentEntreeR1={currentEntreeR1} onSuccess={handleSuccess} produits={produits} produitId={produitId} />
+      <AddEntreeR1Drawer
+        open={addEntreeR1Open}
+        toggle={toggleAddEntreeR1Drawer}
+        onChange={handleChange}
+        currentEntreeR1={currentEntreeR1}
+        onSuccess={handleSuccess}
+        produits={produits}
+        produitId={produitId}
+      />
 
       {/* Notification */}
-      <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} open={openNotification} onClose={handleCloseNotification} autoHideDuration={5000}>
-        <Alert onClose={handleCloseNotification} severity={typeMessage as AlertColor} variant="filled" sx={{ width: '100%' }}>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={openNotification}
+        onClose={handleCloseNotification}
+        autoHideDuration={5000}
+      >
+        <Alert
+          onClose={handleCloseNotification}
+          severity={typeMessage as AlertColor}
+          variant='filled'
+          sx={{ width: '100%' }}
+        >
           {message}
         </Alert>
       </Snackbar>
@@ -587,17 +600,18 @@ const EntreeR1List = () => {
             {t('Cancel')}
           </Button>
           <LoadingButton
-            onClick={() => { comfirmationFunction(); }}
+            onClick={() => {
+              comfirmationFunction()
+            }}
             loading={sendDelete}
             endIcon={<DeleteIcon />}
-            variant="contained"
+            variant='contained'
             color='error'
           >
             {t('Supprimer')}
           </LoadingButton>
         </DialogActions>
       </Dialog>
-
     </Grid>
   )
 }

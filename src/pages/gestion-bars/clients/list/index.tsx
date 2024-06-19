@@ -15,25 +15,26 @@ import DialogContentText from '@mui/material/DialogContentText'
 import Snackbar from '@mui/material/Snackbar'
 import Alert, { AlertColor } from '@mui/material/Alert'
 import Icon from 'src/@core/components/icon'
+import TableHeader from 'src/gestion-bars/views/clients/list/TableHeader'
+import AddClientDrawer from 'src/gestion-bars/views/clients/list/AddClientDrawer'
 import { t } from 'i18next'
+import Model from 'src/gestion-bars/logic/models/Model'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { LoadingButton } from '@mui/lab'
-import Reglement from 'src/gestion-bars/logic/models/Reglement'
-import ReglementService from 'src/gestion-bars/logic/services/ReglementService'
-import TableHeader from 'src/gestion-bars/views/reglements/list/TableHeader'
+import Client from 'src/gestion-bars/logic/models/Client'
+import ClientService from 'src/gestion-bars/logic/services/ClientService'
 
 interface CellType {
-  row: Reglement
+  row: Client
 }
 
 interface ColumnType {
   [key: string]: any
 }
 
-const ReglementList = () => {
-  const reglementService = new ReglementService()
-  const userData = JSON.parse(window.localStorage.getItem('userData') as string)
-  const profile = userData?.profile
+const ClientList = () => {
+  const clientService = new ClientService()
+  let infoTranslate
 
   // Delete Confirmation - State
   const [sendDelete, setSendDelete] = useState<boolean>(false)
@@ -42,20 +43,18 @@ const ReglementList = () => {
   const [comfirmationMessage, setComfirmationMessage] = useState<string>('')
   const [comfirmationFunction, setComfirmationFunction] = useState<() => void>(() => console.log(' .... '))
 
-  const handleDeleteReglement = (reglement: Reglement) => {
-    setCurrentReglement(reglement)
-    setComfirmationMessage(
-      `Voulez-vous réellement supprimer cet reglement de : ${reglement.totalFacture} F CFA pour la facture : ${reglement.codeFacture} ?`
-    )
-    setComfirmationFunction(() => () => deleteReglement(reglement))
+  const handleDeleteClient = (client: Client) => {
+    setCurrentClient(client)
+    setComfirmationMessage('Are you sure you want to remove it ?')
+    setComfirmationFunction(() => () => deleteClient(client))
     setOpen(true)
   }
 
-  const deleteReglement = async (reglement: Reglement) => {
+  const deleteClient = async (client: Client) => {
     setSendDelete(true)
 
     try {
-      const rep = await reglementService.delete(reglement.id)
+      const rep = await clientService.delete(client.id)
 
       if (rep === null) {
         setSendDelete(false)
@@ -63,26 +62,39 @@ const ReglementList = () => {
         handleClose()
         setOpenNotification(true)
         setTypeMessage('success')
-        setMessage('Reglement supprimé avec succes')
+        infoTranslate = t('Model successfully deleted')
+        setMessage(infoTranslate)
       } else {
         setSendDelete(false)
         setOpenNotification(true)
         setTypeMessage('error')
-        setMessage('Reglement non trouvé')
+        infoTranslate = t('Model not found')
+        setMessage(infoTranslate)
       }
     } catch (error) {
       console.error('Erreur lors de la suppression :', error)
       setSendDelete(false)
       setOpenNotification(true)
       setTypeMessage('error')
-      setMessage('Une erreur est survenue')
+      infoTranslate = t('An error has occurred')
+      setMessage(infoTranslate)
     }
   }
+
+  // Search State
+  const [value, setValue] = useState<string>('')
 
   // Notifications - snackbar
   const [openNotification, setOpenNotification] = useState<boolean>(false)
   const [typeMessage, setTypeMessage] = useState('info')
   const [message, setMessage] = useState('')
+
+  const handleSuccess = (message: string, type = 'success') => {
+    setOpenNotification(true)
+    setTypeMessage(type)
+    const messageTrans = t(message)
+    setMessage(messageTrans)
+  }
 
   const handleCloseNotification = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -91,24 +103,24 @@ const ReglementList = () => {
     setOpenNotification(false)
   }
 
-  const [statusReglements, setStatusReglements] = useState<boolean>(true)
-  const [value, setValue] = useState<string>('')
-  const [reglements, setReglements] = useState<Reglement[]>([])
+  // Loading Agencies Data, Datagrid and pagination - State
+  const [statusClients, setStatusClients] = useState<boolean>(true)
+  const [clients, setClients] = useState<Client[]>([])
   const [columns, setColumns] = useState<ColumnType[]>([])
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
+  const [addClientOpen, setAddClientOpen] = useState<boolean>(false)
+  const [paginationClient, setPaginationClient] = useState({ page: 0, pageSize: 10 })
   const [total, setTotal] = useState(40)
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [currentReglement, setCurrentReglement] = useState<null | Reglement>(null)
+  const [currentClient, setCurrentClient] = useState<null | Client>(null)
 
   // Display of columns according to user roles in the Datagrid
-  const getColumns = (handleDeleteReglement: (reglement: Reglement) => void) => {
+  const getColumns = (handleUpdateClient: (client: Client) => void) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.15,
-        field: 'createdAt',
+        flex: 0.25,
+        minWidth: 200,
+        field: 'name',
         renderHeader: () => (
-          <Tooltip title='Date de creation'>
+          <Tooltip title={t('Name')}>
             <Typography
               noWrap
               sx={{
@@ -118,12 +130,12 @@ const ReglementList = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Date de creation
+              {t('Name')}
             </Typography>
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { createdAt } = row
+          const { name } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -135,7 +147,7 @@ const ReglementList = () => {
                     textDecoration: 'none'
                   }}
                 >
-                  {createdAt.slice(0, -5).replace(/T/g, ' ')}
+                  {name}
                 </Typography>
               </Box>
             </Box>
@@ -143,10 +155,11 @@ const ReglementList = () => {
         }
       },
       {
-        flex: 0.09,
-        field: 'client',
+        flex: 0.25,
+        minWidth: 200,
+        field: 'description',
         renderHeader: () => (
-          <Tooltip title='Client'>
+          <Tooltip title={t('Description')}>
             <Typography
               noWrap
               sx={{
@@ -156,12 +169,12 @@ const ReglementList = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Client
+              {t('Description')}
             </Typography>
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { client } = row
+          const { description } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -174,7 +187,7 @@ const ReglementList = () => {
                     color: 'primary.main'
                   }}
                 >
-                  {client}
+                  {description}
                 </Typography>
               </Box>
             </Box>
@@ -182,125 +195,8 @@ const ReglementList = () => {
         }
       },
       {
-        flex: 0.2,
-        field: 'codeFacture',
-        renderHeader: () => (
-          <Tooltip title='Code Facture'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Code Facture
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { codeFacture } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {codeFacture}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        flex: 0.15,
-        field: 'total',
-        renderHeader: () => (
-          <Tooltip title='Total Facture'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Total Facture
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { totalFacture } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main',
-                    textAlign: 'center'
-                  }}
-                >
-                  {totalFacture}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        flex: 0.2,
-        field: 'auteur',
-        renderHeader: () => (
-          <Tooltip title='Auteur'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Auteur
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { firstname, lastname } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {firstname} {''} {lastname}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        flex: 0.15,
+        flex: 0.1,
+        minWidth: 50,
         sortable: false,
         field: 'actions',
         renderHeader: () => (
@@ -319,30 +215,34 @@ const ReglementList = () => {
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => (
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            {(profile === 'ADMINISTRATEUR' || profile === 'SUPER-ADMIN') && (
-              <Tooltip title='Supprimer le règlement'>
-                <IconButton
-                  size='small'
-                  sx={{ color: 'text.primary' }}
-                  onClick={() => {
-                    {
-                      handleDeleteReglement(row)
-                    }
-                  }}
-                >
-                  <Box sx={{ display: 'flex', color: theme => theme.palette.info.main }}>
-                    <Icon icon='tabler:trash' />
-                  </Box>
-                </IconButton>
-              </Tooltip>
-            )}
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Tooltip title={t('Update an model')}>
+              <IconButton
+                size='small'
+                sx={{ color: 'text.primary' }}
+                onClick={() => {
+                  handleUpdateClient(row)
+                }}
+              >
+                <Box sx={{ display: 'flex', color: theme => theme.palette.success.main }}>
+                  <Icon icon='tabler:edit' />
+                </Box>
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title={t('Delete')}>
+              <IconButton
+                size='small'
+                sx={{ color: 'text.primary' }}
+                onClick={() => {
+                  handleDeleteClient(row)
+                }}
+              >
+                <Box sx={{ display: 'flex', color: theme => theme.palette.error.main }}>
+                  <Icon icon='tabler:trash' />
+                </Box>
+              </IconButton>
+            </Tooltip>
           </Box>
         )
       }
@@ -352,24 +252,17 @@ const ReglementList = () => {
   }
 
   // Axios call to loading Data
-  const getListReglements = async (page: number, pageSize: number) => {
-    const result = await reglementService.listReglements({ page: page + 1, length: pageSize })
+  const getListClients = async (page: number, pageSize: number) => {
+    const result = await clientService.listClients({ page: page + 1, length: pageSize })
 
     if (result.success) {
       const queryLowered = value.toLowerCase()
-      const filteredData = (result.data as Reglement[]).filter(reglement => {
-        return (
-          reglement.codeFacture.toString().toLowerCase().includes(queryLowered) ||
-          reglement.createdAt.toLowerCase().includes(queryLowered) ||
-          reglement.client.toString().toLowerCase().includes(queryLowered) ||
-          reglement.totalFacture.toString().toLowerCase().includes(queryLowered) ||
-          reglement.firstname.toLowerCase().includes(queryLowered) ||
-          reglement.lastname.toLowerCase().includes(queryLowered)
-        )
+      const filteredData = (result.data as Model[]).filter(model => {
+        return model.name.toLowerCase().includes(queryLowered) || model.description.toLowerCase().includes(queryLowered)
       })
 
-      setReglements(filteredData)
-      setStatusReglements(false)
+      setClients(filteredData)
+      setStatusClients(false)
       setTotal(Number(result.total))
     } else {
       setOpenNotification(true)
@@ -379,23 +272,39 @@ const ReglementList = () => {
   }
 
   const handleChange = async () => {
-    getListReglements(0, 10)
+    getListClients(0, 10)
   }
 
   // Control search data in datagrid
   useEffect(() => {
     handleChange()
-    setColumns(getColumns(handleDeleteReglement))
+
+    setColumns(getColumns(handleUpdateClient))
   }, [value])
 
   const handleFilter = useCallback((val: string) => {
     setValue(val)
   }, [])
 
+  // Show Modal
+  const toggleAddClientDrawer = () => setAddClientOpen(!addClientOpen)
+
+  // Add Data
+  const handleCreateClient = () => {
+    setCurrentClient(null)
+    toggleAddClientDrawer()
+  }
+
+  // Update Data
+  const handleUpdateClient = (client: Client) => {
+    setCurrentClient(client)
+    toggleAddClientDrawer()
+  }
+
   // Pagination
   useEffect(() => {
-    getListReglements(paginationModel.page, paginationModel.pageSize)
-  }, [paginationModel])
+    getListClients(paginationClient.page, paginationClient.pageSize)
+  }, [paginationClient])
 
   return (
     <Grid container spacing={6.5}>
@@ -404,27 +313,38 @@ const ReglementList = () => {
           <TableHeader
             value={value}
             handleFilter={handleFilter}
+            toggle={handleCreateClient}
             onReload={() => {
               setValue('')
               handleChange()
             }}
           />
+
           <DataGrid
             autoHeight
-            loading={statusReglements}
+            loading={statusClients}
             rowHeight={62}
-            rows={reglements as never[]}
+            rows={clients as never[]}
             columns={columns as GridColDef<never>[]}
             disableRowSelectionOnClick
             pageSizeOptions={[10, 25, 50]}
             pagination
             paginationMode='server'
             rowCount={total}
-            paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
+            paginationModel={paginationClient}
+            onPaginationModelChange={setPaginationClient}
           />
         </Card>
       </Grid>
+
+      {/* Add or Update Right Modal */}
+      <AddClientDrawer
+        open={addClientOpen}
+        toggle={toggleAddClientDrawer}
+        onChange={handleChange}
+        currentClient={currentClient}
+        onSuccess={handleSuccess}
+      />
 
       {/* Notification */}
       <Snackbar
@@ -480,4 +400,4 @@ const ReglementList = () => {
   )
 }
 
-export default ReglementList
+export default ClientList

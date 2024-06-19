@@ -23,9 +23,11 @@ import { Alert, AlertColor, Snackbar } from '@mui/material'
 const Activities = () => {
   let infoTranslate
   const [productCount, setProductCount] = useState<string>('')
+  const [productCountRC, setProductCountRC] = useState<string>('')
   const [reglementMoisCount, setReglementMoisCount] = useState<string>('')
   const [reglementDayCount, setReglementDayCount] = useState<string>('')
-  const [factureImpayee, setFactureImpayee] = useState<string>('')
+
+  // const [factureImpayee, setFactureImpayee] = useState<string>('')
 
   // Notifications - snackbar
   const [openNotification, setOpenNotification] = useState<boolean>(false)
@@ -50,6 +52,25 @@ const Activities = () => {
 
       if (response.data.data) {
         setProductCount(response.data.data.produitNumber)
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      setOpenNotification(true)
+      setTypeMessage('error')
+      infoTranslate = t('An error has occured1')
+      setMessage(infoTranslate)
+    }
+
+    try {
+      const response = await axios.get(`produits/count/rc`, {
+        headers: {
+          ...getHeadersInformation(),
+          'Content-Type': 'application/json'
+        }
+      })
+
+      if (response.data.data) {
+        setProductCountRC(response.data.data.produitNumber)
       }
     } catch (error) {
       console.error('Error submitting form:', error)
@@ -97,24 +118,24 @@ const Activities = () => {
       setMessage(infoTranslate)
     }
 
-    try {
-      const response = await axios.get(`factures/impayee/count`, {
-        headers: {
-          ...getHeadersInformation(),
-          'Content-Type': 'application/json'
-        }
-      })
+    // try {
+    //   const response = await axios.get(`factures/impayee/count`, {
+    //     headers: {
+    //       ...getHeadersInformation(),
+    //       'Content-Type': 'application/json'
+    //     }
+    //   })
 
-      if (response.data.data) {
-        setFactureImpayee(response.data.data.factureTotalImpayeeNumber)
-      }
-    } catch (error) {
-      console.error('Error submitting form:', error)
-      setOpenNotification(true)
-      setTypeMessage('error')
-      infoTranslate = t('An error has occured4')
-      setMessage(infoTranslate)
-    }
+    //   if (response.data.data) {
+    //     setFactureImpayee(response.data.data.factureTotalImpayeeNumber)
+    //   }
+    // } catch (error) {
+    //   console.error('Error submitting form:', error)
+    //   setOpenNotification(true)
+    //   setTypeMessage('error')
+    //   infoTranslate = t('An error has occured4')
+    //   setMessage(infoTranslate)
+    // }
   }
 
   useEffect(() => {
@@ -133,41 +154,41 @@ const Activities = () => {
               </CustomAvatar>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <Typography variant='h6'>{productCount}</Typography>
-                <Typography variant='body2'>{t('Produits Total')}</Typography>
+                <Typography variant='body2'>{t('Produits R1')}</Typography>
               </Box>
             </Box>
           </Grid>
           <Grid item xs={6} md={3}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <CustomAvatar skin='light' color='info' sx={{ mr: 4, width: 42, height: 42 }}>
-                <Icon icon='tabler:users' />
+                <Icon icon='tabler:affiliate' />
               </CustomAvatar>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography variant='h6'>{reglementMoisCount}</Typography>
-                <Typography variant='body2'>{t('Reglement du Mois')}</Typography>
+                <Typography variant='h6'>{productCountRC}</Typography>
+                <Typography variant='body2'>{t('Produits RC')}</Typography>
               </Box>
             </Box>
           </Grid>
           <Grid item xs={6} md={3}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <CustomAvatar skin='light' color='error' sx={{ mr: 4, width: 42, height: 42 }}>
-                <Icon icon='tabler:users' />
+                <Icon icon='tabler:wallet' />
               </CustomAvatar>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography variant='h6'>{reglementDayCount || 0}</Typography>
-                <Typography variant='body2'>{t('Reglement du Jours')}</Typography>
+                <Typography variant='h6'>{reglementMoisCount || 0}</Typography>
+                <Typography variant='body2'>{t('Reglement du Mois')}</Typography>
               </Box>
             </Box>
           </Grid>
           <Grid item xs={6} md={3}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <CustomAvatar skin='light' color='info' sx={{ mr: 4, width: 45, height: 42 }}>
-                <Icon icon='tabler:chart-pie-2' />
+                <Icon icon='tabler:wallet' />
               </CustomAvatar>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography variant='h6'>{factureImpayee}</Typography>
+                <Typography variant='h6'>{reglementDayCount || 0}</Typography>
 
-                <Typography variant='body2'>{t('Facture impayée')}</Typography>
+                <Typography variant='body2'>{t('Reglement du Jour')}</Typography>
               </Box>
             </Box>
           </Grid>
