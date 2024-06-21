@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useEffect } from 'react'
 import { useState } from 'react'
@@ -74,7 +75,10 @@ const listeDesStatsParProducteursRC = () => {
     if (startDate && endDate) {
       console.log('Date de début:', dayjs(startDate).toISOString().split('T')[0])
       console.log('Date de fin:', dayjs(endDate).toISOString().split('T')[0])
-      getListDatas(startDate, endDate)
+      getListDatas(
+        dayjs(startDate).toISOString().split('T')[0] + ' ' + '00:00:00',
+        dayjs(endDate).toISOString().split('T')[0] + ' ' + '23:59:00'
+      )
     } else {
       setOpenNotification(true)
       setTypeMessage('error')

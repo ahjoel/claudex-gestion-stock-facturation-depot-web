@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useCallback } from 'react'
 import Tooltip from '@mui/material/Tooltip'
 import Box from '@mui/material/Box'
@@ -17,7 +18,7 @@ import Alert, { AlertColor } from '@mui/material/Alert'
 import Icon from 'src/@core/components/icon'
 import TableHeader from 'src/gestion-bars/views/users/list/TableHeader'
 import { t } from 'i18next'
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from '@mui/icons-material/Delete'
 import { LoadingButton } from '@mui/lab'
 import UserService from 'src/gestion-bars/logic/services/UserService'
 import User from 'src/gestion-bars/logic/models/User'
@@ -36,7 +37,7 @@ const UserList = () => {
 
   // Delete Confirmation - State
   const [sendDelete, setSendDelete] = useState<boolean>(false)
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false)
   const handleClose = () => setOpen(false)
   const [comfirmationMessage, setComfirmationMessage] = useState<string>('')
   const [comfirmationFunction, setComfirmationFunction] = useState<() => void>(() => console.log(' .... '))
@@ -58,20 +59,20 @@ const UserList = () => {
         setSendDelete(false)
         handleChange()
         handleClose()
-        setOpenNotification(true);
-        setTypeMessage("success");
+        setOpenNotification(true)
+        setTypeMessage('success')
         setMessage('Utilisateur supprimé avec succes')
       } else {
         setSendDelete(false)
-        setOpenNotification(true);
-        setTypeMessage("error");
+        setOpenNotification(true)
+        setTypeMessage('error')
         setMessage('Utilisateur non trouvé')
       }
     } catch (error) {
-      console.error("Erreur lors de la suppression :", error);
+      console.error('Erreur lors de la suppression :', error)
       setSendDelete(false)
-      setOpenNotification(true);
-      setTypeMessage("error");
+      setOpenNotification(true)
+      setTypeMessage('error')
       setMessage('Une erreur est survenue')
     }
   }
@@ -80,23 +81,23 @@ const UserList = () => {
   const [value, setValue] = useState<string>('')
 
   // Notifications - snackbar
-  const [openNotification, setOpenNotification] = useState<boolean>(false);
-  const [typeMessage, setTypeMessage] = useState("info");
-  const [message, setMessage] = useState("");
+  const [openNotification, setOpenNotification] = useState<boolean>(false)
+  const [typeMessage, setTypeMessage] = useState('info')
+  const [message, setMessage] = useState('')
 
   const handleSuccess = (message: string, type = 'success') => {
-    setOpenNotification(true);
-    setTypeMessage(type);
+    setOpenNotification(true)
+    setTypeMessage(type)
     const messageTrans = t(message)
     setMessage(messageTrans)
-  };
+  }
 
   const handleCloseNotification = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
-      setOpenNotification(false);
+      setOpenNotification(false)
     }
-    setOpenNotification(false);
-  };
+    setOpenNotification(false)
+  }
 
   // Loading Agencies Data, Datagrid and pagination - State
   const [statusUsers, setStatusUsers] = useState<boolean>(true)
@@ -107,14 +108,13 @@ const UserList = () => {
   const [currentUsers, setCurrentUser] = useState<null | User>(null)
 
   // Display of columns according to user roles in the Datagrid
-  const getColumns = (handleUpdateUser: (user: User) => void, handleDeleteUser: (user: User) => void,) => {
+  const getColumns = (handleUpdateUser: (user: User) => void, handleDeleteUser: (user: User) => void) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.20,
+        flex: 0.2,
         field: 'username',
         renderHeader: () => (
           <Tooltip title='Nom Utilisateur'>
-
             <Typography
               noWrap
               sx={{
@@ -149,12 +149,11 @@ const UserList = () => {
         }
       },
       {
-        flex: 0.20,
+        flex: 0.2,
         minWidth: 200,
         field: 'lastname',
         renderHeader: () => (
           <Tooltip title='Nom'>
-
             <Typography
               noWrap
               sx={{
@@ -190,11 +189,10 @@ const UserList = () => {
         }
       },
       {
-        flex: 0.20,
+        flex: 0.2,
         field: 'firstname',
         renderHeader: () => (
           <Tooltip title={t('Prénom')}>
-
             <Typography
               noWrap
               sx={{
@@ -229,11 +227,10 @@ const UserList = () => {
         }
       },
       {
-        flex: 0.20,
+        flex: 0.2,
         field: 'email',
         renderHeader: () => (
           <Tooltip title={t('Email')}>
-
             <Typography
               noWrap
               sx={{
@@ -273,7 +270,6 @@ const UserList = () => {
         field: 'zone',
         renderHeader: () => (
           <Tooltip title='Zone'>
-
             <Typography
               noWrap
               sx={{
@@ -314,7 +310,6 @@ const UserList = () => {
         field: 'profil',
         renderHeader: () => (
           <Tooltip title='Profil'>
-
             <Typography
               noWrap
               sx={{
@@ -356,7 +351,6 @@ const UserList = () => {
         field: 'actions',
         renderHeader: () => (
           <Tooltip title={t('Actions')}>
-
             <Typography
               noWrap
               sx={{
@@ -372,7 +366,6 @@ const UserList = () => {
         ),
         renderCell: ({ row }: CellType) => (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-
             <Tooltip title='Mettre à jour un utilisateur'>
               <IconButton
                 size='small'
@@ -400,7 +393,6 @@ const UserList = () => {
                 </Box>
               </IconButton>
             </Tooltip>
-
           </Box>
         )
       }
@@ -411,7 +403,6 @@ const UserList = () => {
 
   // Axios call to loading Data
   const getListUsers = async () => {
-
     const result = await userService.listUsers()
 
     if (result.success) {
@@ -430,12 +421,11 @@ const UserList = () => {
       setUsers(filteredData)
       setStatusUsers(false)
     } else {
-      setOpenNotification(true);
-      setTypeMessage("error");
+      setOpenNotification(true)
+      setTypeMessage('error')
       setMessage(result.description)
     }
   }
-
 
   const handleChange = async () => {
     getListUsers()
@@ -484,16 +474,31 @@ const UserList = () => {
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
           />
-
         </Card>
       </Grid>
 
       {/* Add or Update Right Modal */}
-      <AddUserDrawer open={addUserOpen} toggle={toggleAddUserDrawer} handleChange={handleChange} onSuccess={handleSuccess} currentUser={currentUsers} />
+      <AddUserDrawer
+        open={addUserOpen}
+        toggle={toggleAddUserDrawer}
+        handleChange={handleChange}
+        onSuccess={handleSuccess}
+        currentUser={currentUsers}
+      />
 
       {/* Notification */}
-      <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} open={openNotification} onClose={handleCloseNotification} autoHideDuration={5000}>
-        <Alert onClose={handleCloseNotification} severity={typeMessage as AlertColor} variant="filled" sx={{ width: '100%' }}>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={openNotification}
+        onClose={handleCloseNotification}
+        autoHideDuration={5000}
+      >
+        <Alert
+          onClose={handleCloseNotification}
+          severity={typeMessage as AlertColor}
+          variant='filled'
+          sx={{ width: '100%' }}
+        >
           {message}
         </Alert>
       </Snackbar>
@@ -519,17 +524,18 @@ const UserList = () => {
             {t('Cancel')}
           </Button>
           <LoadingButton
-            onClick={() => { comfirmationFunction(); }}
+            onClick={() => {
+              comfirmationFunction()
+            }}
             loading={sendDelete}
             endIcon={<DeleteIcon />}
-            variant="contained"
+            variant='contained'
             color='error'
           >
             {t('Supprimer')}
           </LoadingButton>
         </DialogActions>
       </Dialog>
-
     </Grid>
   )
 }

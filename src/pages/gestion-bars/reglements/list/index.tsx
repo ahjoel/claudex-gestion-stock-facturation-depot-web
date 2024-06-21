@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect, useCallback } from 'react'
 import Tooltip from '@mui/material/Tooltip'
 import Box from '@mui/material/Box'

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Drawer from '@mui/material/Drawer'
 import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
@@ -15,7 +16,7 @@ import ModelService from 'src/gestion-bars/logic/services/ModelService'
 import Model from 'src/gestion-bars/logic/models/Model'
 import { useEffect, useState } from 'react'
 import { LoadingButton } from '@mui/lab'
-import SaveIcon from '@mui/icons-material/Save';
+import SaveIcon from '@mui/icons-material/Save'
 import { TextField } from '@mui/material'
 
 interface ModelData {
@@ -79,20 +80,25 @@ const SidebarAddModel = (props: SidebarAddModelType) => {
   let infoTranslate
 
   // Notification
-  const [openNotification, setOpenNotification] = useState<boolean>(false);
-  const [typeMessage, setTypeMessage] = useState("info");
-  const [message, setMessage] = useState("");
+  const [openNotification, setOpenNotification] = useState<boolean>(false)
+  const [typeMessage, setTypeMessage] = useState('info')
+  const [message, setMessage] = useState('')
 
   const handleCloseNotification = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
-      setOpenNotification(false);
+      setOpenNotification(false)
     }
-    setOpenNotification(false);
-  };
+    setOpenNotification(false)
+  }
 
   // Control Forms
   const [id, setId] = useState<number>(-1)
-  const { reset, control, handleSubmit, formState: { errors } } = useForm({ defaultValues, mode: 'onChange', resolver: yupResolver(schema) })
+  const {
+    reset,
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({ defaultValues, mode: 'onChange', resolver: yupResolver(schema) })
 
   const onSubmit = async (data: ModelData) => {
     const modelService = new ModelService()
@@ -111,34 +117,37 @@ const SidebarAddModel = (props: SidebarAddModelType) => {
         onChange()
         reset()
         toggle()
-        onSuccess("Registration completed successfully");
+        onSuccess('Registration completed successfully')
       } else {
-        setOpenNotification(true);
-        setTypeMessage("error");
+        setOpenNotification(true)
+        setTypeMessage('error')
         setMessage(result.description)
       }
     } else {
-      modelService.updateModel({ ...sendData, id }, id).then(rep => {
-        setSend(false)
-        if (rep) {
-          onChange()
-          reset()
-          toggle()
-          onSuccess("Change completed successfully");
-        } else {
-          setOpenNotification(true);
-          setTypeMessage("error");
+      modelService
+        .updateModel({ ...sendData, id }, id)
+        .then(rep => {
+          setSend(false)
+          if (rep) {
+            onChange()
+            reset()
+            toggle()
+            onSuccess('Change completed successfully')
+          } else {
+            setOpenNotification(true)
+            setTypeMessage('error')
+            infoTranslate = t('An error has occurred')
+            setMessage(infoTranslate)
+          }
+        })
+        .catch(error => {
+          setSend(false)
+          console.error('Erreur lors de la mise à jour :', error)
+          setOpenNotification(true)
+          setTypeMessage('error')
           infoTranslate = t('An error has occurred')
           setMessage(infoTranslate)
-        }
-      }).catch(error => {
-        setSend(false)
-        console.error("Erreur lors de la mise à jour :", error);
-        setOpenNotification(true);
-        setTypeMessage("error");
-        infoTranslate = t('An error has occurred')
-        setMessage(infoTranslate)
-      })
+        })
     }
   }
 
@@ -150,7 +159,7 @@ const SidebarAddModel = (props: SidebarAddModelType) => {
   useEffect(() => {
     reset({
       name: currentModel !== null ? currentModel?.name : '',
-      description: currentModel !== null ? currentModel?.description : '',
+      description: currentModel !== null ? currentModel?.description : ''
     })
     setId(currentModel !== null ? currentModel?.id : -1)
   }, [open, currentModel])
@@ -220,22 +229,22 @@ const SidebarAddModel = (props: SidebarAddModelType) => {
             <Button variant='outlined' sx={{ mr: 3 }} color='secondary' onClick={handleClose}>
               {t('Cancel')}
             </Button>
-            <LoadingButton
-              type='submit'
-              loading={send}
-              endIcon={<SaveIcon />}
-              variant="contained"
-            >
+            <LoadingButton type='submit' loading={send} endIcon={<SaveIcon />} variant='contained'>
               {t('Submit')}
             </LoadingButton>
           </Box>
         </form>
 
-        <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} open={openNotification} onClose={handleCloseNotification} autoHideDuration={5000}>
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          open={openNotification}
+          onClose={handleCloseNotification}
+          autoHideDuration={5000}
+        >
           <Alert
             onClose={handleCloseNotification}
             severity={typeMessage as AlertColor}
-            variant="filled"
+            variant='filled'
             sx={{ width: '100%' }}
           >
             {message}

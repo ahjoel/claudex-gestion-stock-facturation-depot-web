@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Drawer from '@mui/material/Drawer'
 import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
@@ -13,7 +14,7 @@ import Icon from 'src/@core/components/icon'
 import { t } from 'i18next'
 import { useEffect, useState } from 'react'
 import { LoadingButton } from '@mui/lab'
-import SaveIcon from '@mui/icons-material/Save';
+import SaveIcon from '@mui/icons-material/Save'
 import { MenuItem, TextField } from '@mui/material'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import UserService from 'src/gestion-bars/logic/services/UserService'
@@ -85,7 +86,7 @@ const schema = yup.object().shape({
   zone: yup.string().required(() => 'Le champ zone est obligatoire'),
   email: yup.string().required(() => 'Le champ email est obligatoire'),
   password: yup.string().required(() => 'Le champ password est obligatoire'),
-  profile: yup.string().required(() => 'Le champ profil est obligatoire'),
+  profile: yup.string().required(() => 'Le champ profil est obligatoire')
 })
 
 const defaultValues = {
@@ -95,7 +96,7 @@ const defaultValues = {
   zone: '',
   email: '',
   profile: '',
-  password: '',
+  password: ''
 }
 
 const SidebarAddUser = (props: SidebarAddUser) => {
@@ -106,20 +107,25 @@ const SidebarAddUser = (props: SidebarAddUser) => {
   let infoTranslate
 
   // Notification
-  const [openNotification, setOpenNotification] = useState<boolean>(false);
-  const [typeMessage, setTypeMessage] = useState("info");
-  const [message, setMessage] = useState("");
+  const [openNotification, setOpenNotification] = useState<boolean>(false)
+  const [typeMessage, setTypeMessage] = useState('info')
+  const [message, setMessage] = useState('')
 
   const handleCloseNotification = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
-      setOpenNotification(false);
+      setOpenNotification(false)
     }
-    setOpenNotification(false);
-  };
+    setOpenNotification(false)
+  }
 
   // Control Forms
   const [id, setId] = useState<number>(-1)
-  const { reset, control, handleSubmit, formState: { errors } } = useForm({ defaultValues, mode: 'onChange', resolver: yupResolver(schema) })
+  const {
+    reset,
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({ defaultValues, mode: 'onChange', resolver: yupResolver(schema) })
 
   const onSubmit = async (data: UserData) => {
     const userService = new UserService()
@@ -132,7 +138,7 @@ const SidebarAddUser = (props: SidebarAddUser) => {
       email: data.email,
       zone: data.zone,
       profile: data.profile,
-      password: data.password,
+      password: data.password
     }
 
     if (id === -1) {
@@ -143,34 +149,37 @@ const SidebarAddUser = (props: SidebarAddUser) => {
         handleChange()
         reset()
         toggle()
-        onSuccess("Registration completed successfully");
+        onSuccess('Registration completed successfully')
       } else {
-        setOpenNotification(true);
-        setTypeMessage("error");
+        setOpenNotification(true)
+        setTypeMessage('error')
         setMessage(result.description)
       }
     } else {
-      userService.updateUser({ ...sendData, id }, id).then(rep => {
-        setSend(false)
-        if (rep) {
-          handleChange()
-          reset()
-          toggle()
-          onSuccess("Change completed successfully");
-        } else {
-          setOpenNotification(true);
-          setTypeMessage("error");
+      userService
+        .updateUser({ ...sendData, id }, id)
+        .then(rep => {
+          setSend(false)
+          if (rep) {
+            handleChange()
+            reset()
+            toggle()
+            onSuccess('Change completed successfully')
+          } else {
+            setOpenNotification(true)
+            setTypeMessage('error')
+            infoTranslate = t('An error has occurred')
+            setMessage(infoTranslate)
+          }
+        })
+        .catch(error => {
+          setSend(false)
+          console.error('Erreur lors de la mise à jour :', error)
+          setOpenNotification(true)
+          setTypeMessage('error')
           infoTranslate = t('An error has occurred')
           setMessage(infoTranslate)
-        }
-      }).catch(error => {
-        setSend(false)
-        console.error("Erreur lors de la mise à jour :", error);
-        setOpenNotification(true);
-        setTypeMessage("error");
-        infoTranslate = t('An error has occurred')
-        setMessage(infoTranslate)
-      })
+        })
     }
   }
 
@@ -202,7 +211,7 @@ const SidebarAddUser = (props: SidebarAddUser) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
     >
       <Header>
-        <Typography variant='h6'>{id === -1 ? 'Ajout d\'utilisateur' : 'Modification d\'utilisateur'}</Typography>
+        <Typography variant='h6'>{id === -1 ? "Ajout d'utilisateur" : "Modification d'utilisateur"}</Typography>
         <IconButton
           size='small'
           onClick={handleClose}
@@ -322,10 +331,10 @@ const SidebarAddUser = (props: SidebarAddUser) => {
                 {...(errors.zone && { helperText: errors.zone.message })}
                 SelectProps={{ value: value, onChange: e => onChange(e) }}
               >
-                <MenuItem value={""}>Selectionnez un fournisseur</MenuItem>
-                <MenuItem value={"R1-RC"}>R1-RC</MenuItem>
-                <MenuItem value={"R1"}>R1</MenuItem>
-                <MenuItem value={"RC"}>RC</MenuItem>
+                <MenuItem value={''}>Selectionnez un fournisseur</MenuItem>
+                <MenuItem value={'R1-RC'}>R1-RC</MenuItem>
+                <MenuItem value={'R1'}>R1</MenuItem>
+                <MenuItem value={'RC'}>RC</MenuItem>
               </CustomTextField>
             )}
           />
@@ -350,22 +359,22 @@ const SidebarAddUser = (props: SidebarAddUser) => {
             <Button variant='outlined' sx={{ mr: 3 }} color='secondary' onClick={handleClose}>
               {t('Cancel')}
             </Button>
-            <LoadingButton
-              type='submit'
-              loading={send}
-              endIcon={<SaveIcon />}
-              variant="contained"
-            >
+            <LoadingButton type='submit' loading={send} endIcon={<SaveIcon />} variant='contained'>
               {t('Submit')}
             </LoadingButton>
           </Box>
         </form>
 
-        <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} open={openNotification} onClose={handleCloseNotification} autoHideDuration={5000}>
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          open={openNotification}
+          onClose={handleCloseNotification}
+          autoHideDuration={5000}
+        >
           <Alert
             onClose={handleCloseNotification}
             severity={typeMessage as AlertColor}
-            variant="filled"
+            variant='filled'
             sx={{ width: '100%' }}
           >
             {message}
