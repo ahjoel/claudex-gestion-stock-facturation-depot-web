@@ -54,7 +54,8 @@ interface Styles {
 const styles: Styles = {
   '*': {
     fontSize: '10px',
-    fontFamily: 'Times New Roman'
+    fontFamily: 'Times New Roman',
+    color: 'black'
   },
   'td, th, tr, table': {
     borderTop: '1px solid black',
@@ -339,7 +340,9 @@ const FactureList = () => {
                   noWrap
                   sx={{
                     fontWeight: 500,
-                    textDecoration: 'none'
+                    textDecoration: 'none',
+                    whiteSpace: 'normal',
+                    textAlign: 'left'
                   }}
                 >
                   {code}
@@ -377,7 +380,9 @@ const FactureList = () => {
                   noWrap
                   sx={{
                     fontWeight: 500,
-                    textDecoration: 'none'
+                    textDecoration: 'none',
+                    whiteSpace: 'normal',
+                    textAlign: 'left'
                   }}
                 >
                   {createdAt.slice(0, -5).replace(/T/g, ' ')}
@@ -416,7 +421,9 @@ const FactureList = () => {
                   sx={{
                     fontWeight: 500,
                     textDecoration: 'none',
-                    color: 'primary.main'
+                    color: 'primary.main',
+                    whiteSpace: 'normal',
+                    textAlign: 'left'
                   }}
                 >
                   {client.toString()}
@@ -597,7 +604,7 @@ const FactureList = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Statut
+              Stock
             </Typography>
           </Tooltip>
         ),
@@ -1259,7 +1266,7 @@ const FactureList = () => {
             }
           }}
         >
-          <DialogContent>
+          <DialogContent sx={{ color: 'black' }}>
             <div className='ticket' style={styles['.ticket']}>
               {/* <img src='./logo.png' alt='Logo' style={styles.img} /> */}
               <p className='centered' style={styles['.centered']}>
