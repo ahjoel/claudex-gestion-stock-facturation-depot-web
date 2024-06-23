@@ -943,8 +943,10 @@ const FactureList = () => {
             </Box>
           )
         }
-      },
-      {
+      }
+    ]
+    if (etatFacture === 'impayée') {
+      colArray.push({
         flex: 0.1,
         minWidth: 50,
         sortable: false,
@@ -975,28 +977,30 @@ const FactureList = () => {
                 }}
               >
                 {/* <Box sx={{ display: 'flex', color: theme => theme.palette.success.main }}>
-                  <Icon icon='tabler:edit' />
-                </Box> */}
+                    <Icon icon='tabler:edit' />
+                  </Box> */}
               </IconButton>
             </Tooltip>
 
-            <Tooltip title='Supprimer'>
-              <IconButton
-                size='small'
-                sx={{ color: 'text.primary' }}
-                onClick={() => {
-                  handleDeleteProduitFacture(row)
-                }}
-              >
-                <Box sx={{ display: 'flex', color: theme => theme.palette.error.main }}>
-                  <Icon icon='tabler:trash' />
-                </Box>
-              </IconButton>
-            </Tooltip>
+            {etatFacture === 'impayée' && (
+              <Tooltip title='Supprimer'>
+                <IconButton
+                  size='small'
+                  sx={{ color: 'text.primary' }}
+                  onClick={() => {
+                    handleDeleteProduitFacture(row)
+                  }}
+                >
+                  <Box sx={{ display: 'flex', color: theme => theme.palette.error.main }}>
+                    <Icon icon='tabler:trash' />
+                  </Box>
+                </IconButton>
+              </Tooltip>
+            )}
           </Box>
         )
-      }
-    ]
+      })
+    }
 
     return colArray
   }
