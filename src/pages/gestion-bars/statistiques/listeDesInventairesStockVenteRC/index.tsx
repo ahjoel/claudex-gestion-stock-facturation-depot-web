@@ -507,7 +507,7 @@ const listeDesInventairesStockVenteRC = () => {
                     onClick={() => {
                       setStartDate(null)
                       setEndDate(null)
-                      getListDatas('', '')
+                      getListDatas('null', 'null')
                     }}
                   >
                     <AutorenewIcon />

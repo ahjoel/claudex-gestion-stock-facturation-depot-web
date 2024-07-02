@@ -332,7 +332,6 @@ const SidebarAddUser = (props: SidebarAddUser) => {
                 SelectProps={{ value: value, onChange: e => onChange(e) }}
               >
                 <MenuItem value={''}>Selectionnez un fournisseur</MenuItem>
-                <MenuItem value={'R1-RC'}>R1-RC</MenuItem>
                 <MenuItem value={'R1'}>R1</MenuItem>
                 <MenuItem value={'RC'}>RC</MenuItem>
               </CustomTextField>

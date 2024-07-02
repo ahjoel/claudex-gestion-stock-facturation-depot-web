@@ -395,7 +395,7 @@ const listeDesStatsParProducteursRC = () => {
                     onClick={() => {
                       setStartDate(null)
                       setEndDate(null)
-                      getListDatas('', '')
+                      getListDatas('null', 'null')
                     }}
                   >
                     <AutorenewIcon />
