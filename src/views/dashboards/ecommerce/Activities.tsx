@@ -7,7 +7,7 @@ import CardHeader from '@mui/material/CardHeader'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import axios from 'src/configs/axios-config'
-import { getHeadersInformation } from 'src/gestion-bars/logic/utils/constant'
+import { getHeadersInformation } from 'src/gestion-depot/logic/utils/constant'
 import { t } from 'i18next'
 
 // ** Icon Imports

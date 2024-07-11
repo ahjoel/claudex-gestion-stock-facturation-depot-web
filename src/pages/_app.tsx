@@ -121,12 +121,12 @@ const App = (props: ExtendedAppProps) => {
     <Provider store={store}>
       <CacheProvider value={emotionCache}>
         <Head>
-          <title>{`${themeConfig.templateName} - Logiciel web de gestion de stock et facturation de bars`}</title>
+          <title>{`${themeConfig.templateName} - Logiciel web de gestion de stock et facturation de depot de boissons`}</title>
           <meta
             name='description'
-            content={`${themeConfig.templateName} – est un logiciel web de gestion de stock et facturation d'un bar avec impression reçu aux clients.`}
+            content={`${themeConfig.templateName} – est un logiciel web de gestion de stock et facturation de dépot de boisson avec impression de reçu aux clients.`}
           />
-          <meta name='keywords' content='Plateforme de gestion de stock Design, MUI, Admin Template, React Admin Template' />
+          <meta name='keywords' content='Plateforme de gestion de stock de dépot de boisson' />
           <meta name='viewport' content='initial-scale=1, width=device-width' />
         </Head>
 

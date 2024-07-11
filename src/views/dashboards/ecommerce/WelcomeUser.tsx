@@ -39,15 +39,15 @@ const WelcomeUser = () => {
         <Typography sx={{ mb: 1, color: 'text.secondary' }}>{t('Commencez à consulter...')}</Typography>
         <br />
         {profile === 'FACTURIER-R1' ? (
-          <Button variant='contained' onClick={() => router.push('/gestion-bars/stockDispoR1/list')}>
+          <Button variant='contained' onClick={() => router.push('/gestion-depot/stockDispoR1/list')}>
             {t('Stock R1 Disponible')}
           </Button>
         ) : profile === 'FACTURIER-RC' ? (
-          <Button variant='contained' onClick={() => router.push('/gestion-bars/rc/stockDispoRC/list')}>
+          <Button variant='contained' onClick={() => router.push('/gestion-depot/rc/stockDispoRC/list')}>
             {t('Stock RC Disponible')}
           </Button>
         ) : (
-          <Button variant='contained' onClick={() => router.push('/gestion-bars/factures/list')}>
+          <Button variant='contained' onClick={() => router.push('/gestion-depot/factures/list')}>
             {t('Liste des factures')}
           </Button>
         )}

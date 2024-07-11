@@ -16,91 +16,162 @@ const navigation = (): VerticalNavItemsType => {
   const Dashboard = {
     title: 'Dashboards',
     icon: 'tabler:smart-home',
-    path: '/gestion-bars/dashboard'
+    path: '/gestion-depot/dashboard'
   }
 
+  const Configuration = {
+    title: 'Configuration',
+    icon: 'tabler:affiliate',
+    children: [
+      {
+        title: `Liste des models`,
+        path: '/gestion-depot/models/list'
+      },
+      {
+        title: `Liste des clients`,
+        path: '/gestion-depot/clients/list'
+      },
+      {
+        title: `Liste des fournisseurs`,
+        path: '/gestion-depot/fournisseurs/list'
+      },
+      {
+        title: `Liste des produits`,
+        path: '/gestion-depot/produits/list'
+      }
+    ]
+  }
+
+  const Stock = {
+    title: 'Stock',
+    icon: 'tabler:affiliate',
+    children: [
+      {
+        title: `Stock Entree`,
+        path: '/gestion-depot/entreeR1/list'
+      },
+      {
+        title: `Stock Disponible`,
+        path: '/gestion-depot/stockDispoR1'
+      }
+    ]
+  }
   const Model = {
     title: 'Liste des models',
     icon: 'tabler:affiliate',
-    path: '/gestion-bars/models/list'
+    path: '/gestion-depot/models/list'
   }
 
   const Client = {
     title: 'Liste des clients',
     icon: 'tabler:affiliate',
-    path: '/gestion-bars/clients/list'
+    path: '/gestion-depot/clients/list'
   }
 
   const Fournisseur = {
     title: 'Liste des fournisseurs',
     icon: 'tabler:affiliate',
-    path: '/gestion-bars/fournisseurs/list'
+    path: '/gestion-depot/fournisseurs/list'
   }
 
   const Produit = {
-    title: 'Liste des produits - R1',
+    title: 'Liste des produits',
     icon: 'tabler:affiliate',
-    path: '/gestion-bars/produits/list'
+    path: '/gestion-depot/produits/list'
   }
 
   const ProduitRc = {
     title: 'Liste des produits - RC',
     icon: 'tabler:affiliate',
-    path: '/gestion-bars/rc/produitsrc/list'
+    path: '/gestion-depot/rc/produitsrc/list'
   }
 
-  const StockEntreeR1 = {
-    title: 'Stock Entree - R1',
+  const StockEntree = {
+    title: 'Stock Entree',
     icon: 'tabler:affiliate',
-    path: '/gestion-bars/entreeR1/list'
+    path: '/gestion-depot/entreeR1/list'
   }
 
   const StockEntreeR1Dispo = {
-    title: 'Stock Disponible - R1',
+    title: 'Stock Disponible',
     icon: 'tabler:affiliate',
-    path: '/gestion-bars/stockDispoR1'
+    path: '/gestion-depot/stockDispoR1'
   }
 
-  const FactureEnCours = {
-    title: `Facture en cours - R1`,
+  const Facturation = {
+    title: 'Facturation',
     icon: 'tabler:affiliate',
-    path: '/gestion-bars/factureEnCours'
+    children: [
+      {
+        title: `Facture en cours`,
+        path: '/gestion-depot/factureEnCours'
+      },
+      {
+        title: `Liste factures`,
+        path: '/gestion-depot/factures/list'
+      }
+    ]
   }
+  // const FactureEnCours = {
+  //   title: `Facture en cours`,
+  //   icon: 'tabler:affiliate',
+  //   path: '/gestion-depot/factureEnCours'
+  // }
 
-  const Factures = {
-    title: `Liste des factures`,
-    icon: 'tabler:affiliate',
-    path: '/gestion-bars/factures/list'
-  }
+  // const Factures = {
+  //   title: `Liste des factures`,
+  //   icon: 'tabler:affiliate',
+  //   path: '/gestion-depot/factures/list'
+  // }
 
   const Reglements = {
-    title: `Règlements`,
+    title: 'Règlements',
     icon: 'tabler:affiliate',
-    path: '/gestion-bars/reglements/list'
+    children: [
+      {
+        title: `Liste Règlements`,
+        path: '/gestion-depot/reglements/list'
+      },
+      {
+        title: `Situation Règlements`,
+        path: '/gestion-depot/reglements/situation'
+      }
+    ]
   }
+  // const Reglements = {
+  //   title: `Liste des Règlements`,
+  //   icon: 'tabler:affiliate',
+  //   path: '/gestion-depot/reglements/list'
+  // }
+
+  // const Situation = {
+  //   title: `Situation des Règlements`,
+  //   icon: 'tabler:affiliate',
+  //   path: '/gestion-depot/reglements/situation'
+  // }
 
   const StockEntreeRC = {
     title: 'Stock Entree - RC',
     icon: 'tabler:affiliate',
-    path: '/gestion-bars/rc/entreeRC/list'
+    path: '/gestion-depot/rc/entreeRC/list'
   }
 
   const StockEntreeRCDispo = {
     title: 'Stock Disponible - RC',
     icon: 'tabler:affiliate',
-    path: '/gestion-bars/rc/stockDispoRC'
+    path: '/gestion-depot/rc/stockDispoRC'
   }
 
   const FactureEnCoursrc = {
     title: `Facture en cours - RC`,
     icon: 'tabler:affiliate',
-    path: '/gestion-bars/rc/factureEnCours'
+    path: '/gestion-depot/rc/factureEnCours'
   }
 
   const Facturesrc = {
     title: `Liste des factures - RC`,
     icon: 'tabler:affiliate',
-    path: '/gestion-bars/rc/factures/list'
+    path: '/gestion-depot/rc/factures/list'
   }
 
   const SeparatorR1 = {
@@ -124,39 +195,39 @@ const navigation = (): VerticalNavItemsType => {
     children: [
       {
         title: 'Statistique des ventes',
-        path: '/gestion-bars/statistiques/listeDesVentes/'
+        path: '/gestion-depot/statistiques/listeDesVentes/'
       },
       {
         title: 'Liste des produits',
-        path: '/gestion-bars/statistiques/listeDesProduits/'
+        path: '/gestion-depot/statistiques/listeDesProduits/'
       },
       {
         title: 'Caisse mensuelle',
-        path: '/gestion-bars/statistiques/listeCaisseMensuelle'
+        path: '/gestion-depot/statistiques/listeCaisseMensuelle'
       },
       {
         title: 'Stat Producteurs - R1',
-        path: '/gestion-bars/statistiques/listeDesStatsParProducteursR1/'
+        path: '/gestion-depot/statistiques/listeDesStatsParProducteursR1/'
       },
       {
         title: 'Stat Producteurs - RC',
-        path: '/gestion-bars/statistiques/listeDesStatsParProducteursRC/'
+        path: '/gestion-depot/statistiques/listeDesStatsParProducteursRC/'
       },
       {
         title: 'Archivage facture - R1',
-        path: '/gestion-bars/statistiques/listeDesArchivesFactureR1/'
+        path: '/gestion-depot/statistiques/listeDesArchivesFactureR1/'
       },
       {
         title: 'Archivage facture - RC',
-        path: '/gestion-bars/statistiques/listeDesArchivesFactureRC/'
+        path: '/gestion-depot/statistiques/listeDesArchivesFactureRC/'
       },
       {
         title: 'Invent. stock vente - R1',
-        path: '/gestion-bars/statistiques/listeDesInventairesStockVenteR1/'
+        path: '/gestion-depot/statistiques/listeDesInventairesStockVenteR1/'
       },
       {
         title: 'Invent. stock vente - RC',
-        path: '/gestion-bars/statistiques/listeDesInventairesStockVenteRC/'
+        path: '/gestion-depot/statistiques/listeDesInventairesStockVenteRC/'
       }
     ]
   }
@@ -164,30 +235,29 @@ const navigation = (): VerticalNavItemsType => {
   const Users = {
     title: `Liste des utilisateurs`,
     icon: 'tabler:affiliate',
-    path: '/gestion-bars/users/list'
+    path: '/gestion-depot/users/list'
   }
 
   const navArray: any = [Dashboard, {}]
 
   // SUPER-ADMIN
-  godMode && navArray.push(Model)
-  godMode && navArray.push(Fournisseur)
-  godMode && navArray.push(Client)
+  godMode && navArray.push(Configuration)
+  // godMode && navArray.push(Fournisseur)
+  // godMode && navArray.push(Client)
+  // godMode && navArray.push(Produit)
 
-  godMode && navArray.push(SeparatorR1)
-  godMode && navArray.push(Produit)
-  godMode && navArray.push(StockEntreeR1)
-  godMode && navArray.push(StockEntreeR1Dispo)
-  godMode && navArray.push(FactureEnCours)
+  godMode && navArray.push(Stock)
+  // godMode && navArray.push(StockEntreeR1Dispo)
+  godMode && navArray.push(Facturation)
 
-  godMode && navArray.push(SeparatorRC)
-  godMode && navArray.push(ProduitRc)
-  godMode && navArray.push(StockEntreeRC)
-  godMode && navArray.push(StockEntreeRCDispo)
-  godMode && navArray.push(FactureEnCoursrc)
+  // godMode && navArray.push(SeparatorRC)
+  // godMode && navArray.push(ProduitRc)
+  // godMode && navArray.push(StockEntreeRC)
+  // godMode && navArray.push(StockEntreeRCDispo)
+  // godMode && navArray.push(FactureEnCoursrc)
 
-  godMode && navArray.push(Separator)
-  godMode && navArray.push(Factures)
+  // godMode && navArray.push(Separator)
+  // godMode && navArray.push(Factures)
   godMode && navArray.push(Reglements)
   godMode && navArray.push(Users)
 
@@ -201,9 +271,9 @@ const navigation = (): VerticalNavItemsType => {
 
   gerantMode && navArray.push(SeparatorR1)
   gerantMode && navArray.push(Produit)
-  gerantMode && navArray.push(StockEntreeR1)
+  gerantMode && navArray.push(StockEntree)
   gerantMode && navArray.push(StockEntreeR1Dispo)
-  gerantMode && navArray.push(FactureEnCours)
+  gerantMode && navArray.push(Facturation)
 
   gerantMode && navArray.push(SeparatorRC)
   gerantMode && navArray.push(ProduitRc)
@@ -212,7 +282,7 @@ const navigation = (): VerticalNavItemsType => {
   gerantMode && navArray.push(FactureEnCoursrc)
 
   gerantMode && navArray.push(Separator)
-  gerantMode && navArray.push(Factures)
+  // gerantMode && navArray.push(Factures)
   gerantMode && navArray.push(Reglements)
 
   gerantMode && navArray.push(Separator)
@@ -228,9 +298,9 @@ const navigation = (): VerticalNavItemsType => {
 
   adminMode && navArray.push(Separator)
   adminMode && navArray.push(Produit)
-  adminMode && navArray.push(StockEntreeR1)
+  adminMode && navArray.push(StockEntree)
   adminMode && navArray.push(StockEntreeR1Dispo)
-  adminMode && navArray.push(FactureEnCours)
+  adminMode && navArray.push(Facturation)
 
   adminMode && navArray.push(Separator)
   adminMode && navArray.push(ProduitRc)
@@ -239,7 +309,7 @@ const navigation = (): VerticalNavItemsType => {
   adminMode && navArray.push(FactureEnCoursrc)
 
   adminMode && navArray.push(Separator)
-  adminMode && navArray.push(Factures)
+  // adminMode && navArray.push(Factures)
   adminMode && navArray.push(Reglements)
 
   // adminMode && navArray.push(Facturesrc)
@@ -252,8 +322,8 @@ const navigation = (): VerticalNavItemsType => {
 
   // FACTURIER-R1
   facturierR1Mode && navArray.push(StockEntreeR1Dispo)
-  facturierR1Mode && navArray.push(FactureEnCours)
-  facturierR1Mode && navArray.push(Factures)
+  facturierR1Mode && navArray.push(Facturation)
+  // facturierR1Mode && navArray.push(Factures)
   facturierR1Mode && navArray.push(Statistiques)
 
   // FACTURIER-RC

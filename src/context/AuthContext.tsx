@@ -101,7 +101,7 @@ const AuthProvider = ({ children }: Props) => {
           setUser({ ...userData })
 
           // const returnUrl = router.query.returnUrl
-          // const URL = '/gestion-bars/dashboard'
+          // const URL = '/gestion-depot/dashboard'
 
 
           const returnUrl = router.query.returnUrl

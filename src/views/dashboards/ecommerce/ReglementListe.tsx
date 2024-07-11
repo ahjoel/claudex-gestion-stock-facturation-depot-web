@@ -24,8 +24,8 @@ import {
 } from '@mui/material'
 import AutorenewIcon from '@mui/icons-material/Autorenew'
 import Icon from 'src/@core/components/icon'
-import Reglement from 'src/gestion-bars/logic/models/Reglement'
-import ReglementService from 'src/gestion-bars/logic/services/ReglementService'
+import Reglement from 'src/gestion-depot/logic/models/Reglement'
+import ReglementService from 'src/gestion-depot/logic/services/ReglementService'
 import { LoadingButton } from '@mui/lab'
 
 interface CellType {
