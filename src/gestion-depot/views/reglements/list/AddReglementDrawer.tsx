@@ -237,14 +237,14 @@ const SidebarAddReglement = (props: SidebarAddReglementType) => {
   };
 
   const handleClose = () => {
-    toggle();
-    reset();
     setClient("");
     setMontantAPayer("");
     setMontantDejaPayer("");
     setMontantRestant("");
     setAuteur("");
     setDateCreat("");
+    toggle();
+    reset();
   };
 
   useEffect(() => {
@@ -264,7 +264,13 @@ const SidebarAddReglement = (props: SidebarAddReglementType) => {
     });
     currentReglement !== null
       ? handleLoadingFactureInfo(Number(currentReglement?.factureId))
-      : "";
+      : 
+        setMontantAPayer("");
+        setMontantDejaPayer("");
+        setMontantRestant("");
+        setAuteur("");
+        setDateCreat("")
+      ;
     setId(currentReglement !== null ? currentReglement?.id : -1);
   }, [open, currentReglement]);
 
@@ -273,7 +279,13 @@ const SidebarAddReglement = (props: SidebarAddReglementType) => {
       open={open}
       anchor="right"
       variant="temporary"
-      onClose={handleClose}
+      disableEscapeKeyDown
+      onClose={(event, reason) => {
+        if (reason !== 'backdropClick') {
+          handleClose();
+        }
+      }}
+
       ModalProps={{ keepMounted: true }}
       sx={{ "& .MuiDrawer-paper": { width: { xs: 300, sm: 400 } } }}
     >
@@ -284,7 +296,9 @@ const SidebarAddReglement = (props: SidebarAddReglementType) => {
         </Typography>
         <IconButton
           size="small"
-          onClick={handleClose}
+          onClick={()=>{
+            handleClose();
+          }}
           sx={{
             p: "0.438rem",
             borderRadius: 1,
@@ -431,7 +445,9 @@ const SidebarAddReglement = (props: SidebarAddReglementType) => {
               variant="outlined"
               sx={{ mr: 3 }}
               color="secondary"
-              onClick={handleClose}
+              onClick={()=>{
+                handleClose()
+              }}
             >
               {t("Cancel")}
             </Button>

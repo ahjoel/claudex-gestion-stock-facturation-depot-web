@@ -29,7 +29,7 @@ import ModelService from 'src/gestion-depot/logic/services/ModelService'
 import FournisseurService from 'src/gestion-depot/logic/services/FournisseurService'
 
 // import PdfDocument from 'src/gestion-depot/views/pdfMake/PdfDocument'
-import TemplateListeDesProduits2 from 'src/gestion-depot/views/pdfMake/TemplateListeDesProduits2'
+// import TemplateListeDesProduits2 from 'src/gestion-depot/views/pdfMake/TemplateListeDesProduits2'
 
 interface CellType {
   row: Produit
@@ -38,29 +38,6 @@ interface CellType {
 interface ColumnType {
   [key: string]: any
 }
-
-const sampleData = [
-  { designation: 'LAGER-C24', qte: '1,0', pu: '15 000', montant: '15 000,0' },
-  { designation: 'EKU-C12', qte: '1,0', pu: '6 000', montant: '6 000,0' },
-  { designation: 'DFSEE-C24', qte: '1,0', pu: '15 000', montant: '15 000,0' },
-  { designation: 'P01-C24', qte: '1,0', pu: '10 000', montant: '10 000,0' },
-  { designation: 'LAGER-C24', qte: '1,0', pu: '15 000', montant: '15 000,0' },
-  { designation: 'EKU-C12', qte: '1,0', pu: '6 000', montant: '6 000,0' },
-  { designation: 'DFSEE-C24', qte: '1,0', pu: '15 000', montant: '15 000,0' },
-  { designation: 'P01-C24', qte: '1,0', pu: '10 000', montant: '10 000,0' },
-  { designation: 'LAGER-C24', qte: '1,0', pu: '15 000', montant: '15 000,0' },
-  { designation: 'EKU-C12', qte: '1,0', pu: '6 000', montant: '6 000,0' },
-  { designation: 'DFSEE-C24', qte: '1,0', pu: '15 000', montant: '15 000,0' },
-  { designation: 'P01-C24', qte: '1,0', pu: '10 000', montant: '10 000,0' },
-  { designation: 'LAGER-C24', qte: '1,0', pu: '15 000', montant: '15 000,0' },
-  { designation: 'EKU-C12', qte: '1,0', pu: '6 000', montant: '6 000,0' },
-  { designation: 'DFSEE-C24', qte: '1,0', pu: '15 000', montant: '15 000,0' },
-  { designation: 'P01-C24', qte: '1,0', pu: '10 000', montant: '10 000,0' },
-  { designation: 'LAGER-C24', qte: '1,0', pu: '15 000', montant: '15 000,0' },
-  { designation: 'EKU-C12', qte: '1,0', pu: '6 000', montant: '6 000,0' },
-  { designation: 'DFSEE-C24', qte: '1,0', pu: '15 000', montant: '15 000,0' },
-  { designation: 'P01-C24', qte: '1,0', pu: '10 000', montant: '10 000,0' }
-]
 
 const ProduitList = () => {
   const produitService = new ProduitService()
@@ -584,9 +561,9 @@ const ProduitList = () => {
               handleDownload()
             }}
           />
-          {downloadCount > 0 && (
+          {/* {downloadCount > 0 && (
             <TemplateListeDesProduits2 data={sampleData as never[]} fileName={`Liste_des_produits_${downloadCount}`} />
-          )}
+          )} */}
 
           <DataGrid
             autoHeight

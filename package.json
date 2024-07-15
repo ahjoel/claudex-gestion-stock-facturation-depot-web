@@ -45,6 +45,7 @@
     "cleave.js": "1.6.0",
     "clipboard-copy": "4.0.1",
     "clsx": "1.2.1",
+    "convertir-nombre-lettre": "^1.0.2",
     "crypto-js": "^4.2.0",
     "date-fns": "2.30.0",
     "dayjs": "^1.11.11",

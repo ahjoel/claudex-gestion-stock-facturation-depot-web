@@ -17,6 +17,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import Snackbar from "@mui/material/Snackbar";
 import Alert, { AlertColor } from "@mui/material/Alert";
 import Icon from "src/@core/components/icon";
+import { CircularProgress } from "@mui/material";
 import { t } from "i18next";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { LoadingButton } from "@mui/lab";
@@ -27,6 +28,8 @@ import AddReglementDrawer from "src/gestion-depot/views/reglements/list/AddRegle
 import FactureService from "src/gestion-depot/logic/services/FactureService";
 import Facture from "src/gestion-depot/logic/models/Facture";
 import TableHeaderSituation from "src/gestion-depot/views/reglements/list/TableHeaderSituation";
+import TableHeaderReglement from "src/gestion-depot/views/reglements/list/TableHeaderReglement";
+import FactureDetail from "src/gestion-depot/logic/models/FactureDetail";
 
 interface CellType {
   row: Reglement;
@@ -36,13 +39,27 @@ interface ColumnType {
   [key: string]: any;
 }
 
+interface CellTypeFacture {
+  row: FactureDetail;
+}
+
 const SituationReglementList = () => {
   const reglementService = new ReglementService();
+  const factureService = new FactureService();
   const userData = JSON.parse(
     window.localStorage.getItem("userData") as string
   );
   const profile = userData?.profile;
 
+  const [statusFactureDetail, setStatusFactureDetail] = useState<boolean>(true);
+  const [facturesDetails, setFacturesDetails] = useState<FactureDetail[]>([]);
+  const [factureReceipt, setFactureReceipt] = useState<FactureDetail[]>([]);
+  const [columnsFacture, setColumnsFacture] = useState<ColumnType[]>([]);
+  const [paginationModelFacture, setPaginationModelFacture] = useState({
+    page: 0,
+    pageSize: 10,
+  });
+  
   // Delete Confirmation - State
   const [sendDelete, setSendDelete] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
@@ -114,8 +131,12 @@ const SituationReglementList = () => {
   const [statusReglements, setStatusReglements] = useState<boolean>(true);
 
   const [value, setValue] = useState<string>("");
+  const [valueDetFact, setValueDetFact] = useState<string>("");
   const [addReglementOpen, setAddReglementOpen] = useState<boolean>(false);
+  const [code, setCode] = useState<string>("");
   const [reglements, setReglements] = useState<Reglement[]>([]);
+  const [downloadCount, setDownloadCount] = useState(0);
+  const [openFacture, setOpenFacture] = useState(false);
   const [factures, setFactures] = useState<Facture[]>([]);
   const [columns, setColumns] = useState<ColumnType[]>([]);
   const [paginationModel, setPaginationModel] = useState({
@@ -128,6 +149,18 @@ const SituationReglementList = () => {
   const [currentReglement, setCurrentReglement] = useState<null | Reglement>(
     null
   );
+
+  const handleDownload = async () => {
+    setDownloadCount(downloadCount + 1);
+  };
+
+  const handleOpenModalFacture = (
+    arecode: string
+  ) => {
+    setCode(arecode);
+    setOpenFacture(true);
+    setDownloadCount(0);
+  };
 
   // Display of columns according to user roles in the Datagrid
   const getColumns = (
@@ -512,7 +545,7 @@ const SituationReglementList = () => {
                 size="small"
                 sx={{ color: "text.primary" }}
                 onClick={() => {
-                  handleUpdateReglement(row);
+                  handleOpenModalFacture(row.codeFacture);
                 }}
               >
                 <Box
@@ -521,39 +554,65 @@ const SituationReglementList = () => {
                     color: (theme) => theme.palette.success.main,
                   }}
                 >
-                  <Icon icon="tabler:edit" />
+                  <Icon icon="tabler:list" />
                 </Box>
               </IconButton>
             </Tooltip>
 
-            {(profile === "ADMINISTRATEUR" || profile === "SUPER-ADMIN") && (
-              <Tooltip title="Supprimer le règlement">
-                <IconButton
-                  size="small"
-                  sx={{ color: "text.primary" }}
-                  onClick={() => {
-                    {
-                      handleDeleteReglement(row);
-                    }
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      color: (theme) => theme.palette.info.main,
-                    }}
-                  >
-                    <Icon icon="tabler:trash" />
-                  </Box>
-                </IconButton>
-              </Tooltip>
-            )}
           </Box>
         ),
       },
     ];
 
     return colArray;
+  };
+
+  const getDetailsFacture = async () => {
+    setStatusFactureDetail(true);
+    const result = await factureService.listFactureDetail({
+      code: code || null,
+    });
+
+    if (result.success) {
+      setStatusFactureDetail(false);
+      const queryLowered = valueDetFact.toLowerCase();
+      const filteredData = (result.data as FactureDetail[]).filter((detail) => {
+        return (
+          detail.produit.toLowerCase().includes(queryLowered) ||
+          detail.modele.toLowerCase().includes(queryLowered) ||
+          detail.fournisseur.toLowerCase().includes(queryLowered) ||
+          detail.qte.toString().toLowerCase().includes(queryLowered) ||
+          detail.pv.toString().toLowerCase().includes(queryLowered)
+        );
+      });
+      setFacturesDetails(filteredData);
+      // Facture à Imprimer
+      setFactureReceipt(result.data as FactureDetail[]);
+
+      const dataFact = result.data as FactureDetail[];
+      // console.log('dataFact ::::', dataFact);
+      
+      const dateStr = dataFact[0]?.created_at;
+      const dateObj = new Date(dateStr);
+      const options: Intl.DateTimeFormatOptions = {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      };
+      const formattedDate = dateObj.toLocaleDateString('fr-FR', options);
+      // setDateFacture(formattedDate)
+      // setClientFact(dataFact[0]?.client)
+      // setAuteur(dataFact[0]?.username)
+      // setRemise(dataFact[0]?.remise)
+      // setStatusFactures(false);
+    } else {
+      setOpenNotification(true);
+      setTypeMessage("error");
+      setMessage(
+        "Une erreur est survenue lors du chargement des produits de facture"
+      );
+    }
   };
 
   // Axios call to loading Data
@@ -593,6 +652,308 @@ const SituationReglementList = () => {
     }
   };
 
+  const getColumnsFactureDetail = (
+  ) => {
+    const colArray: ColumnType[] = [
+      {
+        flex: 0.15,
+        field: "produit",
+        renderHeader: () => (
+          <Tooltip title="Produit">
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: "1px",
+                textTransform: "uppercase",
+                fontSize: "0.8125rem",
+              }}
+            >
+              Produit
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellTypeFacture) => {
+          const { produit } = row;
+
+          return (
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  flexDirection: "column",
+                }}
+              >
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: "none",
+                    color: "secondary.main",
+                  }}
+                >
+                  {produit}
+                </Typography>
+              </Box>
+            </Box>
+          );
+        },
+      },
+      {
+        flex: 0.15,
+        field: "modele",
+        renderHeader: () => (
+          <Tooltip title="Modèle">
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: "1px",
+                textTransform: "uppercase",
+                fontSize: "0.8125rem",
+              }}
+            >
+              Modèle
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellTypeFacture) => {
+          const { modele } = row;
+
+          return (
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  flexDirection: "column",
+                }}
+              >
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: "none",
+                    color: "secondary.main",
+                  }}
+                >
+                  {modele}
+                </Typography>
+              </Box>
+            </Box>
+          );
+        },
+      },
+      {
+        flex: 0.15,
+        field: "fournisseur",
+        renderHeader: () => (
+          <Tooltip title="Fournisseur">
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: "1px",
+                textTransform: "uppercase",
+                fontSize: "0.8125rem",
+              }}
+            >
+              Fournisseur
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellTypeFacture) => {
+          const { fournisseur } = row;
+
+          return (
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  flexDirection: "column",
+                }}
+              >
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: "none",
+                    color: "secondary.main",
+                  }}
+                >
+                  {fournisseur}
+                </Typography>
+              </Box>
+            </Box>
+          );
+        },
+      },
+      {
+        flex: 0.1,
+
+        // minWidth: 50,
+        field: "qte",
+        renderHeader: () => (
+          <Tooltip title="Quantité">
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: "1px",
+                textTransform: "uppercase",
+                fontSize: "0.8125rem",
+                whiteSpace: "normal",
+                textAlign: "left",
+              }}
+            >
+              Quantité
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellTypeFacture) => {
+          const { qte } = row;
+
+          return (
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  flexDirection: "column",
+                }}
+              >
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: "none",
+                    color: "secondary.main",
+                  }}
+                >
+                  {qte}
+                </Typography>
+              </Box>
+            </Box>
+          );
+        },
+      },
+      {
+        flex: 0.1,
+
+        // minWidth: 50,
+        field: "pv",
+        renderHeader: () => (
+          <Tooltip title="Prix de vente">
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: "1px",
+                textTransform: "uppercase",
+                fontSize: "0.8125rem",
+                whiteSpace: "normal",
+                textAlign: "left",
+              }}
+            >
+              Prix de vente
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellTypeFacture) => {
+          const { pv } = row;
+
+          return (
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  flexDirection: "column",
+                }}
+              >
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: "none",
+                    color: "secondary.main",
+                  }}
+                >
+                  {pv}
+                </Typography>
+              </Box>
+            </Box>
+          );
+        },
+      },
+    ];
+    // if (etatFacture === "impayée") {
+    // colArray.push({
+    //   flex: 0.1,
+    //   minWidth: 50,
+    //   sortable: false,
+    //   field: "action",
+    //   renderHeader: () => (
+    //     <Tooltip title={t("Action")}>
+    //       <Typography
+    //         noWrap
+    //         sx={{
+    //           fontWeight: 500,
+    //           letterSpacing: "1px",
+    //           textTransform: "uppercase",
+    //           fontSize: "0.8125rem",
+    //         }}
+    //       >
+    //         {t("Action")}
+    //       </Typography>
+    //     </Tooltip>
+    //   ),
+    //   renderCell: ({ row }: CellTypeFacture) => (
+    //     <Box sx={{ display: "flex", alignItems: "center" }}>
+    //       <Tooltip title="Mettre à jour un produit de facture">
+    //         <IconButton
+    //           size="small"
+    //           sx={{ color: "text.primary" }}
+    //           onClick={() => {
+    //             // handleUpdateProduitFacture(row)
+    //           }}
+    //         >
+    //           {/* <Box sx={{ display: 'flex', color: theme => theme.palette.success.main }}>
+    //                 <Icon icon='tabler:edit' />
+    //               </Box> */}
+    //         </IconButton>
+    //       </Tooltip>
+
+    //       {/* {etatFacture === "impayée" && ( */}
+    //       <Tooltip title="Supprimer">
+    //         <IconButton
+    //           size="small"
+    //           sx={{ color: "text.primary" }}
+    //           onClick={() => {
+    //             handleDeleteProduitFacture(row);
+    //           }}
+    //         >
+    //           <Box
+    //             sx={{
+    //               display: "flex",
+    //               color: (theme) => theme.palette.error.main,
+    //             }}
+    //           >
+    //             <Icon icon="tabler:trash" />
+    //           </Box>
+    //         </IconButton>
+    //       </Tooltip>
+    //       {/* )} */}
+    //     </Box>
+    //   ),
+    // });
+    // }
+
+    return colArray;
+  };
+
   const handleChange = async () => {
     getSituationReglements(0, 10);
   };
@@ -617,6 +978,12 @@ const SituationReglementList = () => {
     setColumns(getColumns(handleUpdateReglement));
   }, [value]);
 
+  useEffect(() => {
+    getDetailsFacture();
+    setColumnsFacture(getColumnsFactureDetail());
+  }, [code, valueDetFact]);
+
+
   const handleFilter = useCallback((val: string) => {
     setValue(val);
   }, []);
@@ -629,6 +996,10 @@ const SituationReglementList = () => {
     setCurrentReglement(null);
     toggleAddReglementDrawer();
   };
+
+  const handleFilterDet = useCallback((valFact: string) => {
+    setValueDetFact(valFact);
+  }, []);
 
   // Update Data
   const handleUpdateReglement = (reglement: Reglement) => {
@@ -682,6 +1053,87 @@ const SituationReglementList = () => {
         mtrecu={0}
         factureId={0}
       />
+
+      {/* Modal List of Detail Facture */}
+      <Dialog
+        fullWidth
+        open={openFacture}
+        maxWidth="md"
+        scroll="body"
+        onClose={() => {
+          setOpenFacture(false);
+        }}
+      >
+        <DialogContent
+          sx={{
+            position: "relative",
+            px: (theme) => [
+              `${theme.spacing(2)} !important`,
+              `${theme.spacing(6)} !important`,
+            ],
+            py: (theme) => [
+              `${theme.spacing(8)} !important`,
+              `${theme.spacing(10)} !important`,
+            ],
+          }}
+        >
+          <IconButton
+            size="small"
+            onClick={() => {
+              setOpenFacture(false);
+            }}
+            sx={{ position: "absolute", right: "1rem", top: "1rem" }}
+          >
+            <Icon icon="tabler:x" />
+          </IconButton>
+          <Box sx={{ mb: 0.5, textAlign: "center" }}>
+            <Typography variant="h4" sx={{ mb: 2 }}>
+              {"Liste des produits de la facture "} - {code}
+            </Typography>
+          </Box>
+
+          <TableHeaderReglement
+            value={valueDetFact}
+            onDownload={handleDownload}
+            handleFilterDetail={handleFilterDet}
+          />
+
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Box sx={{ height: 500, width: "100%" }}>
+              {statusFactureDetail ? (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: "20px",
+                    marginBottom: "20px",
+                  }}
+                >
+                  <CircularProgress />
+                </div>
+              ) : (
+                <DataGrid
+                  loading={statusFactureDetail}
+                  rows={facturesDetails as never[]}
+                  columns={columnsFacture as GridColDef<never>[]}
+                  disableRowSelectionOnClick
+                  pageSizeOptions={[10, 25, 50]}
+                  pagination
+                  paginationModel={paginationModelFacture}
+                  onPaginationModelChange={setPaginationModelFacture}
+                />
+              )}
+            </Box>
+          </Box>
+        </DialogContent>
+      </Dialog>
 
       {/* Notification */}
       <Snackbar

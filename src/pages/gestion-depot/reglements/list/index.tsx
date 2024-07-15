@@ -122,6 +122,23 @@ const ReglementList = () => {
     pageSize: 10,
   });
   const [total, setTotal] = useState(40);
+  const [downloadCount, setDownloadCount] = useState(0);
+  
+  const handleDownload = async () => {
+    setDownloadCount(downloadCount + 1);
+  };
+
+  const [openFacture, setOpenFacture] = useState(false);
+  const [code, setCode] = useState<string>("");
+  const handleOpenModalFacture = (
+    arecode: string,
+    etat: string,
+    idFact: number
+  ) => {
+    setCode(arecode);
+    setOpenFacture(true);
+    setDownloadCount(0);
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [currentReglement, setCurrentReglement] = useState<null | Reglement>(
@@ -458,7 +475,7 @@ const ReglementList = () => {
                 size='small'
                 sx={{ color: 'text.primary' }}
                 onClick={() => {
-                  handleUpdateReglement(row)
+                  handleUpdateReglement(row);
                 }}
               >
                 <Box sx={{ display: 'flex', color: theme => theme.palette.success.main }}>

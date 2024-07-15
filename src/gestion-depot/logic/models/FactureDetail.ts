@@ -2,7 +2,12 @@ import MainModel from './MainModel'
 
 export default class FactureDetail extends MainModel {
   produit: string
+  remise: string
+  code: string
+  created_at: string
+  client: string
   modele: string
+  username: string
   fournisseur: string
   qte: number
   pv: number
@@ -19,6 +24,11 @@ export default class FactureDetail extends MainModel {
     deletedAt = '',
     produit = '',
     modele = '',
+    remise = '',
+    code = '',
+    client = '',
+    created_at = '',
+    username = '',
     qte = 0,
     pv = 0,
     factureId = 0,
@@ -29,6 +39,11 @@ export default class FactureDetail extends MainModel {
 
     this.produit = produit
     this.modele = modele
+    this.remise = remise
+    this.username = username
+    this.created_at = created_at
+    this.code = code
+    this.client = client
     this.fournisseur = fournisseur
     this.qte = qte
     this.pv = pv

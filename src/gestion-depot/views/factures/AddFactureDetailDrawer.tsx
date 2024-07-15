@@ -176,7 +176,7 @@ const SidebarAddFactureDetail = (props: SidebarAddFactureDetailType) => {
     //   }
     // }
   }
-  console.log('fact-Id :::', factureId)
+  // console.log('fact-Id :::', factureId)
 
   const handleClose = () => {
     toggle()

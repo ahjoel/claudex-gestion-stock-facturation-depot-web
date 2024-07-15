@@ -34,6 +34,8 @@ import PaymentIcon from "@mui/icons-material/Payment";
 import PrintIcon from "@mui/icons-material/Print";
 import ClientService from "src/gestion-depot/logic/services/ClientService";
 import Client from "src/gestion-depot/logic/models/Client";
+import TemplateFacture from "src/gestion-depot/views/pdfMake/TemplateFacture";
+import TemplateFactureUnique from "src/gestion-depot/views/pdfMake/TemplateFactureUnique";
 
 interface CellType {
   row: Facture;
@@ -304,6 +306,11 @@ const FactureList = () => {
   const [facturesDetailsPrint, setFacturesDetailsPrint] = useState<
     FactureDetail[]
   >([]);
+  const [factureReceipt, setFactureReceipt] = useState<FactureDetail[]>([]);
+  const [dateFacture, setDateFacture] = useState<string>("");
+  const [remise, setRemise] = useState<string>("");
+  const [auteur, setAuteur] = useState<string>("");
+  const [clientFact, setClientFact] = useState<string>("");
 
   const [code, setCode] = useState<string>("");
   const [etatFacture, setEtatFacture] = useState<string>("");
@@ -316,6 +323,14 @@ const FactureList = () => {
     pageSize: 10,
   });
 
+  
+  const [downloadCount, setDownloadCount] = useState(0);
+  // console.log("download :::", downloadCount)
+
+  const handleDownload = async () => {
+    setDownloadCount(downloadCount + 1);
+  };
+
   // const handleCloseFacture = () => setOpenFacture(false);
 
   const handleOpenModalFacture = (
@@ -327,6 +342,7 @@ const FactureList = () => {
     setEtatFacture(etat);
     setIdFacture(idFact);
     setOpenFacture(true);
+    setDownloadCount(0);
   };
 
   const handleOpenModalPrintFacture = (
@@ -485,7 +501,7 @@ const FactureList = () => {
         },
       },
       {
-        flex: 0.10,
+        flex: 0.1,
         field: "tax",
         renderHeader: () => (
           <Tooltip title="Tax">
@@ -800,7 +816,7 @@ const FactureList = () => {
                 </Box>
               </IconButton>
             </Tooltip>
-            
+
             <Tooltip title="Supprimer">
               <IconButton
                 size="small"
@@ -819,7 +835,7 @@ const FactureList = () => {
                 </Box>
               </IconButton>
             </Tooltip>
-            <Tooltip title="Voir la facture">
+            {/* <Tooltip title="Voir la facture">
               <IconButton
                 size="small"
                 sx={{ color: "text.primary" }}
@@ -836,9 +852,25 @@ const FactureList = () => {
                   <Icon icon="tabler:file-plus" />
                 </Box>
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
+            {/* <Tooltip title="Imprimer la facture">
+              <IconButton
+                size="small"
+                sx={{ color: "text.primary" }}
+                onClick={() => handleDownload(row.code)}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    color: (theme) => theme.palette.info.main,
+                  }}
+                >
+                  <Icon icon="tabler:file-plus" />
+                </Box>
+              </IconButton>
+            </Tooltip> */}
           </Box>
-        )
+        ),
       },
     ];
 
@@ -1084,65 +1116,65 @@ const FactureList = () => {
       },
     ];
     // if (etatFacture === "impayée") {
-      colArray.push({
-        flex: 0.1,
-        minWidth: 50,
-        sortable: false,
-        field: "action",
-        renderHeader: () => (
-          <Tooltip title={t("Action")}>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: "1px",
-                textTransform: "uppercase",
-                fontSize: "0.8125rem",
+    colArray.push({
+      flex: 0.1,
+      minWidth: 50,
+      sortable: false,
+      field: "action",
+      renderHeader: () => (
+        <Tooltip title={t("Action")}>
+          <Typography
+            noWrap
+            sx={{
+              fontWeight: 500,
+              letterSpacing: "1px",
+              textTransform: "uppercase",
+              fontSize: "0.8125rem",
+            }}
+          >
+            {t("Action")}
+          </Typography>
+        </Tooltip>
+      ),
+      renderCell: ({ row }: CellTypeFacture) => (
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Tooltip title="Mettre à jour un produit de facture">
+            <IconButton
+              size="small"
+              sx={{ color: "text.primary" }}
+              onClick={() => {
+                // handleUpdateProduitFacture(row)
               }}
             >
-              {t("Action")}
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellTypeFacture) => (
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Tooltip title="Mettre à jour un produit de facture">
-              <IconButton
-                size="small"
-                sx={{ color: "text.primary" }}
-                onClick={() => {
-                  // handleUpdateProduitFacture(row)
-                }}
-              >
-                {/* <Box sx={{ display: 'flex', color: theme => theme.palette.success.main }}>
+              {/* <Box sx={{ display: 'flex', color: theme => theme.palette.success.main }}>
                     <Icon icon='tabler:edit' />
                   </Box> */}
-              </IconButton>
-            </Tooltip>
+            </IconButton>
+          </Tooltip>
 
-            {/* {etatFacture === "impayée" && ( */}
-              <Tooltip title="Supprimer">
-                <IconButton
-                  size="small"
-                  sx={{ color: "text.primary" }}
-                  onClick={() => {
-                    handleDeleteProduitFacture(row);
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      color: (theme) => theme.palette.error.main,
-                    }}
-                  >
-                    <Icon icon="tabler:trash" />
-                  </Box>
-                </IconButton>
-              </Tooltip>
-            {/* )} */}
-          </Box>
-        ),
-      });
+          {/* {etatFacture === "impayée" && ( */}
+          <Tooltip title="Supprimer">
+            <IconButton
+              size="small"
+              sx={{ color: "text.primary" }}
+              onClick={() => {
+                handleDeleteProduitFacture(row);
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  color: (theme) => theme.palette.error.main,
+                }}
+              >
+                <Icon icon="tabler:trash" />
+              </Box>
+            </IconButton>
+          </Tooltip>
+          {/* )} */}
+        </Box>
+      ),
+    });
     // }
 
     return colArray;
@@ -1196,6 +1228,25 @@ const FactureList = () => {
         );
       });
       setFacturesDetails(filteredData);
+      // Facture à Imprimer
+      setFactureReceipt(result.data as FactureDetail[]);
+
+      const dataFact = result.data as FactureDetail[];
+      // console.log('dataFact ::::', dataFact);
+      
+      const dateStr = dataFact[0]?.created_at;
+      const dateObj = new Date(dateStr);
+      const options: Intl.DateTimeFormatOptions = {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      };
+      const formattedDate = dateObj.toLocaleDateString('fr-FR', options);
+      setDateFacture(formattedDate)
+      setClientFact(dataFact[0]?.client)
+      setAuteur(dataFact[0]?.username)
+      setRemise(dataFact[0]?.remise)
       setStatusFactures(false);
     } else {
       setOpenNotification(true);
@@ -1337,6 +1388,27 @@ const FactureList = () => {
               handleChange();
             }}
           />
+          {downloadCount > 0 && (
+              factureReceipt.length > 15 ?
+              (<TemplateFactureUnique
+                data={factureReceipt as never[]}
+                auteur={auteur}
+                client={clientFact}
+                remise={remise}
+                code={code}
+                dateFact={dateFacture}
+                fileName={`FACTURE_${code}`}
+              />) : 
+              (<TemplateFacture
+                data={factureReceipt as never[]}
+                auteur={auteur}
+                client={clientFact}
+                remise={remise}
+                code={code}
+                dateFact={dateFacture}
+                fileName={`FACTURE_${code}`}
+              />)
+            )}
           <DataGrid
             autoHeight
             loading={statusFactures}
@@ -1386,18 +1458,19 @@ const FactureList = () => {
               <Icon icon="tabler:x" />
             </IconButton>
             <Box sx={{ mb: 0.5, textAlign: "center" }}>
-              <Typography variant="h5" sx={{ mb: 1 }}>
+              <Typography variant="h4" sx={{ mb: 2 }}>
                 {"Liste des produits de la facture "} - {code}
               </Typography>
             </Box>
 
             <TableHeaderDetail
               value={valueDetFact}
+              onDownload={handleDownload}
               handleFilterDetail={handleFilterDet}
               toggle={handleAddProduitFacture}
               etatFacture={etatFacture}
             />
-
+            
             <Box
               sx={{
                 display: "flex",
