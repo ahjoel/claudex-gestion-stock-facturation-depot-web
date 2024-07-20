@@ -30,7 +30,7 @@ const WelcomeUser = () => {
         <Typography variant='h4' sx={{ mb: 0.2 }}>
           {t('Bienvenue')}{' '}
           <span
-            style={{ fontFamily: 'Arial, Helvetica, sans-serif', fontSize: '20px', width: '100px', maxWidth: '100%' }}
+            style={{ fontFamily: 'Arial, Helvetica, sans-serif', fontSize: '25px', width: '100px', maxWidth: '100%' }}
           >
             {user?.lastname} {user?.firstname}
           </span>{' '}
@@ -38,20 +38,11 @@ const WelcomeUser = () => {
         </Typography>
         <Typography sx={{ mb: 1, color: 'text.secondary' }}>{t('Commencez à consulter...')}</Typography>
         <br />
-        {profile === 'FACTURIER-R1' ? (
-          <Button variant='contained' onClick={() => router.push('/gestion-depot/stockDispoR1/list')}>
-            {t('Stock R1 Disponible')}
-          </Button>
-        ) : profile === 'FACTURIER-RC' ? (
-          <Button variant='contained' onClick={() => router.push('/gestion-depot/rc/stockDispoRC/list')}>
-            {t('Stock RC Disponible')}
-          </Button>
-        ) : (
-          <Button variant='contained' onClick={() => router.push('/gestion-depot/factures/list')}>
-            {t('Liste des factures')}
-          </Button>
-        )}
-        <Illustration width={95} alt='bars_icon' src='/images/bar.png' />
+        <Button variant='contained' onClick={() => router.push('/gestion-depot/stockDispoR1')}>
+          {t('Stock Disponible')}
+        </Button>
+
+        <Illustration width={105} alt='bars_icon' src='/images/snb.png' sx={{marginBottom: '10px'}}/>
       </CardContent>
     </Card>
   )

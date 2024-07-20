@@ -264,46 +264,46 @@ const UserList = () => {
           )
         }
       },
-      {
-        flex: 0.18,
-        minWidth: 200,
-        field: 'zone',
-        renderHeader: () => (
-          <Tooltip title='Zone'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Zone
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { zone } = row
+      // {
+      //   flex: 0.18,
+      //   minWidth: 200,
+      //   field: 'zone',
+      //   renderHeader: () => (
+      //     <Tooltip title='Zone'>
+      //       <Typography
+      //         noWrap
+      //         sx={{
+      //           fontWeight: 500,
+      //           letterSpacing: '1px',
+      //           textTransform: 'uppercase',
+      //           fontSize: '0.8125rem'
+      //         }}
+      //       >
+      //         Zone
+      //       </Typography>
+      //     </Tooltip>
+      //   ),
+      //   renderCell: ({ row }: CellType) => {
+      //     const { zone } = row
 
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {zone.toString()}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
+      //     return (
+      //       <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      //         <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+      //           <Typography
+      //             noWrap
+      //             sx={{
+      //               fontWeight: 500,
+      //               textDecoration: 'none',
+      //               color: 'primary.main'
+      //             }}
+      //           >
+      //             {zone.toString()}
+      //           </Typography>
+      //         </Box>
+      //       </Box>
+      //     )
+      //   }
+      // },
       {
         flex: 0.15,
         minWidth: 200,

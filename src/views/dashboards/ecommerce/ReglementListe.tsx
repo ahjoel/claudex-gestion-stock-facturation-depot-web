@@ -52,7 +52,7 @@ const ReglementListe = () => {
   const handleDeleteReglement = (reglement: Reglement) => {
     setCurrentReglement(reglement)
     setComfirmationMessage(
-      `Voulez-vous réellement supprimer cet reglement de : ${reglement.totalFacture} F CFA pour la facture : ${reglement.codeFacture} ?`
+      `Voulez-vous réellement supprimer cet reglement de : ${reglement.mtpayer} F CFA pour la facture : ${reglement.code} ?`
     )
     setComfirmationFunction(() => () => deleteReglement(reglement))
     setOpen(true)
@@ -189,7 +189,7 @@ const ReglementListe = () => {
       },
       {
         flex: 0.2,
-        field: 'codeFacture',
+        field: 'code',
         renderHeader: () => (
           <Tooltip title='Code Facture'>
             <Typography
@@ -206,7 +206,7 @@ const ReglementListe = () => {
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { codeFacture } = row
+          const { code } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -219,7 +219,7 @@ const ReglementListe = () => {
                     color: 'primary.main'
                   }}
                 >
-                  {codeFacture}
+                  {code}
                 </Typography>
               </Box>
             </Box>
@@ -228,7 +228,7 @@ const ReglementListe = () => {
       },
       {
         flex: 0.15,
-        field: 'total',
+        field: 'mtpayer',
         renderHeader: () => (
           <Tooltip title='Total Facture'>
             <Typography
@@ -245,7 +245,7 @@ const ReglementListe = () => {
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { totalFacture } = row
+          const { mtpayer } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -259,7 +259,7 @@ const ReglementListe = () => {
                     textAlign: 'center'
                   }}
                 >
-                  {totalFacture}
+                  {mtpayer}
                 </Typography>
               </Box>
             </Box>
@@ -285,7 +285,7 @@ const ReglementListe = () => {
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { firstname, lastname } = row
+          const { auteur } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -298,7 +298,7 @@ const ReglementListe = () => {
                     color: 'primary.main'
                   }}
                 >
-                  {firstname} {''} {lastname}
+                  {auteur}
                 </Typography>
               </Box>
             </Box>
@@ -369,8 +369,7 @@ const ReglementListe = () => {
           reglement.codeFacture.toLowerCase().includes(queryLowered) ||
           reglement.client.toLowerCase().includes(queryLowered) ||
           reglement.firstname.toString().toLowerCase().includes(queryLowered) ||
-          reglement.lastname.toString().toLowerCase().includes(queryLowered) ||
-          reglement.totalFacture.toString().toLowerCase().includes(queryLowered)
+          reglement.auteur.toString().toLowerCase().includes(queryLowered)
         )
       })
       setReglements(filteredData)

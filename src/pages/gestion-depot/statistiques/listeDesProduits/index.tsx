@@ -307,7 +307,7 @@ const ListeDesProduits = () => {
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { stock_min } = row
+          const { seuil } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -320,7 +320,7 @@ const ListeDesProduits = () => {
                     color: 'primary.main'
                   }}
                 >
-                  {stock_min}
+                  {seuil}
                 </Typography>
               </Box>
             </Box>

@@ -484,7 +484,7 @@ const ReglementList = () => {
               </IconButton>
             </Tooltip>
 
-            {(profile === "ADMINISTRATEUR" || profile === "SUPER-ADMIN") && (
+            {(profile === "ADMINISTRATEUR" || profile === "SUPER-ADMIN" || profile === "GERANT") && (
               <Tooltip title="Supprimer le règlement">
                 <IconButton
                   size="small"

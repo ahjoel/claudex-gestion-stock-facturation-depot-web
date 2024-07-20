@@ -30,6 +30,8 @@ import Facture from "src/gestion-depot/logic/models/Facture";
 import TableHeaderSituation from "src/gestion-depot/views/reglements/list/TableHeaderSituation";
 import TableHeaderReglement from "src/gestion-depot/views/reglements/list/TableHeaderReglement";
 import FactureDetail from "src/gestion-depot/logic/models/FactureDetail";
+import TemplateFactureRegle from "src/gestion-depot/views/pdfMake/TemplateFactureRegle";
+import TemplateFactureRegleUnique from "src/gestion-depot/views/pdfMake/TemplateFactureRegleUnique";
 
 interface CellType {
   row: Reglement;
@@ -50,7 +52,15 @@ const SituationReglementList = () => {
     window.localStorage.getItem("userData") as string
   );
   const profile = userData?.profile;
+  const [dateFacture, setDateFacture] = useState<string>("");
+  const [remise, setRemise] = useState<string>("");
+  const [auteur, setAuteur] = useState<string>("");
+  const [clientFact, setClientFact] = useState<string>("");
+  const [clientImp, setClientImp] = useState<string>("");
+  const [dateEch, setDateEch] = useState<string>("");
 
+  // const [code, setCode] = useState<string>("");
+  const [etatFacture, setEtatFacture] = useState<string>("");
   const [statusFactureDetail, setStatusFactureDetail] = useState<boolean>(true);
   const [facturesDetails, setFacturesDetails] = useState<FactureDetail[]>([]);
   const [factureReceipt, setFactureReceipt] = useState<FactureDetail[]>([]);
@@ -134,6 +144,8 @@ const SituationReglementList = () => {
   const [valueDetFact, setValueDetFact] = useState<string>("");
   const [addReglementOpen, setAddReglementOpen] = useState<boolean>(false);
   const [code, setCode] = useState<string>("");
+  const [montantEncaisse, setMontantEncaisse] = useState<string>("");
+  const [montantRestant, setMontantRestant] = useState<string>("");
   const [reglements, setReglements] = useState<Reglement[]>([]);
   const [downloadCount, setDownloadCount] = useState(0);
   const [openFacture, setOpenFacture] = useState(false);
@@ -155,11 +167,16 @@ const SituationReglementList = () => {
   };
 
   const handleOpenModalFacture = (
-    arecode: string
+    arecode: string,
+    aremtencaiss: string,
+    aremtrestant: string
   ) => {
     setCode(arecode);
     setOpenFacture(true);
+    setMontantEncaisse(aremtencaiss);
+    setMontantRestant(aremtrestant);
     setDownloadCount(0);
+    setClientImp("")
   };
 
   // Display of columns according to user roles in the Datagrid
@@ -545,7 +562,7 @@ const SituationReglementList = () => {
                 size="small"
                 sx={{ color: "text.primary" }}
                 onClick={() => {
-                  handleOpenModalFacture(row.codeFacture);
+                  handleOpenModalFacture(row.codeFacture, row.mt_encaisse, row.mt_restant);
                 }}
               >
                 <Box
@@ -568,6 +585,8 @@ const SituationReglementList = () => {
   };
 
   const getDetailsFacture = async () => {
+    let clientName;
+    let dateEcheance;
     setStatusFactureDetail(true);
     const result = await factureService.listFactureDetail({
       code: code || null,
@@ -594,6 +613,9 @@ const SituationReglementList = () => {
       
       const dateStr = dataFact[0]?.created_at;
       const dateObj = new Date(dateStr);
+      const dateObjEch = new Date(dateStr);
+
+      dateObjEch.setDate(dateObjEch.getDate() + 7)
       const options: Intl.DateTimeFormatOptions = {
         weekday: 'long',
         day: 'numeric',
@@ -601,16 +623,34 @@ const SituationReglementList = () => {
         year: 'numeric'
       };
       const formattedDate = dateObj.toLocaleDateString('fr-FR', options);
-      // setDateFacture(formattedDate)
-      // setClientFact(dataFact[0]?.client)
-      // setAuteur(dataFact[0]?.username)
-      // setRemise(dataFact[0]?.remise)
-      // setStatusFactures(false);
+      const formattedDateEcheance = dateObjEch.toLocaleDateString('fr-FR', options);
+
+      setDateFacture(formattedDate)
+      clientName = dataFact[0]?.client
+      setClientFact(dataFact[0]?.client)
+      setAuteur(dataFact[0]?.username)
+      setRemise(dataFact[0]?.remise)
+      setDateEch(formattedDateEcheance)
     } else {
       setOpenNotification(true);
       setTypeMessage("error");
       setMessage(
         "Une erreur est survenue lors du chargement des produits de facture"
+      );
+    }
+
+    const resul = await factureService.listMontantFacturesImpayee({
+      name: clientName || "",
+    });
+
+    if (resul.success) {
+      const dataImp = resul.data as FactureDetail[]
+      setClientImp(dataImp[0].impayee);
+    } else {
+      setOpenNotification(true);
+      setTypeMessage("error");
+      setMessage(
+        "Une erreur est survenue lors du chargement des impayées du client"
       );
     }
   };
@@ -958,19 +998,6 @@ const SituationReglementList = () => {
     getSituationReglements(0, 10);
   };
 
-  // const factureService = new FactureService();
-  // const handleLoadingFacture = async () => {
-  //   const result = await factureService.readAllImpayee();
-
-  //   if (result.success) {
-  //     setFactures(result.data as Facture[]);
-  //   } else {
-  //     setOpenNotification(true);
-  //     setTypeMessage("error");
-  //     setMessage(result.description);
-  //   }
-  // };
-
   // Control search data in datagrid
   useEffect(() => {
     handleChange();
@@ -1024,6 +1051,39 @@ const SituationReglementList = () => {
               handleChange();
             }}
           />
+          {downloadCount > 0 && (
+              factureReceipt.length > 10 ?
+              ( 
+                <TemplateFactureRegleUnique
+                    data={factureReceipt as never[]}
+                    auteur={auteur}
+                    client={clientFact}
+                    remise={remise}
+                    code={code}
+                    dateFact={dateFacture}
+                    fileName={`FACTURE_REGLE_${code}`} 
+                    mtrestant={montantRestant}
+                    mtencaisse={montantEncaisse}
+                    impayee={clientImp} 
+                    dateEcheance={dateEch}  
+                />
+              ) : 
+              (
+                <TemplateFactureRegle
+                    data={factureReceipt as never[]}
+                    auteur={auteur}
+                    client={clientFact}
+                    remise={remise}
+                    code={code}
+                    dateFact={dateFacture}
+                    fileName={`FACTURE_REGLE_${code}`}
+                    mtrestant={montantRestant}
+                    mtencaisse={montantEncaisse}
+                    impayee={clientImp} 
+                    dateEcheance={dateEch}         
+                />
+              )
+            )}
           <DataGrid
             autoHeight
             loading={statusReglements}

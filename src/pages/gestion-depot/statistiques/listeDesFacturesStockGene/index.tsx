@@ -25,9 +25,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import 'dayjs/locale/fr'
 import dayjs from 'dayjs'
-import StatInventaireStockVente from 'src/gestion-depot/logic/models/StatInventaireStockVente'
-import TemplateInventaireStockVente from 'src/gestion-depot/views/pdfMake/TemplateFactureRegleOuNon'
 import { format, parseISO } from 'date-fns'
+import StatInventaireStockVente from 'src/gestion-depot/logic/models/StatInventaireStockVente'
+import TemplateInventaireStockVente from 'src/gestion-depot/views/pdfMake/TemplateInventaireStockVente'
 
 interface CellType {
   row: StatInventaireStockVente
@@ -37,7 +37,7 @@ interface ColumnType {
   [key: string]: any
 }
 
-const listeDesInventairesStockVenteR1 = () => {
+const listeDesFacturesStockGene = () => {
   // Notifications - snackbar
   const [openNotification, setOpenNotification] = useState<boolean>(false)
   const [typeMessage, setTypeMessage] = useState('info')
@@ -58,6 +58,11 @@ const listeDesInventairesStockVenteR1 = () => {
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
   let infoTranslate
 
+  const [downloadCount, setDownloadCount] = useState(0)
+
+  const handleDownload = async() => {
+    setDownloadCount(downloadCount + 1)
+  }
   const [startDate, setStartDate] = useState(null)
   const [endDate, setEndDate] = useState(null)
 
@@ -71,8 +76,8 @@ const listeDesInventairesStockVenteR1 = () => {
 
   const handleSearch = () => {
     if (startDate && endDate) {
-      console.log('Date de début:', dayjs(startDate).toISOString().split('T')[0])
-      console.log('Date de fin:', dayjs(endDate).toISOString().split('T')[0])
+      // console.log('Date de début:', dayjs(startDate).toISOString().split('T')[0])
+      // console.log('Date de fin:', dayjs(endDate).toISOString().split('T')[0])
       getListDatas(
         dayjs(startDate).toISOString().split('T')[0] + ' ' + '00:00:00',
         dayjs(endDate).toISOString().split('T')[0] + ' ' + '23:59:00'
@@ -88,6 +93,44 @@ const listeDesInventairesStockVenteR1 = () => {
   // Display of columns according to user roles in the Datagrid
   const getColumns = () => {
     const colArray: ColumnType[] = [
+      {
+        flex: 0.18,
+        field: 'fournisseur',
+        renderHeader: () => (
+          <Tooltip title='Fournisseur'>
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                fontSize: '0.8125rem'
+              }}
+            >
+              Fournisseur
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellType) => {
+          const { fournisseur } = row
+
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: 'none'
+                  }}
+                >
+                  {fournisseur}
+                </Typography>
+              </Box>
+            </Box>
+          )
+        }
+      },
       {
         flex: 0.18,
         field: 'produit',
@@ -127,10 +170,10 @@ const listeDesInventairesStockVenteR1 = () => {
         }
       },
       {
-        flex: 0.18,
+        flex: 0.15,
         field: 'model',
         renderHeader: () => (
-          <Tooltip title={t('Model')}>
+          <Tooltip title='Model'>
             <Typography
               noWrap
               sx={{
@@ -140,7 +183,7 @@ const listeDesInventairesStockVenteR1 = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              {t('Model')}
+              Model
             </Typography>
           </Tooltip>
         ),
@@ -165,49 +208,10 @@ const listeDesInventairesStockVenteR1 = () => {
         }
       },
       {
-        flex: 0.2,
-        field: 'fournisseur',
-        renderHeader: () => (
-          <Tooltip title='Fournisseur'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Fournisseur
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { fournisseur } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {fournisseur}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        flex: 0.15,
+        flex: 0.10,
         field: 'qte_stock',
         renderHeader: () => (
-          <Tooltip title='Qte Avant Periode'>
+          <Tooltip title='Qte Stock'>
             <Typography
               noWrap
               sx={{
@@ -217,7 +221,7 @@ const listeDesInventairesStockVenteR1 = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Qte Avant Per.
+              Qte Stock
             </Typography>
           </Tooltip>
         ),
@@ -231,8 +235,7 @@ const listeDesInventairesStockVenteR1 = () => {
                   noWrap
                   sx={{
                     fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
+                    textDecoration: 'none'
                   }}
                 >
                   {qte_stock}
@@ -285,7 +288,7 @@ const listeDesInventairesStockVenteR1 = () => {
         flex: 0.15,
         field: 'qte_stock_vendu',
         renderHeader: () => (
-          <Tooltip title='Qte Sortie'>
+          <Tooltip title='Qte Vendu'>
             <Typography
               noWrap
               sx={{
@@ -295,7 +298,7 @@ const listeDesInventairesStockVenteR1 = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Qte Sortie
+              Qte Vendu
             </Typography>
           </Tooltip>
         ),
@@ -411,14 +414,13 @@ const listeDesInventairesStockVenteR1 = () => {
       date_fin: date_fin || null
     }
     try {
-      const response = await axios.post(`stat/stock/gene/r1`, dataSearch, {
+      const response = await axios.post(`stat/stock/factures/general`, dataSearch, {
         headers: {
           ...getHeadersInformation(),
           'Content-Type': 'application/json'
         }
       })
       setLoadingSearch(false)
-      console.log('datas :::', response.data.data.data)
 
       if (response.data.data) {
         setDatas(response.data.data.data as StatInventaireStockVente[])
@@ -439,17 +441,11 @@ const listeDesInventairesStockVenteR1 = () => {
     setColumns(getColumns())
   }, [])
 
-  const [downloadCount, setDownloadCount] = useState(0)
-
-  const handleDownload = () => {
-    setDownloadCount(downloadCount + 1)
-  }
-
   return (
     <Grid container spacing={6.5}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='Inventaire du stock de vente - R1' sx={{ fontSize: '60px' }} />
+          <CardHeader title='Inventaire Stock General - Vente' sx={{ fontSize: '60px' }} />
 
           <CardContent>
             <Grid container spacing={1} justifyContent='flex-end'>
@@ -497,7 +493,7 @@ const listeDesInventairesStockVenteR1 = () => {
                     endIcon={<SearchSharpIcon />}
                     variant='contained'
                   >
-                    {t('Search')}
+                    Rechercher
                   </LoadingButton>
 
                   <Button
@@ -514,9 +510,7 @@ const listeDesInventairesStockVenteR1 = () => {
                   </Button>
 
                   <Button
-                    onClick={() => {
-                      handleDownload()
-                    }}
+                    onClick={handleDownload}
                     variant='contained'
                     sx={{ height: '38px', marginLeft: '5px' }}
                   >
@@ -531,17 +525,16 @@ const listeDesInventairesStockVenteR1 = () => {
           {downloadCount > 0 && (
             <TemplateInventaireStockVente
               data={datas as never[]}
-              fileName={`Statistique_par_producteur_${downloadCount}`}
-              stock='R1'
-              date_debut={
+              fileName={`Statistique_stock_general_${downloadCount}`}
+              date_debut={ startDate ?
                 format(parseISO(dayjs(startDate).toISOString().split('T')[0]), 'EEEE dd MMMM yyyy', {
                   locale: frLocale
-                }) || ''
+                }) : ''
               }
-              date_fin={
+              date_fin={ endDate ?
                 format(parseISO(dayjs(endDate).toISOString().split('T')[0]), 'EEEE dd MMMM yyyy', {
                   locale: frLocale
-                }) || ''
+                }) : ''
               }
             />
           )}
@@ -581,4 +574,4 @@ const listeDesInventairesStockVenteR1 = () => {
   )
 }
 
-export default listeDesInventairesStockVenteR1
+export default listeDesFacturesStockGene

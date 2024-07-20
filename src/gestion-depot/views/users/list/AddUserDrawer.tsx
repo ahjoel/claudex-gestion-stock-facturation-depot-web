@@ -27,7 +27,6 @@ interface UserData {
   lastname: string
   email: string
   profile: string
-  zone: string
   password: string
 }
 
@@ -83,7 +82,6 @@ const schema = yup.object().shape({
       }
     })
     .required(),
-  zone: yup.string().required(() => 'Le champ zone est obligatoire'),
   email: yup.string().required(() => 'Le champ email est obligatoire'),
   password: yup.string().required(() => 'Le champ password est obligatoire'),
   profile: yup.string().required(() => 'Le champ profil est obligatoire')
@@ -93,7 +91,6 @@ const defaultValues = {
   username: '',
   firstname: '',
   lastname: '',
-  zone: '',
   email: '',
   profile: '',
   password: ''
@@ -136,7 +133,6 @@ const SidebarAddUser = (props: SidebarAddUser) => {
       firstname: data.firstname,
       lastname: data.lastname,
       email: data.email,
-      zone: data.zone,
       profile: data.profile,
       password: data.password
     }
@@ -194,7 +190,6 @@ const SidebarAddUser = (props: SidebarAddUser) => {
       firstname: currentUser !== null ? currentUser?.firstname : '',
       lastname: currentUser !== null ? currentUser?.lastname : '',
       email: currentUser !== null ? currentUser?.email : '',
-      zone: currentUser !== null ? currentUser?.zone : '',
       profile: currentUser !== null ? currentUser?.profile : '',
       password: currentUser !== null ? currentUser?.password : ''
     })
@@ -311,32 +306,13 @@ const SidebarAddUser = (props: SidebarAddUser) => {
                 <MenuItem value={``}>Selectionnez un profil</MenuItem>
                 <MenuItem value={`SUPER-ADMIN`}>SUPER-ADMIN</MenuItem>
                 <MenuItem value={`ADMINISTRATEUR`}>ADMINISTRATEUR</MenuItem>
-                <MenuItem value={`FACTURIER-R1`}>FACTURIER-R1</MenuItem>
-                <MenuItem value={`FACTURIER-RC`}>FACTURIER-RC</MenuItem>
                 <MenuItem value={`GERANT`}>GERANT</MenuItem>
+                <MenuItem value={`FACTURIER`}>FACTURIER</MenuItem>
+                <MenuItem value={`CAISSIER`}>CAISSIER</MenuItem>
               </CustomTextField>
             )}
           />
-          <Controller
-            name='zone'
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { value, onChange } }) => (
-              <CustomTextField
-                select
-                fullWidth
-                sx={{ mb: 4 }}
-                label='Zone'
-                error={Boolean(errors.zone)}
-                {...(errors.zone && { helperText: errors.zone.message })}
-                SelectProps={{ value: value, onChange: e => onChange(e) }}
-              >
-                <MenuItem value={''}>Selectionnez un fournisseur</MenuItem>
-                <MenuItem value={'R1'}>R1</MenuItem>
-                <MenuItem value={'RC'}>RC</MenuItem>
-              </CustomTextField>
-            )}
-          />
+
           <Controller
             name='password'
             control={control}

@@ -24,7 +24,7 @@ import { Alert, AlertColor, Snackbar } from '@mui/material'
 const Activities = () => {
   let infoTranslate
   const [productCount, setProductCount] = useState<string>('')
-  const [productCountRC, setProductCountRC] = useState<string>('')
+  const [factureCount, setFactureCount] = useState<string>('')
   const [reglementMoisCount, setReglementMoisCount] = useState<string>('')
   const [reglementDayCount, setReglementDayCount] = useState<string>('')
 
@@ -63,7 +63,7 @@ const Activities = () => {
     }
 
     try {
-      const response = await axios.get(`produits/count/rc`, {
+      const response = await axios.get(`stock/factures/jour`, {
         headers: {
           ...getHeadersInformation(),
           'Content-Type': 'application/json'
@@ -71,13 +71,13 @@ const Activities = () => {
       })
 
       if (response.data.data) {
-        setProductCountRC(response.data.data.produitNumber)
+        setFactureCount(response.data.data.factureNb || 0)
       }
     } catch (error) {
       console.error('Error submitting form:', error)
       setOpenNotification(true)
       setTypeMessage('error')
-      infoTranslate = t('An error has occured1')
+      infoTranslate = t('An error has occured2')
       setMessage(infoTranslate)
     }
 
@@ -155,7 +155,7 @@ const Activities = () => {
               </CustomAvatar>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <Typography variant='h6'>{productCount}</Typography>
-                <Typography variant='body2'>{t('Produits R1')}</Typography>
+                <Typography variant='body2'>{t('Nb Produits Stock')}</Typography>
               </Box>
             </Box>
           </Grid>
@@ -165,8 +165,8 @@ const Activities = () => {
                 <Icon icon='tabler:affiliate' />
               </CustomAvatar>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography variant='h6'>{productCountRC}</Typography>
-                <Typography variant='body2'>{t('Produits RC')}</Typography>
+                <Typography variant='h6'>{factureCount}</Typography>
+                <Typography variant='body2'>{t('Nb Factures Du Jours')}</Typography>
               </Box>
             </Box>
           </Grid>

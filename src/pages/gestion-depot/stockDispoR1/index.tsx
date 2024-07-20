@@ -13,6 +13,15 @@ import Icon from 'src/@core/components/icon'
 import TableHeader from 'src/gestion-depot/views/entreeR1Dispo/list/TableHeader'
 import EntreeR1Service from 'src/gestion-depot/logic/services/EntreeR1Service'
 import EntreeR1Dispo from 'src/gestion-depot/logic/models/EntreeR1Dispo'
+import { CardContent, CardHeader, Divider, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
+import Produit from 'src/gestion-depot/logic/models/Produit'
+import { LoadingButton } from '@mui/lab'
+import axios from 'src/configs/axios-config'
+import { getHeadersInformation } from 'src/gestion-depot/logic/utils/constant'
+import SearchSharpIcon from '@mui/icons-material/SearchSharp'
+import ProduitService from 'src/gestion-depot/logic/services/ProduitService'
+import AutorenewIcon from '@mui/icons-material/Autorenew';
+import Button from '@mui/material/Button'
 
 interface CellType {
   row: EntreeR1Dispo
@@ -48,6 +57,11 @@ const EntreeR1List = () => {
   }
 
   // Loading Agencies Data, Datagrid and pagination - State
+  const produitService = new ProduitService()
+  const [produit, setProduit] = useState<string>('')
+  const [produits, setProduits] = useState<Produit[]>([])
+  const [statusData, setStatusData] = useState<boolean>(true)
+  const [loadingSearch, setLoadingSearch] = useState(false)
   const [statusEntreeR1, setStatusEntreeR1] = useState<boolean>(true)
   const [entreesR1Dispo, setEntreesR1Dispo] = useState<EntreeR1Dispo[]>([])
   const [columns, setColumns] = useState<ColumnType[]>([])
@@ -360,6 +374,56 @@ const EntreeR1List = () => {
     }
   }
 
+  const handleSearch = async () => {
+    const searchData = {
+      page: 1,
+      length: 10,
+      produitId: produit + "",
+    }
+    setLoadingSearch(true)
+
+    await axios
+      .post('/entreer1/produit/all', searchData, {
+        headers: {
+          ...getHeadersInformation(),
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        const repp = response.data
+        setLoadingSearch(false)
+
+        if (repp.status === 200) {
+          setTotal(Number(repp.data.mouvementsEntreeR1DispoNumber))
+          setEntreesR1Dispo(repp.data.mouvementsEntreeR1Dispo as EntreeR1Dispo[])
+          setStatusData(false)
+
+        } else {
+          setOpenNotification(true);
+          setTypeMessage("success");
+          setMessage("Aucun résultat")
+        }
+      })
+      .catch(error => {
+        console.log(error)
+        setOpenNotification(true);
+        setTypeMessage("error");
+        setMessage(error)
+      })
+  }
+
+  const handleLoadingProduits = async () => {
+    const result = await produitService.listProduitsLongue()
+
+    if (result.success) {
+      setProduits(result.data as Produit[])
+    } else {
+      setOpenNotification(true)
+      setTypeMessage('error')
+      setMessage(result.description)
+    }
+  }
+
   const handleChange = async () => {
     getListEntreesR1Dispo(0, 10)
   }
@@ -367,11 +431,16 @@ const EntreeR1List = () => {
   // Control search data in datagrid
   useEffect(() => {
     handleChange()
+    handleLoadingProduits()
     setColumns(getColumns(handleAddToCart))
   }, [value])
 
   const handleFilter = useCallback((val: string) => {
     setValue(val)
+  }, [])
+
+  const handleProduitChange = useCallback((e: SelectChangeEvent<unknown>) => {
+    setProduit(e.target.value as string)
   }, [])
 
   const handleAddToCart = (entreeR1Dispo: EntreeR1Dispo) => {
@@ -429,6 +498,57 @@ const EntreeR1List = () => {
     <Grid container spacing={6.5}>
       <Grid item xs={12}>
         <Card>
+          <CardHeader title='STOCK DISPONIBLE' />
+
+          <CardContent>
+
+            <Grid container spacing={1} justifyContent="flex-end">
+
+              <Grid item>
+                <FormControl sx={{ m: 1, minWidth: 50 }} size="small">
+                  <InputLabel id="demo-simple-select-small-label">Rechercher un produit</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-small-label"
+                    id="demo-simple-select-small"
+                    value={produit}
+                    onChange={handleProduitChange}
+                    sx={{width: '250px'}}
+                    label="Rechercher un produit"
+                  >
+                    <MenuItem value={''}>None</MenuItem>
+                    {produits.map(produit => (
+                      <MenuItem key={produit.id} value={produit.id}>
+                        {produit.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item lg={2} md={3} sm={3} xs={3} sx={{ marginTop: '4px', marginLeft: '15px' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <LoadingButton
+                    type='submit'
+                    color='error'
+                    loading={loadingSearch}
+                    onClick={() => { (produit != "") ? handleSearch() : setOpenNotification(true); setTypeMessage("error"); setMessage("Merci de sélectionner un produit") }}
+                    loadingPosition='end'
+                    endIcon={<SearchSharpIcon />}
+                    variant='contained'
+                  >
+                    Rechercher
+                  </LoadingButton>
+                  <Button sx={{ marginLeft: '5px' }} size='small' variant="contained" onClick={() => { setValue(''); setProduit(""); handleChange() }}>
+                    <AutorenewIcon />
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
+
+          </CardContent>
+
+          <Divider sx={{ m: '0 !important' }} />
+
           <TableHeader
             value={value}
             handleFilter={handleFilter}

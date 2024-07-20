@@ -26,7 +26,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import 'dayjs/locale/fr'
 import dayjs from 'dayjs'
 import StatInventaireStockVente from 'src/gestion-depot/logic/models/StatInventaireStockVente'
-import TemplateInventaireStockVente from 'src/gestion-depot/views/pdfMake/TemplateInventaireStockVente'
+import TemplateInventaireStockVente from 'src/gestion-depot/views/pdfMake/TemplateFactureRegleOuNon'
 import { format, parseISO } from 'date-fns'
 
 interface CellType {

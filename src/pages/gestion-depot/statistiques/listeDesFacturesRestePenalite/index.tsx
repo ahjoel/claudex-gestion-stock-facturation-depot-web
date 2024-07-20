@@ -1,5 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react'
+/* eslint-disable react-hooks/rules-of-hooks */
+import React, { useEffect } from 'react'
+import { useState } from 'react'
 import Tooltip from '@mui/material/Tooltip'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
@@ -10,22 +12,37 @@ import Button from '@mui/material/Button'
 import Snackbar from '@mui/material/Snackbar'
 import Alert, { AlertColor } from '@mui/material/Alert'
 import SaveAltIcon from '@mui/icons-material/SaveAlt'
-import Reglement from 'src/gestion-depot/logic/models/Reglement'
-import ReglementService from 'src/gestion-depot/logic/services/ReglementService'
-import { CardHeader, Divider } from '@mui/material'
-import TemplateListeDesVentes from 'src/gestion-depot/views/pdfMake/TemplateListeDesVentes'
+import AutorenewIcon from '@mui/icons-material/Autorenew'
+import axios from 'src/configs/axios-config'
+import { t } from 'i18next'
+import SearchSharpIcon from '@mui/icons-material/SearchSharp'
+import frLocale from 'date-fns/locale/fr'
+import { CardContent, CardHeader, FormControl } from '@mui/material'
+import { getHeadersInformation } from 'src/gestion-depot/logic/utils/constant'
+import { LoadingButton } from '@mui/lab'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import 'dayjs/locale/fr'
+import dayjs from 'dayjs'
+import StatFactureReglement from 'src/gestion-depot/logic/models/StatFactureReglement'
+import { format, parseISO } from 'date-fns'
+import TemplateFactureRegleOuNon from 'src/gestion-depot/views/pdfMake/TemplateFactureRegleOuNon'
+import TemplateFactureReglement from 'src/gestion-depot/views/pdfMake/TemplateFactureReglement'
+import StatFactureArchivee from 'src/gestion-depot/logic/models/StatFactureArchivee'
+import TemplateFactureArchivees from 'src/gestion-depot/views/pdfMake/TemplateFactureArchivees'
+import StatFacturePenalite from 'src/gestion-depot/logic/models/StatFacturePenalite'
+import TemplateFactureImpayeePenalite from 'src/gestion-depot/views/pdfMake/TemplateFactureImpayeePenalite'
 
 interface CellType {
-  row: Reglement
+  row: StatFacturePenalite
 }
 
 interface ColumnType {
   [key: string]: any
 }
 
-const ReglementList = () => {
-  const reglementService = new ReglementService()
-
+const listeDesFacturesRestePenalite = () => {
   // Notifications - snackbar
   const [openNotification, setOpenNotification] = useState<boolean>(false)
   const [typeMessage, setTypeMessage] = useState('info')
@@ -38,97 +55,25 @@ const ReglementList = () => {
     setOpenNotification(false)
   }
 
-  const [statusReglements, setStatusReglements] = useState<boolean>(true)
-  const [reglements, setReglements] = useState<Reglement[]>([])
+  // Loading Agencies Data, Datagrid and pagination - State
+  const [statusDatas, setStatusDatas] = useState<boolean>(true)
+  const [datas, setDatas] = useState<StatFactureReglement[]>([])
+  const [loadingSearch, setLoadingSearch] = useState<boolean>(false)
   const [columns, setColumns] = useState<ColumnType[]>([])
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
-  const [total, setTotal] = useState(40)
+  let infoTranslate
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [currentReglement, setCurrentReglement] = useState<null | Reglement>(null)
+  const [downloadCount, setDownloadCount] = useState(0)
+
+  const handleDownload = async () => {
+    setDownloadCount(downloadCount + 1)
+  }
 
   // Display of columns according to user roles in the Datagrid
   const getColumns = () => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.15,
-        field: 'createdAt',
-        renderHeader: () => (
-          <Tooltip title='Date de creation'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Date de creation
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { createdAt } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none'
-                  }}
-                >
-                  {createdAt.slice(0, -5).replace(/T/g, ' ')}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        flex: 0.09,
-        field: 'client',
-        renderHeader: () => (
-          <Tooltip title='Client'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Client
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { client } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {client}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        flex: 0.2,
+        flex: 0.18,
         field: 'codeFacture',
         renderHeader: () => (
           <Tooltip title='Code Facture'>
@@ -146,7 +91,7 @@ const ReglementList = () => {
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { codeFacture } = row
+          const { code } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -155,11 +100,48 @@ const ReglementList = () => {
                   noWrap
                   sx={{
                     fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
+                    textDecoration: 'none'
                   }}
                 >
-                  {codeFacture}
+                  {code}
+                </Typography>
+              </Box>
+            </Box>
+          )
+        }
+      },
+      {
+        flex: 0.18,
+        field: 'createdAt',
+        renderHeader: () => (
+          <Tooltip title='Date Facture'>
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                fontSize: '0.8125rem'
+              }}
+            >
+              Date Facture
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellType) => {
+          const { createdAt } = row
+
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: 'none'
+                  }}
+                >
+                  {createdAt?.slice(0, -5).replace(/T/g, " ")}
                 </Typography>
               </Box>
             </Box>
@@ -168,9 +150,9 @@ const ReglementList = () => {
       },
       {
         flex: 0.15,
-        field: 'total',
+        field: 'mt_restant',
         renderHeader: () => (
-          <Tooltip title='Total Facture'>
+          <Tooltip title='Montant Restant'>
             <Typography
               noWrap
               sx={{
@@ -180,52 +162,12 @@ const ReglementList = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Total Facture
+              Montant Restant
             </Typography>
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { totalFacture } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main',
-                    textAlign: 'center'
-                  }}
-                >
-                  {totalFacture}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        flex: 0.2,
-        field: 'auteur',
-        renderHeader: () => (
-          <Tooltip title='Auteur'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Auteur
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { firstname, lastname } = row
+          const { mt_restant } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -238,103 +180,212 @@ const ReglementList = () => {
                     color: 'primary.main'
                   }}
                 >
-                  {firstname} {''} {lastname}
+                  {mt_restant}
                 </Typography>
               </Box>
             </Box>
           )
         }
-      }
+      },
+      {
+        flex: 0.10,
+        field: 'nbJour',
+        renderHeader: () => (
+          <Tooltip title='Nombre de Jours'>
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                fontSize: '0.8125rem'
+              }}
+            >
+              Nbr. Jours
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellType) => {
+          const { nbJour } = row
+
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: 'none'
+                  }}
+                >
+                  {nbJour}
+                </Typography>
+              </Box>
+            </Box>
+          )
+        }
+      },
+      {
+        flex: 0.15,
+        field: 'mt_a_payer',
+        renderHeader: () => (
+          <Tooltip title='Montant TTC'>
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                fontSize: '0.8125rem'
+              }}
+            >
+              MONTANT TTC
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellType) => {
+          const { mt_a_payer } = row
+
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: 'none',
+                    color: 'primary.main'
+                  }}
+                >
+                  {mt_a_payer}
+                </Typography>
+              </Box>
+            </Box>
+          )
+        }
+      },
+      {
+        flex: 0.15,
+        field: 'mt_encaisse',
+        renderHeader: () => (
+          <Tooltip title='Montant Encaisse'>
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                fontSize: '0.8125rem'
+              }}
+            >
+              Montant Encaisse
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellType) => {
+          const { mt_encaisse } = row
+
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: 'none',
+                    color: 'primary.main'
+                  }}
+                >
+                  {mt_encaisse}
+                </Typography>
+              </Box>
+            </Box>
+          )
+        }
+      },
     ]
 
     return colArray
   }
 
   // Axios call to loading Data
-  const getListReglements = async (page: number, pageSize: number) => {
-    const result = await reglementService.listReglements({ page: page + 1, length: pageSize })
+  const getListDatas = async () => {
+    setLoadingSearch(true)
+    try {
+      const response = await axios.get(`stat/stock/factures/penalitees`, {
+        headers: {
+          ...getHeadersInformation(),
+          'Content-Type': 'application/json'
+        }
+      })
+      setLoadingSearch(false)
 
-    if (result.success) {
-      const filteredData = result.data as Reglement[]
-      setReglements(filteredData)
-      setStatusReglements(false)
-      setTotal(Number(result.total))
-    } else {
+      if (response.data.data) {
+        setDatas(response.data.data.data as StatFactureArchivee[])
+        setStatusDatas(false)
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error)
       setOpenNotification(true)
       setTypeMessage('error')
-      setMessage(result.description)
+      infoTranslate = t('An error has occured')
+      setMessage(infoTranslate)
     }
-  }
-
-  const handleChange = async () => {
-    getListReglements(0, 10)
   }
 
   // Control search data in datagrid
   useEffect(() => {
-    handleChange()
+    getListDatas()
     setColumns(getColumns())
   }, [])
 
-  const [downloadCount, setDownloadCount] = useState(0)
-
-  const handleDownload = () => {
-    setDownloadCount(downloadCount + 1)
-  }
-
-  // Pagination
-  useEffect(() => {
-    getListReglements(paginationModel.page, paginationModel.pageSize)
-  }, [paginationModel])
-
   return (
-    <Grid container spacing={6.5}>
+    <Grid container spacing={3}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='Liste des ventes' sx={{ fontSize: '60px' }} />
-          <Divider sx={{ m: '0 !important' }}></Divider>
-          <Box
-            sx={{
-              py: 4,
-              px: 6,
-              rowGap: 2,
-              columnGap: 4,
-              display: 'flex',
-              flexWrap: 'wrap',
-              alignItems: 'right',
-              justifyContent: 'flex-end'
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'right' }}>
+          <CardHeader title='Factures Impayées' sx={{ fontSize: '60px' }} />
+
+          <CardContent>
+            <Grid container justifyContent='flex-end'>
               <Button
-                onClick={() => {
-                  handleDownload()
-                }}
+                sx={{ marginLeft: '5px' }}
+                size='small'
                 variant='contained'
-                sx={{ height: '38px' }}
+                onClick={() => {
+                  getListDatas()
+                }}
               >
-                <span style={{ marginRight: '0.2rem' }}>Exporter la liste</span>
+                <AutorenewIcon />
+              </Button>
+
+              <Button
+                onClick={handleDownload}
+                variant='contained'
+                sx={{ height: '38px', marginLeft: '5px' }}
+              >
+                <span style={{ marginRight: '0.2rem' }}>Exporter</span>
                 <SaveAltIcon />
               </Button>
-            </Box>
-          </Box>
+
+            </Grid>
+          </CardContent>
 
           {downloadCount > 0 && (
-            <TemplateListeDesVentes data={reglements as never[]} fileName={`Liste_des_reglements_${downloadCount}`} />
+            <TemplateFactureImpayeePenalite
+              data={datas as never[]}
+              fileName={`Statistique_factures_impayees_${downloadCount}`}
+            />
           )}
 
-          {/* <TableHeader value={value} handleFilter={handleFilter} /> */}
           <DataGrid
             autoHeight
-            loading={statusReglements}
+            loading={statusDatas}
             rowHeight={62}
-            rows={reglements as never[]}
+            rows={datas as never[]}
             columns={columns as GridColDef<never>[]}
             disableRowSelectionOnClick
             pageSizeOptions={[10, 25, 50]}
             pagination
-            paginationMode='server'
-            rowCount={total}
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
           />
@@ -361,4 +412,4 @@ const ReglementList = () => {
   )
 }
 
-export default ReglementList
+export default listeDesFacturesRestePenalite

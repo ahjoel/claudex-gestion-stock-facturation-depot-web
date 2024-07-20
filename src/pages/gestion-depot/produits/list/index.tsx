@@ -27,6 +27,7 @@ import Model from 'src/gestion-depot/logic/models/Model'
 import Fournisseur from 'src/gestion-depot/logic/models/Fournisseur'
 import ModelService from 'src/gestion-depot/logic/services/ModelService'
 import FournisseurService from 'src/gestion-depot/logic/services/FournisseurService'
+import TemplateListeDesProduits from 'src/gestion-depot/views/pdfMake/TemplateListeDesProduits'
 
 // import PdfDocument from 'src/gestion-depot/views/pdfMake/PdfDocument'
 // import TemplateListeDesProduits2 from 'src/gestion-depot/views/pdfMake/TemplateListeDesProduits2'
@@ -561,9 +562,9 @@ const ProduitList = () => {
               handleDownload()
             }}
           />
-          {/* {downloadCount > 0 && (
-            <TemplateListeDesProduits2 data={sampleData as never[]} fileName={`Liste_des_produits_${downloadCount}`} />
-          )} */}
+          {downloadCount > 0 && (
+            <TemplateListeDesProduits data={produits as never[]} fileName={`Liste_des_produits_${downloadCount}`} />
+          )}
 
           <DataGrid
             autoHeight

@@ -36,7 +36,7 @@ const FooterContent = () => {
         </Box>
         {`${t('by')}`}
         <Typography sx={{ ml: 1 }} target='_blank' href='https://www.linkedin.com/in/jo%C3%ABl-aholou-1171a5174/' component={StyledCompanyName}>
-          KAJ
+          JoelDev
         </Typography>
       </Typography>
       {(hidden || true) ? null : (

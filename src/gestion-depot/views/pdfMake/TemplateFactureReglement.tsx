@@ -1,51 +1,51 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react'
 import pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
-import StatInventaireStockVente from 'src/gestion-depot/logic/models/StatInventaireStockVente'
+import StatFactureReglement from 'src/gestion-depot/logic/models/StatFactureReglement'
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs
 
 interface PdfDocumentProps {
-  data: StatInventaireStockVente[]
+  data: StatFactureReglement[]
   fileName: string
   date_debut: string
-  stock: string
   date_fin: string
 }
 
-const TemplateInventaireStockVente: React.FC<PdfDocumentProps> = ({ data, fileName, stock, date_debut, date_fin }) => {
+const TemplateFactureReglement: React.FC<PdfDocumentProps> = ({ data, fileName, date_debut, date_fin }) => {
   const generatePdf = () => {
     const tableBody = [
       [
         { text: '#', style: 'tableHeader', alignment: 'center' },
-        { text: 'Produit', style: 'tableHeader' },
-        { text: 'Model', style: 'tableHeader' },
-        { text: 'Fournisseur', style: 'tableHeader' },
-        { text: 'Qte Avant Per', style: 'tableHeader' },
-        { text: 'Qte Entree Per', style: 'tableHeader' },
-        { text: 'Qte Sortie Per', style: 'tableHeader' },
-        { text: 'Qte Rest Ap. Per', style: 'tableHeader' },
-        { text: 'Stock Minimal', style: 'tableHeader' }
+        { text: 'Date Facture', style: 'tableHeader' },
+        { text: 'Code', style: 'tableHeader' },
+        { text: 'Date Reglement', style: 'tableHeader' },
+        { text: 'Client', style: 'tableHeader' },
+        { text: 'Montant TTC', style: 'tableHeader' },
+        { text: 'Montant Encaisse', style: 'tableHeader' },
+        { text: 'Montant Restant', style: 'tableHeader' },
+        { text: 'Statut', style: 'tableHeader' }
       ],
-      ...data.map(row => [
-        { text: row.id, alignment: 'center' },
-        row.produit,
-        row.model,
-        { text: row.fournisseur, color: 'red', alignment: 'center' },
-        { text: row.qte_stock, alignment: 'center' },
-        { text: row.qte_stock_entree, alignment: 'center' },
-        { text: row.qte_stock_vendu, alignment: 'center' },
-        { text: row.qte_stock_restant.toString(), alignment: 'center', color: 'red' },
-        { text: row.seuil.toString(), alignment: 'center', color: 'red' }
+      ...data.map((row,index) => [
+        { text: (index + 1).toString(), alignment: 'center' },
+        { text: row.createdAt?.slice(0, -5).replace(/T/g, " "), alignment: 'center' },
+        { text: row.code, alignment: 'center' },
+        { text: row.createdAtReg?.slice(0, -5).replace(/T/g, " "), alignment: 'center' },
+        { text: row.client, color: 'red', alignment: 'center' },
+        { text: row.mt_a_payer.toString(), alignment: 'center' },
+        { text: row.mt_encaisse.toString(), alignment: 'center' },
+        { text: row.mt_restant.toString(), alignment: 'center' },
+        { text: row.statut.toString(), alignment: 'center', color: 'red' }
       ])
     ]
 
     const documentDefinition: any = {
       pageSize: 'A4',
       pageOrientation: 'landscape',
-      pageMargins: [40, 60, 40, 60],
+      pageMargins: [40, 50, 40, 60],
       header: {
-        text: `INVENTAIRE DU STOCK DE VENTE - ${stock}`,
+        text: `STATISTIQUE DES VENTES`,
         alignment: 'center',
         margin: [0, 10, 0, 10],
         fontSize: 18,
@@ -68,7 +68,7 @@ const TemplateInventaireStockVente: React.FC<PdfDocumentProps> = ({ data, fileNa
         {
           table: {
             headerRows: 1,
-            widths: ['auto', '*', 'auto', 'auto', '*', '*', '*', 'auto', '*'],
+            widths: ['auto', 'auto', 'auto', '*', 'auto', 'auto', 'auto', 'auto', '*'],
             body: tableBody
           },
           layout: {
@@ -103,4 +103,4 @@ const TemplateInventaireStockVente: React.FC<PdfDocumentProps> = ({ data, fileNa
   return null
 }
 
-export default TemplateInventaireStockVente
+export default TemplateFactureReglement

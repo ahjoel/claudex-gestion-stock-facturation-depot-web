@@ -2,43 +2,44 @@
 import React, { useEffect } from 'react'
 import pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
-import StatCaisse from 'src/gestion-depot/logic/models/StatCaisse'
-import StatReglementPerMonth from 'src/gestion-depot/logic/models/StatReglementPerMonth'
+import StatFacturePenalite from 'src/gestion-depot/logic/models/StatFacturePenalite'
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs
 
 interface PdfDocumentProps {
-  data: StatReglementPerMonth[]
+  data: StatFacturePenalite[]
   fileName: string
 }
 
-const TemplateCaisseMensuelle: React.FC<PdfDocumentProps> = ({ data, fileName }) => {
+const TemplateFactureImpayeePenalite: React.FC<PdfDocumentProps> = ({ data, fileName }) => {
   const generatePdf = () => {
     const tableBody = [
       [
         { text: '#', style: 'tableHeader', alignment: 'center' },
-        { text: 'Période', style: 'tableHeader' },
-        { text: 'Montant Total', style: 'tableHeader' }
+        { text: 'Date Facture', style: 'tableHeader' },
+        { text: 'Code', style: 'tableHeader' },
+        { text: 'Montant Restant', style: 'tableHeader' },
+        { text: 'Nbr. Jours', style: 'tableHeader' },
+        { text: 'Montant TTC', style: 'tableHeader' },
+        { text: 'Montant Encaisse', style: 'tableHeader' }
       ],
-      ...data.map(row => [
-        { text: row.id.toString(), alignment: 'center' },
-        { text: row.moisAnnee.toString(), alignment: 'center' },
-        { text: row.Mtotal.toString(), alignment: 'center' }
+      ...data.map((row,index) => [
+        { text: (index + 1).toString(), alignment: 'center' },
+        { text: row.createdAt?.slice(0, -5).replace(/T/g, " "), alignment: 'center' },
+        { text: row.code, alignment: 'center' },
+        { text: row.mt_restant.toString(), alignment: 'center' },
+        { text: row.nbJour, alignment: 'center' },
+        { text: row.mt_a_payer.toString(), alignment: 'center' },
+        { text: row.mt_encaisse.toString(), alignment: 'center' }
       ])
-    ]
-
-    const totalRow = [
-      { text: 'Total', colSpan: 2, alignment: 'center', bold: true },
-      {},
-      { text: formatNumber(calculateTotal(data)), alignment: 'center', bold: true }
     ]
 
     const documentDefinition: any = {
       pageSize: 'A4',
-      pageOrientation: 'portrait',
-      pageMargins: [40, 60, 40, 60],
+      pageOrientation: 'landscape',
+      pageMargins: [40, 50, 40, 60],
       header: {
-        text: `SATISTIQUE CAISSE MENSUELLE`,
+        text: `SUIVI DES FACTURES IMPAYEES`,
         alignment: 'center',
         margin: [0, 10, 0, 10],
         fontSize: 18,
@@ -61,8 +62,8 @@ const TemplateCaisseMensuelle: React.FC<PdfDocumentProps> = ({ data, fileName })
         {
           table: {
             headerRows: 1,
-            widths: ['auto', 'auto', 'auto'],
-            body: [...tableBody, totalRow]
+            widths: ['auto', 'auto', '*', '*', 'auto', 'auto', 'auto'],
+            body: tableBody
           },
           layout: {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -89,21 +90,6 @@ const TemplateCaisseMensuelle: React.FC<PdfDocumentProps> = ({ data, fileName })
     pdfMake.createPdf(documentDefinition).download(`${fileName}.pdf`)
   }
 
-  // Fonction pour calculer le total des montants
-  const calculateTotal = (data: StatReglementPerMonth[]): number => {
-    let total = 0
-    data.forEach(row => {
-      total += Number(row.Mtotal)
-    })
-
-    return total
-  }
-
-  // Fonction pour formater les nombres avec séparateur de milliers
-  const formatNumber = (num: number): string => {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-  }
-
   useEffect(() => {
     generatePdf()
   }, [fileName])
@@ -111,4 +97,4 @@ const TemplateCaisseMensuelle: React.FC<PdfDocumentProps> = ({ data, fileName })
   return null
 }
 
-export default TemplateCaisseMensuelle
+export default TemplateFactureImpayeePenalite

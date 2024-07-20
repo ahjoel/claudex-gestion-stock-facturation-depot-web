@@ -817,58 +817,27 @@ const FactureList = () => {
               </IconButton>
             </Tooltip>
 
-            <Tooltip title="Supprimer">
-              <IconButton
-                size="small"
-                sx={{ color: "text.primary" }}
-                onClick={() => {
-                  handleDeleteFacture(row);
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    color: (theme) => theme.palette.error.main,
+            {(profile === "SUPER-ADMIN") || (profile === "ADMINISTRATEUR") || (profile === "GERANT") ?
+              (<Tooltip title="Supprimer">
+                <IconButton
+                  size="small"
+                  sx={{ color: "text.primary" }}
+                  onClick={() => {
+                    handleDeleteFacture(row);
                   }}
                 >
-                  <Icon icon="tabler:trash" />
-                </Box>
-              </IconButton>
-            </Tooltip>
-            {/* <Tooltip title="Voir la facture">
-              <IconButton
-                size="small"
-                sx={{ color: "text.primary" }}
-                onClick={() =>
-                  handleOpenModalPrintFacture(row.code, row.totalfacture)
-                }
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    color: (theme) => theme.palette.info.main,
-                  }}
-                >
-                  <Icon icon="tabler:file-plus" />
-                </Box>
-              </IconButton>
-            </Tooltip> */}
-            {/* <Tooltip title="Imprimer la facture">
-              <IconButton
-                size="small"
-                sx={{ color: "text.primary" }}
-                onClick={() => handleDownload(row.code)}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    color: (theme) => theme.palette.info.main,
-                  }}
-                >
-                  <Icon icon="tabler:file-plus" />
-                </Box>
-              </IconButton>
-            </Tooltip> */}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      color: (theme) => theme.palette.error.main,
+                    }}
+                  >
+                    <Icon icon="tabler:trash" />
+                  </Box>
+                </IconButton>
+              </Tooltip>) : ''
+            }
+            
           </Box>
         ),
       },

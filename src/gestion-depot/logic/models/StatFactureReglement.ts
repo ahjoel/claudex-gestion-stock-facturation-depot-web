@@ -1,56 +1,53 @@
 import MainModel from './MainModel'
 
-export default class FactureDetail extends MainModel {
+export default class StatFactureReglement extends MainModel {
   produit: string
   remise: string
   code: string
   created_at: string
+  createdAtReg: string
   client: string
-  modele: string
-  username: string
-  fournisseur: string
-  qte: number
-  pv: number
-  factureId: number
-  produitId: number
-  impayee: string
+  mt_a_payer: string
+  mt_encaisse: string
+  mt_restant: string
+  mtrecu: number
+  mtpayer: number
+  statut: string
 
   constructor(
     id = -1,
     createdBy = null,
     createdAt = '',
+    createdAtReg = '',
     updatedBy = null,
     updatedAt = '',
     deletedBy = null,
     deletedAt = '',
     produit = '',
-    modele = '',
     remise = '',
     code = '',
     client = '',
     created_at = '',
-    username = '',
-    impayee = '',
-    qte = 0,
-    pv = 0,
-    factureId = 0,
-    produitId = 0,
-    fournisseur = ''
+    statut = '',
+    mt_a_payer = '',
+    mt_encaisse = '',
+    mt_restant = '',
+    mtrecu = 0,
+    mtpayer = 0
   ) {
     super(id, createdBy, createdAt, updatedBy, updatedAt, deletedBy, deletedAt)
 
     this.produit = produit
-    this.modele = modele
     this.remise = remise
-    this.username = username
     this.created_at = created_at
+    this.createdAtReg = createdAtReg
     this.code = code
     this.client = client
-    this.fournisseur = fournisseur
-    this.qte = qte
-    this.pv = pv
-    this.impayee = impayee
-    this.factureId = factureId
-    this.produitId = produitId
+    this.mt_a_payer = mt_a_payer
+    this.mt_encaisse = mt_encaisse
+    this.mt_restant = mt_restant
+    this.mtrecu = mtrecu
+    this.mtpayer = mtpayer
+    this.statut = statut
   }
 }

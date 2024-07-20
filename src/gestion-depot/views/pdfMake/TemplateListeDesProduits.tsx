@@ -30,7 +30,7 @@ const TemplateListeDesProduits: React.FC<PdfDocumentProps> = ({ data, fileName }
         row.model,
         row.fournisseur,
         { text: row.pv.toString(), alignment: 'right', color: 'red' },
-        { text: row.stock_min.toString(), alignment: 'right', color: 'red' }
+        { text: row.seuil.toString(), alignment: 'right', color: 'red' }
       ])
     ]
 
