@@ -45,7 +45,7 @@ const ReglementList = () => {
   const handleDeleteReglement = (reglement: Reglement) => {
     setCurrentReglement(reglement)
     setComfirmationMessage(
-      `Voulez-vous réellement supprimer cet reglement de : ${reglement.totalFacture} F CFA pour la facture : ${reglement.codeFacture} ?`
+      `Voulez-vous réellement supprimer cet reglement de : ${reglement.mtpayer} F CFA pour la facture : ${reglement.code} ?`
     )
     setComfirmationFunction(() => () => deleteReglement(reglement))
     setOpen(true)
@@ -221,7 +221,7 @@ const ReglementList = () => {
       },
       {
         flex: 0.15,
-        field: 'total',
+        field: 'mtpayer',
         renderHeader: () => (
           <Tooltip title='Total Facture'>
             <Typography
@@ -238,7 +238,7 @@ const ReglementList = () => {
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { totalFacture } = row
+          const { mtpayer } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -252,7 +252,7 @@ const ReglementList = () => {
                     textAlign: 'center'
                   }}
                 >
-                  {totalFacture}
+                  {mtpayer}
                 </Typography>
               </Box>
             </Box>
@@ -278,7 +278,7 @@ const ReglementList = () => {
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { firstname, lastname } = row
+          const { auteur } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -291,7 +291,7 @@ const ReglementList = () => {
                     color: 'primary.main'
                   }}
                 >
-                  {firstname} {''} {lastname}
+                  {auteur}
                 </Typography>
               </Box>
             </Box>

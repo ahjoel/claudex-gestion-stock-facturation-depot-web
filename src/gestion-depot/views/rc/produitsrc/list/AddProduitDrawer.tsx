@@ -30,7 +30,7 @@ interface ProduitData {
   modelId: number
   fournisseurId: number
   pv: number
-  stock_min: number
+  seuil: number
 }
 
 interface SidebarAddProduitType {
@@ -92,7 +92,7 @@ const schema = yup.object().shape({
   modelId: yup.number().required(() => 'Le champ model est obligatoire'),
   fournisseurId: yup.number().required(() => 'Le champ fournisseur est obligatoire'),
   pv: yup.number().required(() => 'Le champ prix de vente est obligatoire'),
-  stock_min: yup.number().required(() => 'Le champ stock minimal est obligatoire')
+  seuil: yup.number().required(() => 'Le champ stock minimal est obligatoire')
 })
 
 const defaultValues = {
@@ -102,7 +102,7 @@ const defaultValues = {
   modelId: 0,
   fournisseurId: 0,
   pv: 0,
-  stock_min: 0
+  seuil: 0
 }
 
 const SidebarAddProduit = (props: SidebarAddProduitType) => {
@@ -144,7 +144,7 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
       modelId: Number(data.modelId),
       fournisseurId: Number(data.fournisseurId),
       pv: Number(data.pv),
-      stock_min: Number(data.stock_min)
+      seuil: Number(data.seuil)
     }
 
     if (id === -1) {
@@ -202,7 +202,7 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
       modelId: currentProduit && currentProduit?.modelId !== undefined ? currentProduit.modelId : 0,
       fournisseurId: currentProduit && currentProduit?.fournisseurId !== undefined ? currentProduit.fournisseurId : 0,
       pv: currentProduit && currentProduit?.pv !== undefined ? currentProduit.pv : 0,
-      stock_min: currentProduit && currentProduit?.stock_min !== undefined ? currentProduit.stock_min : 0
+      seuil: currentProduit && currentProduit?.seuil !== undefined ? currentProduit.seuil : 0
     })
     setId(currentProduit !== null ? currentProduit?.id : -1)
   }, [open, currentProduit])
@@ -347,7 +347,7 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
             )}
           />
           <Controller
-            name='stock_min'
+            name='seuil'
             control={control}
             rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
@@ -357,8 +357,8 @@ const SidebarAddProduit = (props: SidebarAddProduitType) => {
                 sx={{ mb: 4 }}
                 label='Stock minimal'
                 onChange={onChange}
-                error={Boolean(errors.stock_min)}
-                {...(errors.stock_min && { helperText: errors.stock_min.message })}
+                error={Boolean(errors.seuil)}
+                {...(errors.seuil && { helperText: errors.seuil.message })}
               />
             )}
           />

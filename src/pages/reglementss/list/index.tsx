@@ -1395,8 +1395,9 @@ const ReglementssList = () => {
               value={valueDetFact}
               handleFilterDetail={handleFilterDet}
               toggle={handleAddProduitFacture}
-              etatFacture={etatFacture}
-            />
+              etatFacture={etatFacture} onDownload={function (): void {
+                throw new Error("Function not implemented.");
+              } }            />
 
             <Box
               sx={{

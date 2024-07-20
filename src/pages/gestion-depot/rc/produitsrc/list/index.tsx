@@ -359,7 +359,7 @@ const ProduitList = () => {
       },
       {
         flex: 0.15,
-        field: 'stock_min',
+        field: 'seuil',
         renderHeader: () => (
           <Tooltip title='Stock Minimal'>
             <Typography
@@ -376,7 +376,7 @@ const ProduitList = () => {
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { stock_min } = row
+          const { seuil } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -389,46 +389,7 @@ const ProduitList = () => {
                     color: 'primary.main'
                   }}
                 >
-                  {stock_min}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        }
-      },
-      {
-        flex: 0.15,
-        field: 'stock',
-        renderHeader: () => (
-          <Tooltip title='Stock'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Stock
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { stock } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {stock}
+                  {seuil}
                 </Typography>
               </Box>
             </Box>
@@ -502,11 +463,10 @@ const ProduitList = () => {
           produit.code.toLowerCase().includes(queryLowered) ||
           produit.name.toLowerCase().includes(queryLowered) ||
           produit.description.toLowerCase().includes(queryLowered) ||
-          produit.stock.toLowerCase().includes(queryLowered) ||
           (produit.model && produit.model.toString().toLowerCase().includes(queryLowered)) ||
           (produit.fournisseur && produit.fournisseur.toString().toLowerCase().includes(queryLowered)) ||
           produit.pv.toString().toLowerCase().includes(queryLowered) ||
-          produit.stock_min.toString().toLowerCase().includes(queryLowered)
+          produit.seuil.toString().toLowerCase().includes(queryLowered)
         )
       })
 

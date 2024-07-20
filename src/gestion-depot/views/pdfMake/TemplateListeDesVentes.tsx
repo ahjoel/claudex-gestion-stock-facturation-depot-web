@@ -27,8 +27,8 @@ const TemplateListeDesVentes: React.FC<PdfDocumentProps> = ({ data, fileName }) 
         row.createdAt.slice(0, -5).replace(/T/g, ' '),
         row.client,
         { text: row.codeFacture, color: 'red' },
-        row.totalFacture,
-        row.firstname + ' ' + row.lastname
+        row.mtpayer,
+        row.auteur
       ])
     ]
 
