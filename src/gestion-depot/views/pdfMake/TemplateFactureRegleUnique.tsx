@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { NumberToLetter } from 'convertir-nombre-lettre';
+import { NumberToLetter } from 'convertir-nombre-lettre'
 import FactureDetail from 'src/gestion-depot/logic/models/FactureDetail';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
