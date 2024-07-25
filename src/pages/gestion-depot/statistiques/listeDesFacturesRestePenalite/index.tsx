@@ -73,7 +73,6 @@ const listeDesFacturesRestePenalite = () => {
   const getColumns = () => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.18,
         field: 'codeFacture',
         renderHeader: () => (
           <Tooltip title='Code Facture'>
@@ -108,10 +107,10 @@ const listeDesFacturesRestePenalite = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 200
       },
       {
-        flex: 0.18,
         field: 'createdAt',
         renderHeader: () => (
           <Tooltip title='Date Facture'>
@@ -146,10 +145,10 @@ const listeDesFacturesRestePenalite = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 200
       },
       {
-        flex: 0.15,
         field: 'mt_restant',
         renderHeader: () => (
           <Tooltip title='Montant Restant'>
@@ -185,10 +184,10 @@ const listeDesFacturesRestePenalite = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 200
       },
       {
-        flex: 0.10,
         field: 'nbJour',
         renderHeader: () => (
           <Tooltip title='Nombre de Jours'>
@@ -223,10 +222,10 @@ const listeDesFacturesRestePenalite = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 200
       },
       {
-        flex: 0.15,
         field: 'mt_a_payer',
         renderHeader: () => (
           <Tooltip title='Montant TTC'>
@@ -262,10 +261,10 @@ const listeDesFacturesRestePenalite = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 200
       },
       {
-        flex: 0.15,
         field: 'mt_encaisse',
         renderHeader: () => (
           <Tooltip title='Montant Encaisse'>
@@ -301,7 +300,8 @@ const listeDesFacturesRestePenalite = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 200
       },
     ]
 

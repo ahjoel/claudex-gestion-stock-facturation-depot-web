@@ -185,7 +185,6 @@ const SituationReglementList = () => {
   ) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.15,
         field: "createdAt",
         renderHeader: () => (
           <Tooltip title="Date de creation">
@@ -229,9 +228,9 @@ const SituationReglementList = () => {
             </Box>
           );
         },
+        width: 200
       },
       {
-        flex: 0.09,
         field: "client",
         renderHeader: () => (
           <Tooltip title="Client">
@@ -276,9 +275,9 @@ const SituationReglementList = () => {
             </Box>
           );
         },
+        width: 150
       },
       {
-        flex: 0.2,
         field: "codeFacture",
         renderHeader: () => (
           <Tooltip title="Code Facture">
@@ -325,9 +324,9 @@ const SituationReglementList = () => {
             </Box>
           );
         },
+        width: 270
       },
       {
-        flex: 0.15,
         field: "mt_a_payer",
         renderHeader: () => (
           <Tooltip title="Mt A Payer">
@@ -378,9 +377,9 @@ const SituationReglementList = () => {
             </Box>
           );
         },
+        width: 200
       },
       {
-        flex: 0.15,
         field: "mt_encaisse",
         renderHeader: () => (
           <Tooltip title="Mt Encaisse">
@@ -431,9 +430,9 @@ const SituationReglementList = () => {
             </Box>
           );
         },
+        width: 200
       },
       {
-        flex: 0.15,
         field: "mt_restant",
         renderHeader: () => (
           <Tooltip title="Mt Restant">
@@ -484,6 +483,7 @@ const SituationReglementList = () => {
             </Box>
           );
         },
+        width: 200
       },
       // {
       //   flex: 0.15,
@@ -531,7 +531,6 @@ const SituationReglementList = () => {
       //   },
       // },
       {
-        flex: 0.15,
         sortable: false,
         field: "actions",
         renderHeader: () => (
@@ -578,6 +577,7 @@ const SituationReglementList = () => {
 
           </Box>
         ),
+        width: 150
       },
     ];
 
@@ -696,7 +696,6 @@ const SituationReglementList = () => {
   ) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.15,
         field: "produit",
         renderHeader: () => (
           <Tooltip title="Produit">
@@ -739,9 +738,9 @@ const SituationReglementList = () => {
             </Box>
           );
         },
+        width: 200
       },
       {
-        flex: 0.15,
         field: "modele",
         renderHeader: () => (
           <Tooltip title="Modèle">
@@ -784,9 +783,9 @@ const SituationReglementList = () => {
             </Box>
           );
         },
+        width: 180
       },
       {
-        flex: 0.15,
         field: "fournisseur",
         renderHeader: () => (
           <Tooltip title="Fournisseur">
@@ -829,11 +828,9 @@ const SituationReglementList = () => {
             </Box>
           );
         },
+        width: 150
       },
       {
-        flex: 0.1,
-
-        // minWidth: 50,
         field: "qte",
         renderHeader: () => (
           <Tooltip title="Quantité">
@@ -878,11 +875,9 @@ const SituationReglementList = () => {
             </Box>
           );
         },
+        width: 150
       },
       {
-        flex: 0.1,
-
-        // minWidth: 50,
         field: "pv",
         renderHeader: () => (
           <Tooltip title="Prix de vente">
@@ -927,6 +922,7 @@ const SituationReglementList = () => {
             </Box>
           );
         },
+        width: 150
       },
     ];
     // if (etatFacture === "impayée") {

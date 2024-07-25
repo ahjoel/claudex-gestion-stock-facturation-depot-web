@@ -111,8 +111,6 @@ const FournisseurList = () => {
   const getColumns = (handleUpdateFournisseur: (fournisseur: Fournisseur) => void) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.25,
-        minWidth: 200,
         field: 'name',
         renderHeader: () => (
           <Tooltip title={t('Name')}>
@@ -147,11 +145,10 @@ const FournisseurList = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 350
       },
       {
-        flex: 0.25,
-        minWidth: 200,
         field: 'description',
         renderHeader: () => (
           <Tooltip title={t('Description')}>
@@ -187,11 +184,10 @@ const FournisseurList = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 350
       },
       {
-        flex: 0.1,
-        minWidth: 50,
         sortable: false,
         field: 'actions',
         renderHeader: () => (
@@ -239,7 +235,8 @@ const FournisseurList = () => {
               </IconButton>
             </Tooltip>
           </Box>
-        )
+        ),
+        width: 350
       }
     ]
 

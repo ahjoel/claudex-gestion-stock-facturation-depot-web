@@ -68,7 +68,6 @@ const listeDesReglementPerMonth = () => {
   const getColumns = () => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.20,
         field: 'moisAnnee',
         renderHeader: () => (
           <Tooltip title='Période'>
@@ -103,10 +102,10 @@ const listeDesReglementPerMonth = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 400
       },
       {
-        flex: 0.20,
         field: 'Mtotal',
         renderHeader: () => (
           <Tooltip title={t('Total')}>
@@ -141,7 +140,8 @@ const listeDesReglementPerMonth = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 400
       }
     ]
 

@@ -111,7 +111,6 @@ const UserList = () => {
   const getColumns = (handleUpdateUser: (user: User) => void, handleDeleteUser: (user: User) => void) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.2,
         field: 'username',
         renderHeader: () => (
           <Tooltip title='Nom Utilisateur'>
@@ -146,11 +145,10 @@ const UserList = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 250
       },
       {
-        flex: 0.2,
-        minWidth: 200,
         field: 'lastname',
         renderHeader: () => (
           <Tooltip title='Nom'>
@@ -186,10 +184,10 @@ const UserList = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 250
       },
       {
-        flex: 0.2,
         field: 'firstname',
         renderHeader: () => (
           <Tooltip title={t('Prénom')}>
@@ -224,10 +222,10 @@ const UserList = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 250
       },
       {
-        flex: 0.2,
         field: 'email',
         renderHeader: () => (
           <Tooltip title={t('Email')}>
@@ -262,7 +260,8 @@ const UserList = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 250
       },
       // {
       //   flex: 0.18,
@@ -305,8 +304,6 @@ const UserList = () => {
       //   }
       // },
       {
-        flex: 0.15,
-        minWidth: 200,
         field: 'profil',
         renderHeader: () => (
           <Tooltip title='Profil'>
@@ -342,11 +339,10 @@ const UserList = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 200
       },
       {
-        flex: 0.1,
-        minWidth: 50,
         sortable: false,
         field: 'actions',
         renderHeader: () => (
@@ -394,7 +390,8 @@ const UserList = () => {
               </IconButton>
             </Tooltip>
           </Box>
-        )
+        ),
+        width: 100
       }
     ]
 

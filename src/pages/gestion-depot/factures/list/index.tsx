@@ -362,7 +362,6 @@ const FactureList = () => {
   ) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.15,
         field: "code",
         renderHeader: () => (
           <Tooltip title="Code">
@@ -406,9 +405,9 @@ const FactureList = () => {
             </Box>
           );
         },
+        width: 280
       },
       {
-        flex: 0.15,
         field: "createdAt",
         renderHeader: () => (
           <Tooltip title="Date creation">
@@ -452,9 +451,9 @@ const FactureList = () => {
             </Box>
           );
         },
+        width: 200
       },
       {
-        flex: 0.15,
         field: "client",
         renderHeader: () => (
           <Tooltip title="Client">
@@ -499,9 +498,9 @@ const FactureList = () => {
             </Box>
           );
         },
+        width: 150
       },
       {
-        flex: 0.1,
         field: "tax",
         renderHeader: () => (
           <Tooltip title="Tax">
@@ -544,9 +543,9 @@ const FactureList = () => {
             </Box>
           );
         },
+        width: 80
       },
       {
-        flex: 0.15,
         field: "nbproduit",
         renderHeader: () => (
           <Tooltip title="NB Pdt(s)">
@@ -597,9 +596,9 @@ const FactureList = () => {
             </Box>
           );
         },
+        width: 130
       },
       {
-        flex: 0.15,
         field: "totalfacture",
         renderHeader: () => (
           <Tooltip title="Total Facture">
@@ -642,9 +641,9 @@ const FactureList = () => {
             </Box>
           );
         },
+        width: 150
       },
       {
-        flex: 0.15,
         field: "remise",
         renderHeader: () => (
           <Tooltip title="Remise">
@@ -657,7 +656,7 @@ const FactureList = () => {
                 fontSize: "0.8125rem",
               }}
             >
-              Remise Facture
+              Remise
             </Typography>
           </Tooltip>
         ),
@@ -687,9 +686,9 @@ const FactureList = () => {
             </Box>
           );
         },
+        width: 100
       },
       {
-        flex: 0.15,
         field: "totalApres",
         renderHeader: () => (
           <Tooltip title="Mtant. A Payer">
@@ -732,9 +731,9 @@ const FactureList = () => {
             </Box>
           );
         },
+        width: 150
       },
       {
-        flex: 0.18,
         sortable: false,
         field: "actions",
         renderHeader: () => (
@@ -760,26 +759,6 @@ const FactureList = () => {
               alignItems: "center",
             }}
           >
-            {/* <Tooltip title="Régler la facture">
-              <IconButton
-                size="small"
-                sx={{ color: "text.primary" }}
-                onClick={() => {
-                  {
-                    handlePayementFacture(row);
-                  }
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    color: (theme) => theme.palette.info.main,
-                  }}
-                >
-                  <Icon icon="tabler:currency-dollar" />
-                </Box>
-              </IconButton>
-            </Tooltip> */}
             <Tooltip title={"Afficher détail facture"}>
               <IconButton
                 size="small"
@@ -840,6 +819,7 @@ const FactureList = () => {
             
           </Box>
         ),
+        width: 120
       },
     ];
 
@@ -851,7 +831,6 @@ const FactureList = () => {
   ) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.15,
         field: "produit",
         renderHeader: () => (
           <Tooltip title="Produit">
@@ -894,9 +873,9 @@ const FactureList = () => {
             </Box>
           );
         },
+        width: 200
       },
       {
-        flex: 0.15,
         field: "modele",
         renderHeader: () => (
           <Tooltip title="Modèle">
@@ -939,9 +918,9 @@ const FactureList = () => {
             </Box>
           );
         },
+        width: 150
       },
       {
-        flex: 0.15,
         field: "fournisseur",
         renderHeader: () => (
           <Tooltip title="Fournisseur">
@@ -984,11 +963,9 @@ const FactureList = () => {
             </Box>
           );
         },
+        width: 130
       },
       {
-        flex: 0.1,
-
-        // minWidth: 50,
         field: "qte",
         renderHeader: () => (
           <Tooltip title="Quantité">
@@ -1033,11 +1010,9 @@ const FactureList = () => {
             </Box>
           );
         },
+        width: 120
       },
       {
-        flex: 0.1,
-
-        // minWidth: 50,
         field: "pv",
         renderHeader: () => (
           <Tooltip title="Prix de vente">
@@ -1082,12 +1057,11 @@ const FactureList = () => {
             </Box>
           );
         },
+        width: 150
       },
     ];
     // if (etatFacture === "impayée") {
     colArray.push({
-      flex: 0.1,
-      minWidth: 50,
       sortable: false,
       field: "action",
       renderHeader: () => (
@@ -1143,6 +1117,7 @@ const FactureList = () => {
           {/* )} */}
         </Box>
       ),
+      width: 100
     });
     // }
 

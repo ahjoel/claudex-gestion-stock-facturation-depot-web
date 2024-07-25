@@ -11,8 +11,16 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Divider,
+  FormControl,
+  InputLabel,
   MenuItem,
+  Select,
   Table,
   TableBody,
   TableCell,
@@ -33,6 +41,12 @@ import axios from 'src/configs/axios-config'
 import { getHeadersInformation } from 'src/gestion-depot/logic/utils/constant'
 import router from 'next/router'
 import Client from 'src/gestion-depot/logic/models/Client'
+import Icon from 'src/@core/components/icon'
+import ProduitService from 'src/gestion-depot/logic/services/ProduitService'
+import Produit from 'src/gestion-depot/logic/models/Produit'
+import Autocomplete from '@mui/material/Autocomplete'
+import EntreeR1 from 'src/gestion-depot/logic/services/EntreeR1Service'
+import EntreeR1Dispo from 'src/gestion-depot/logic/models/EntreeR1Dispo'
 
 interface CellType {
   row: StorageData
@@ -59,6 +73,15 @@ const defaultValues = {
   remise: 0
 }
 
+const schemap = yup.object().shape({
+  client_id: yup.string().required(() => 'Le champ client est obligatoire')
+})
+
+const defaultValuesp = {
+  produitId: '',
+  qte: 0
+}
+
 const FactureEnCours = () => {
   // Notifications - snackbar
 
@@ -68,6 +91,17 @@ const FactureEnCours = () => {
   const [openNotificationSuccess, setOpenNotificationSuccess] = useState<boolean>(false)
   const [typeMessage, setTypeMessage] = useState('info')
   const [message, setMessage] = useState('')
+
+  const [openModal, setOpenModal] = React.useState(false);
+
+  const handleClickOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
 
   const loadCodefacture = async () => {
     try {
@@ -171,6 +205,9 @@ const FactureEnCours = () => {
 
   // Fonction pour gérer l'action Ajouter de Quantité
   const handleActionAjouter = (row: any) => {
+    const updatedQuantity = row.quantity;
+    console.log("quantityUpdated ::", updatedQuantity);
+
     const cartProductArray = JSON.parse(localStorage.getItem('cart1') || '[]')
 
     const productToCart = {
@@ -255,7 +292,6 @@ const FactureEnCours = () => {
   ) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.15,
         field: 'product',
         renderHeader: () => (
           <Tooltip title='Produit'>
@@ -293,10 +329,10 @@ const FactureEnCours = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 300
       },
       {
-        flex: 0.1,
         field: 'fournisseur',
         renderHeader: () => (
           <Tooltip title='Fournisseur'>
@@ -332,10 +368,10 @@ const FactureEnCours = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 150
       },
       {
-        flex: 0.1,
         field: 'quantity',
         renderHeader: () => (
           <Tooltip title='Quantité'>
@@ -371,10 +407,11 @@ const FactureEnCours = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 150,
+        editable: true
       },
       {
-        flex: 0.2,
         field: 'total',
         renderHeader: () => (
           <Tooltip title='Total'>
@@ -414,10 +451,10 @@ const FactureEnCours = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 250
       },
       {
-        flex: 0.2,
         sortable: false,
         field: 'actions',
         renderHeader: () => (
@@ -445,10 +482,10 @@ const FactureEnCours = () => {
               +
             </Button>
           </ButtonGroup>
-        )
+        ),
+        width: 200
       },
       {
-        flex: 0.18,
         sortable: false,
         field: 'suppression',
         renderHeader: () => (
@@ -483,7 +520,8 @@ const FactureEnCours = () => {
               </Tooltip>
             </Button>
           </ButtonGroup>
-        )
+        ),
+        width: 250
       }
     ]
 
@@ -598,9 +636,155 @@ const FactureEnCours = () => {
     }
   }
 
+  const handleAddToCart = (entreeR1Dispo: EntreeR1Dispo) => {
+    // console.log('data to save :::', entreeR1Dispo);
+    const qteSaisie = parseFloat(entreeR1Dispo.quantity)
+    const stockDispo = parseFloat(entreeR1Dispo.st_dispo)
+    // console.log('add to cart ::', qteSaisie, stockDispo);
+    
+    if (stockDispo >= qteSaisie) {
+      const cartProductArray = JSON.parse(localStorage.getItem('cart1') || '[]')
+      
+      // Créer un nouvel objet pour le produit à ajouter au panier
+      const productToCart = {
+        productId: entreeR1Dispo?.produitId,
+        product: entreeR1Dispo?.produit.toString(),
+        model: entreeR1Dispo?.model,
+        fournisseur: entreeR1Dispo?.fournisseur,
+        pv: Number(entreeR1Dispo?.pv),
+        stockDispo: Number(entreeR1Dispo?.st_dispo),
+        quantity: parseFloat(entreeR1Dispo?.quantity)
+      }
+
+      // Vérifier si le produit existe déjà dans le panier
+      const existingProductIndex = cartProductArray.findIndex(
+        (item: { productId: number }) => item.productId === productToCart.productId
+      )
+
+      // Si le produit existe déjà dans le panier, ne l'ajoute pas à nouveau
+      if (existingProductIndex === -1) {
+        // Ajouter le nouveau produit au panier
+        cartProductArray.push(productToCart)
+
+        // Mettre à jour le localStorage avec le nouveau panier
+        localStorage.setItem('cart1', JSON.stringify(cartProductArray))
+        setOpenNotification(true)
+        setTypeMessage('success')
+        setMessage('Produit ajouté à la facture en cours')
+      } else {
+        setOpenNotification(true)
+        setTypeMessage('error')
+        setMessage('Produit existe déja sur la facture en cours')
+      }
+    } else {
+      setOpenNotification(true)
+      setTypeMessage('error')
+      setMessage('La quantité demandée est supérieur au stock disponible')
+    }
+  }
+  
+  const [produitId, setProduitId] = useState('');
+  const [fournisseur, setFournisseur] = useState('');
+  const [st_dispo, setSt_Dispo] = useState('');
+  const [model, setModel] = useState('');
+  const [productName, setProductName] = useState('');
+  const [pv, setPv] = useState('');
+  const [stockDispo, setStockDispo] = useState('');
+  const [quantite, setQuantite] = useState('');
+  const [seuil, setSeuil] = useState('');
+  const [error, setError] = useState(false);
+
+  const handleProduitChange = async (selectedProductId: any) => {
+    // Ici, vous pouvez mettre à jour l'état ou effectuer d'autres actions
+    // console.log('Produit sélectionné :', selectedProductId);
+    // Mettre à jour l'état dans votre composant parent, par exemple :
+    // productId, product, model, fournisseur, pv, stockDispo
+    setProduitId(selectedProductId); // Si vous utilisez useState pour gérer produitId
+
+    // Load Data
+    const entreeR1 = new EntreeR1()
+    try {
+      const sendData = {
+        produitId: Number(selectedProductId)
+      }
+      const rep = await entreeR1.listProduitInfo(sendData);
+
+      if (rep.success) {
+        const filteredData = rep.data[0] as StorageData;
+        console.log('Data trouvé :', filteredData);
+        setProductName(filteredData.produit);
+        setModel(filteredData.model);
+        setFournisseur(filteredData.fournisseur);
+        setPv(filteredData.pv + '');
+        setSt_Dispo(filteredData.st_dispo + '');
+        setSeuil(filteredData.stockMinimal + '')
+      } else {
+        setOpenNotification(true);
+        setTypeMessage("error");
+        setMessage("Reglement non trouvé");
+      }
+    } catch (error) {
+      console.error("Erreur lors de la suppression :", error);
+
+      setOpenNotification(true);
+      setTypeMessage("error");
+      setMessage("Une erreur est survenue lors du chargement des infos du produit");
+    }
+  };
+
+  const handleSubmitProd = (event:any) => {
+    event.preventDefault(); // Prevent form submission for demonstration purposes
+    // console.log('Data send::::', produitId, quantite, st_dispo);
+    if (produitId != '' && quantite != ''){
+      const productToCart: EntreeR1Dispo = {
+        produitId: Number(produitId),
+        produit: productName,
+        model: model,
+        fournisseur: fournisseur,
+        pv: pv,
+        st_dispo: st_dispo,
+        quantity: quantite,
+        seuil: seuil,
+        id: -1,
+        createdBy: null,
+        createdAt: '',
+        updatedAt: '',
+        updatedBy: null,
+        deletedAt: '',
+        deletedBy: null
+      }
+      handleAddToCart(productToCart)
+      refresh()
+      setProduitId('');
+      setModel('');
+      setFournisseur('');
+      setQuantite('');
+      setSt_Dispo('');
+    }else{
+      setOpenNotification(true)
+      setTypeMessage('error')
+      setMessage('Veuillez remplir tous les champs du formulaire.')
+    }
+  };
+
+  const produitService = new ProduitService()
+  const [produits, setProduits] = useState<Produit[]>([])
+  const handleLoadingProduits = async () => {
+    const result = await produitService.listProduitsLongue();
+
+    if (result.success) {
+      setProduits(result.data as Produit[]);
+    } else {
+      setOpenNotification(true);
+      setTypeMessage("error");
+      setMessage(result.description);
+    }
+  };
+
   // Control search data in datagrid
   useEffect(() => {
     loadCodefacture()
+    handleLoadingProduits()
     loadClients()
     refresh()
     setColumns(getColumns(handleActionAjouter, handleActionRetrancher, handleActionSupprimer))
@@ -614,13 +798,14 @@ const FactureEnCours = () => {
             <Box
               sx={{
                 py: 4,
-                px: 6,
+                px: 2,
                 rowGap: 2,
-                columnGap: 4,
+                columnGap: 2,
                 display: 'flex',
                 flexWrap: 'wrap',
                 alignItems: 'center',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
+                marginRight: 0.6
               }}
             >
               <Controller
@@ -639,7 +824,7 @@ const FactureEnCours = () => {
                   />
                 )}
               />
-              
+
               <Controller
                 name='remise'
                 control={control}
@@ -664,20 +849,29 @@ const FactureEnCours = () => {
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     select
-                    sx={{ mr: 4 }}
+                    sx={{ mr: 4, width: '250px' }}
+                    fullWidth
                     error={Boolean(errors.client_id)}
                     {...(errors.client_id && { helperText: errors.client_id.message })}
                     SelectProps={{ value: value, onChange: e => onChange(e) }}
                   >
-                    <MenuItem value={''}>Sélectionnez la table client</MenuItem>
+                    <MenuItem value={''}>Sélectionnez le client</MenuItem>
                     {clients?.map(client => (
                       <MenuItem key={client.id} value={`${client.id}-${client.name}`}>
-                        {client.name}
+                        {client.code}-{client.name}
                       </MenuItem>
                     ))}
                   </CustomTextField>
                 )}
               />
+
+
+              <Box sx={{ display: 'flex', alignItems: 'right' }}>
+                <Button onClick={handleClickOpenModal} variant='contained' sx={{ height: '38px' }}>
+                  <span style={{ marginRight: '0.2rem' }}>Ajouter un produit</span>
+                  <Icon icon='tabler:plus' />
+                </Button>
+              </Box>
             </Box>
             <Divider sx={{ m: '0 !important' }} />
 
@@ -759,6 +953,77 @@ const FactureEnCours = () => {
         </form>
       </Grid>
 
+      {/* Add Product to cart */}
+      <Dialog
+        open={openModal}
+        onClose={handleCloseModal}
+        // PaperProps={{
+        //   component: 'form',
+        //   onSubmit: (event) => {
+        //     event.preventDefault();
+        //     const formData = new FormData(event.currentTarget);
+        //     const formJson = Object.fromEntries(formData.entries());
+        //     const email = formJson.email;
+        //     console.log(email);
+        //     handleCloseModal();
+        //   },
+        // }}
+      >
+        <DialogTitle>Ajout de Produit</DialogTitle>
+          <form onSubmit={handleSubmitProd} autoComplete='off'>
+            <DialogContent>
+              <DialogContentText>
+                Ajoutez des produits du stock sur la facture en cours
+              </DialogContentText>
+                <FormControl sx={{ m: 1, mt:5, width: 350}} size='small'>
+                    <Autocomplete
+                      id="produitId"
+                      options={produits}
+                      getOptionLabel={(product) => `${product.name} ${product.model}`}
+                      value={produits.find((p) => p.id === Number(produitId)) || null}
+                      onChange={(event, newValue) => {
+                        handleProduitChange(newValue ? newValue.id : 0);
+                      }}
+                      renderInput={(params) => <TextField {...params} label="Sélectionnez un produit" />}
+                      fullWidth
+                    />
+
+                  <Grid container spacing={2} sx={{mt:2}}>
+                    <Grid item xs={6}>
+                      <Typography variant="subtitle1">Fournisseur:</Typography>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <Typography variant="body1">{produitId ? fournisseur : ''}</Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="subtitle1">Quantité Disponible:</Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body1">
+                        {produitId ? st_dispo : ''}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+
+                    <TextField
+                      sx={{mt: 5}}
+                      label="Quantité"
+                      id="outlined-size-small"
+                      defaultValue=""
+                      size="small"
+                      fullWidth
+                      value={quantite}
+                      onChange={(e) => setQuantite(e.target.value)}
+                    />
+                </FormControl>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseModal}>Annuler</Button>
+              <Button type="submit">Ajouter</Button>
+            </DialogActions>
+          </form>
+      </Dialog>
+      
       {/* Notification */}
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}

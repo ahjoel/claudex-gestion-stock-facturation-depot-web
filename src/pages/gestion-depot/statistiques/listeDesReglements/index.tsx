@@ -95,7 +95,6 @@ const listeDesReglements = () => {
   const getColumns = () => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.18,
         field: 'codeFacture',
         renderHeader: () => (
           <Tooltip title='Code Facture'>
@@ -130,10 +129,10 @@ const listeDesReglements = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 190
       },
       {
-        flex: 0.18,
         field: 'createdAt',
         renderHeader: () => (
           <Tooltip title='Date Facture'>
@@ -168,10 +167,10 @@ const listeDesReglements = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 170
       },
       {
-        flex: 0.18,
         field: 'createdAtReg',
         renderHeader: () => (
           <Tooltip title='Date Reglement'>
@@ -206,10 +205,10 @@ const listeDesReglements = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 170
       },
       {
-        flex: 0.2,
         field: 'client',
         renderHeader: () => (
           <Tooltip title='Client'>
@@ -245,10 +244,10 @@ const listeDesReglements = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 170
       },
       {
-        flex: 0.15,
         field: 'mt_a_payer',
         renderHeader: () => (
           <Tooltip title='Montant TTC'>
@@ -284,10 +283,10 @@ const listeDesReglements = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 170
       },
       {
-        flex: 0.15,
         field: 'mt_encaisse',
         renderHeader: () => (
           <Tooltip title='Montant Encaisse'>
@@ -323,10 +322,10 @@ const listeDesReglements = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 180
       },
       {
-        flex: 0.15,
         field: 'mt_restant',
         renderHeader: () => (
           <Tooltip title='Montant Restant'>
@@ -362,10 +361,10 @@ const listeDesReglements = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 170
       },
       {
-        flex: 0.15,
         field: 'statut',
         renderHeader: () => (
           <Tooltip title='Statut'>
@@ -401,7 +400,8 @@ const listeDesReglements = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 170
       }
       // {
       //   flex: 0.15,

@@ -72,7 +72,6 @@ const EntreeR1List = () => {
   const getColumns = (handleAddToCart: (entreeR1Dispo: EntreeR1Dispo) => void) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.25,
         field: 'produit',
         renderHeader: () => (
           <Tooltip title='Produit'>
@@ -108,10 +107,10 @@ const EntreeR1List = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 250
       },
       {
-        flex: 0.18,
         field: 'model',
         renderHeader: () => (
           <Tooltip title='Model'>
@@ -147,10 +146,10 @@ const EntreeR1List = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 250
       },
       {
-        flex: 0.18,
         field: 'fournisseur',
         renderHeader: () => (
           <Tooltip title='Fournisseur'>
@@ -186,10 +185,10 @@ const EntreeR1List = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 250
       },
       {
-        flex: 0.18,
         field: 'pv',
         renderHeader: () => (
           <Tooltip title='Prix de vente'>
@@ -225,10 +224,10 @@ const EntreeR1List = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 150
       },
       {
-        flex: 0.18,
         field: 'st_dispo',
         renderHeader: () => (
           <Tooltip title='Quantité Disponible'>
@@ -264,10 +263,10 @@ const EntreeR1List = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 200
       },
       {
-        flex: 0.15,
         field: 'stockMinimal',
         renderHeader: () => (
           <Tooltip title='Stock'>
@@ -303,45 +302,46 @@ const EntreeR1List = () => {
               </Box>
             </Box>
           )
-        }
-      },
-      {
-        flex: 0.2,
-        sortable: false,
-        field: 'actions',
-        renderHeader: () => (
-          <Tooltip title='Actions'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Action
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Tooltip title='Créer une facture avec ce produit du stock'>
-              <IconButton
-                size='small'
-                sx={{ color: 'text.primary', ':hover': 'none' }}
-                onClick={() => {
-                  handleAddToCart(row)
-                }}
-              >
-                <Box sx={{ display: 'flex', color: theme => theme.palette.success.main }}>
-                  <Icon icon='tabler:plus' />
-                </Box>
-              </IconButton>
-            </Tooltip>
-          </Box>
-        )
+        },
+        width: 150
       }
+      // {
+      //   flex: 0.2,
+      //   sortable: false,
+      //   field: 'actions',
+      //   renderHeader: () => (
+      //     <Tooltip title='Actions'>
+      //       <Typography
+      //         noWrap
+      //         sx={{
+      //           fontWeight: 500,
+      //           letterSpacing: '1px',
+      //           textTransform: 'uppercase',
+      //           fontSize: '0.8125rem'
+      //         }}
+      //       >
+      //         Action
+      //       </Typography>
+      //     </Tooltip>
+      //   ),
+      //   renderCell: ({ row }: CellType) => (
+      //     <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      //       <Tooltip title='Créer une facture avec ce produit du stock'>
+      //         <IconButton
+      //           size='small'
+      //           sx={{ color: 'text.primary', ':hover': 'none' }}
+      //           onClick={() => {
+      //             handleAddToCart(row)
+      //           }}
+      //         >
+      //           <Box sx={{ display: 'flex', color: theme => theme.palette.success.main }}>
+      //             <Icon icon='tabler:plus' />
+      //           </Box>
+      //         </IconButton>
+      //       </Tooltip>
+      //     </Box>
+      //   )
+      // }
     ]
 
     return colArray

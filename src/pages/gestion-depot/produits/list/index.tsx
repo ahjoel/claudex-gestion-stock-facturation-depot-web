@@ -127,7 +127,6 @@ const ProduitList = () => {
   const getColumns = (handleUpdateProduit: (produit: Produit) => void) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.15,
         field: 'code',
         renderHeader: () => (
           <Tooltip title='Code'>
@@ -162,10 +161,10 @@ const ProduitList = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 150
       },
       {
-        flex: 0.15,
         field: 'name',
         renderHeader: () => (
           <Tooltip title={t('Name')}>
@@ -200,10 +199,10 @@ const ProduitList = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 250
       },
       {
-        flex: 0.18,
         field: 'description',
         renderHeader: () => (
           <Tooltip title='Description'>
@@ -239,10 +238,10 @@ const ProduitList = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 200
       },
       {
-        flex: 0.15,
         field: 'model',
         renderHeader: () => (
           <Tooltip title='Model'>
@@ -278,10 +277,10 @@ const ProduitList = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 150
       },
       {
-        flex: 0.15,
         field: 'fournisseur',
         renderHeader: () => (
           <Tooltip title='Fournisseur'>
@@ -317,10 +316,10 @@ const ProduitList = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 150
       },
       {
-        flex: 0.15,
         field: 'pv',
         renderHeader: () => (
           <Tooltip title='Prix de vente'>
@@ -356,10 +355,10 @@ const ProduitList = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 150
       },
       {
-        flex: 0.15,
         field: 'seuil',
         renderHeader: () => (
           <Tooltip title='Stock Minimal'>
@@ -395,10 +394,10 @@ const ProduitList = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 150
       },
       {
-        flex: 0.1,
         sortable: false,
         field: 'actions',
         renderHeader: () => (
@@ -446,7 +445,8 @@ const ProduitList = () => {
               </IconButton>
             </Tooltip>
           </Box>
-        )
+        ),
+        width: 100
       }
     ]
 

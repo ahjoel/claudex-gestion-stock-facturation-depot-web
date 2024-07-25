@@ -373,6 +373,42 @@ export default class MainService {
 
     return result
   }
+
+  async listProduitInfo(object: any) {
+    const result = {
+      success: false,
+      code: -1,
+      status: '',
+      description: '',
+      data: [],
+      total: ''
+    }
+
+    try {
+      const response = await axios.post(`${this.url}/produit/info`, object, {
+        headers: {
+          ...getHeadersInformation()
+        }
+      })
+
+      // console.log(`${this.url}/all`);
+
+      if (response.data.status === 200) {
+        result.success = true
+        result.data = response.data.data.infos
+      } else {
+        result.description = response.data.description
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+
+      // Handle general network errors or other exceptions
+      result.description = 'Une erreur est survenue.'
+    }
+
+    return result
+  }
+
   async createReglement(object: any) {
     const result = {
       success: false,

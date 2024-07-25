@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, Tooltip } from "@mui/material";
 import SaveAltIcon from '@mui/icons-material/SaveAlt'
 
 interface TableHeaderProps {
@@ -52,18 +52,19 @@ const TableHeaderDetail = (props: TableHeaderProps) => {
           sx={{ "& svg": { mr: 2 } }}
         >
           <span style={{ marginRight: "0.1rem" }}>Ajouter un produit</span>
-          {/* <Icon fontSize='1.5rem' icon='tabler:plus' /> */}
         </Button>
-        <Button
-          sx={{ marginLeft: "5px" }}
-          size="small"
-          variant="contained"
-          onClick={() => {
-            onDownload();
-          }}
-        >
-          <SaveAltIcon />
-        </Button>
+        <Tooltip title="Imprimer la facture">
+          <Button
+            sx={{ marginLeft: "5px" }}
+            size="small"
+            variant="contained"
+            onClick={() => {
+              onDownload();
+            }}
+          >
+            <SaveAltIcon />
+          </Button>
+        </Tooltip>
       </Box>
       {/* )} */}
     </Box>

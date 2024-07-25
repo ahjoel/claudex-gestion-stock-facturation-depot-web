@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, Tooltip } from "@mui/material";
 import SaveAltIcon from '@mui/icons-material/SaveAlt'
 
 interface TableHeaderProps {
@@ -37,6 +37,7 @@ const TableHeaderReglement = (props: TableHeaderProps) => {
 
       {/* {etatFacture === "impayée" && ( */}
         <Box sx={{ rowGap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+        <Tooltip title="Imprimer la situation facture">
           <Button
           sx={{ marginLeft: "5px" }}
           size="small"
@@ -47,6 +48,7 @@ const TableHeaderReglement = (props: TableHeaderProps) => {
         >
           <SaveAltIcon />
         </Button>
+        </Tooltip>
         </Box>
       {/* )} */}
     </Box>

@@ -151,7 +151,6 @@ const ReglementList = () => {
   ) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.15,
         field: "createdAt",
         renderHeader: () => (
           <Tooltip title="Date de creation">
@@ -195,9 +194,9 @@ const ReglementList = () => {
             </Box>
           );
         },
+        width: 250
       },
       {
-        flex: 0.09,
         field: "client",
         renderHeader: () => (
           <Tooltip title="Client">
@@ -242,9 +241,9 @@ const ReglementList = () => {
             </Box>
           );
         },
+        width: 200
       },
       {
-        flex: 0.2,
         field: "codeFacture",
         renderHeader: () => (
           <Tooltip title="Code Facture">
@@ -291,9 +290,9 @@ const ReglementList = () => {
             </Box>
           );
         },
+        width: 200
       },
       {
-        flex: 0.15,
         field: "mtrecu",
         renderHeader: () => (
           <Tooltip title="Mt Payé">
@@ -344,9 +343,9 @@ const ReglementList = () => {
             </Box>
           );
         },
+        width: 200
       },
       {
-        flex: 0.15,
         field: "mtpayer",
         renderHeader: () => (
           <Tooltip title="Mt Reçu">
@@ -397,9 +396,9 @@ const ReglementList = () => {
             </Box>
           );
         },
+        width: 200
       },
       {
-        flex: 0.15,
         field: "auteur",
         renderHeader: () => (
           <Tooltip title="Auteur">
@@ -442,9 +441,9 @@ const ReglementList = () => {
             </Box>
           );
         },
+        width: 150
       },
       {
-        flex: 0.15,
         sortable: false,
         field: "actions",
         renderHeader: () => (
@@ -508,6 +507,7 @@ const ReglementList = () => {
             )}
           </Box>
         ),
+        width: 150
       },
     ];
 

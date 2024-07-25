@@ -94,7 +94,6 @@ const listeDesFactures = () => {
   const getColumns = () => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.18,
         field: 'codeFacture',
         renderHeader: () => (
           <Tooltip title='Code Facture'>
@@ -129,10 +128,10 @@ const listeDesFactures = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 250
       },
       {
-        flex: 0.18,
         field: 'createdAt',
         renderHeader: () => (
           <Tooltip title='Date Facture'>
@@ -167,10 +166,10 @@ const listeDesFactures = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 250
       },
       {
-        flex: 0.2,
         field: 'client',
         renderHeader: () => (
           <Tooltip title='Client'>
@@ -206,10 +205,10 @@ const listeDesFactures = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 180
       },
       {
-        flex: 0.15,
         field: 'mt_a_payer',
         renderHeader: () => (
           <Tooltip title='Montant TTC'>
@@ -245,10 +244,10 @@ const listeDesFactures = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 150
       },
       {
-        flex: 0.15,
         field: 'mt_encaisse',
         renderHeader: () => (
           <Tooltip title='Montant Encaisse'>
@@ -284,10 +283,10 @@ const listeDesFactures = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 200
       },
       {
-        flex: 0.15,
         field: 'mt_restant',
         renderHeader: () => (
           <Tooltip title='Montant Restant'>
@@ -323,10 +322,10 @@ const listeDesFactures = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 180
       },
       {
-        flex: 0.15,
         field: 'statut',
         renderHeader: () => (
           <Tooltip title='Statut'>
@@ -362,7 +361,8 @@ const listeDesFactures = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 180
       }
       // {
       //   flex: 0.15,

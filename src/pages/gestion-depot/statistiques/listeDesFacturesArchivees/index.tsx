@@ -97,7 +97,6 @@ const listeDesFacturesArchivees = () => {
   const getColumns = () => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.18,
         field: 'codeFacture',
         renderHeader: () => (
           <Tooltip title='Code Facture'>
@@ -132,10 +131,10 @@ const listeDesFacturesArchivees = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 190
       },
       {
-        flex: 0.18,
         field: 'createdAt',
         renderHeader: () => (
           <Tooltip title='Date Facture'>
@@ -170,10 +169,10 @@ const listeDesFacturesArchivees = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 190
       },
       {
-        flex: 0.10,
         field: 'tax',
         renderHeader: () => (
           <Tooltip title='Tax'>
@@ -208,10 +207,10 @@ const listeDesFacturesArchivees = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 100
       },
       {
-        flex: 0.10,
         field: 'remise',
         renderHeader: () => (
           <Tooltip title='Remise'>
@@ -246,10 +245,10 @@ const listeDesFacturesArchivees = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 100
       },
       {
-        flex: 0.15,
         field: 'mt_a_payer',
         renderHeader: () => (
           <Tooltip title='Montant TTC'>
@@ -285,10 +284,10 @@ const listeDesFacturesArchivees = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 190
       },
       {
-        flex: 0.15,
         field: 'mt_encaisse',
         renderHeader: () => (
           <Tooltip title='Montant Encaisse'>
@@ -324,10 +323,10 @@ const listeDesFacturesArchivees = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 190
       },
       {
-        flex: 0.15,
         field: 'mt_restant',
         renderHeader: () => (
           <Tooltip title='Montant Restant'>
@@ -363,10 +362,10 @@ const listeDesFacturesArchivees = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 190
       },
       {
-        flex: 0.15,
         field: 'dateEcheance',
         renderHeader: () => (
           <Tooltip title='Statut'>
@@ -402,7 +401,8 @@ const listeDesFacturesArchivees = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 190
       }
     ]
 

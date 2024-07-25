@@ -117,7 +117,46 @@ const ClientList = () => {
   const getColumns = (handleUpdateClient: (client: Client) => void) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.19,
+        field: 'code',
+        renderHeader: () => (
+          <Tooltip title={t('Code')}>
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 500,
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                fontSize: '0.8125rem'
+              }}
+            >
+              {t('Code')}
+            </Typography>
+          </Tooltip>
+        ),
+        renderCell: ({ row }: CellType) => {
+          const { code } = row
+
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 500,
+                    textDecoration: 'none',
+                    whiteSpace: "normal",
+                    textAlign: "left",
+                  }}
+                >
+                  {code}
+                </Typography>
+              </Box>
+            </Box>
+          )
+        },
+        width: 150
+      },
+      {
         field: 'name',
         renderHeader: () => (
           <Tooltip title={t('Name')}>
@@ -152,10 +191,10 @@ const ClientList = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 250
       },
       {
-        flex: 0.18,
         field: 'description',
         renderHeader: () => (
           <Tooltip title={t('Description')}>
@@ -191,10 +230,10 @@ const ClientList = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 150
       },
       {
-        flex: 0.18,
         field: 'mail',
         renderHeader: () => (
           <Tooltip title='Email'>
@@ -230,10 +269,10 @@ const ClientList = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 250
       },
       {
-        flex: 0.18,
         field: 'tel',
         renderHeader: () => (
           <Tooltip title='Telephone'>
@@ -269,10 +308,10 @@ const ClientList = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 250
       },
       {
-        flex: 0.18,
         field: 'type',
         renderHeader: () => (
           <Tooltip title='Type'>
@@ -308,11 +347,10 @@ const ClientList = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 150
       },
       {
-        flex: 0.1,
-        minWidth: 50,
         sortable: false,
         field: 'actions',
         renderHeader: () => (
@@ -360,7 +398,8 @@ const ClientList = () => {
               </IconButton>
             </Tooltip>
           </Box>
-        )
+        ),
+        width: 150
       }
     ]
 

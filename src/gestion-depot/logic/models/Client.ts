@@ -1,6 +1,7 @@
 import MainModel from './MainModel'
 
 export default class Client extends MainModel {
+  code: string
   name: string
   description: string
   type: string
@@ -15,6 +16,7 @@ export default class Client extends MainModel {
     updatedAt = '',
     deletedBy = null,
     deletedAt = '',
+    code = '',
     name = '',
     type = '',
     mail = '',
@@ -23,6 +25,7 @@ export default class Client extends MainModel {
   ) {
     super(id, createdBy, createdAt, updatedBy, updatedAt, deletedBy, deletedAt)
 
+    this.code = code
     this.name = name
     this.description = description
     this.type = type

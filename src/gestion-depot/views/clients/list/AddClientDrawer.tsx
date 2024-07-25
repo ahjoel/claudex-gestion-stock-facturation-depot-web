@@ -21,6 +21,7 @@ import Client from 'src/gestion-depot/logic/models/Client'
 
 interface ClientData {
   id?: number
+  code: string
   name: string
   description: string
   type: string
@@ -44,6 +45,18 @@ const Header = styled(Box)<BoxProps>(({ theme }) => ({
 }))
 
 const schema = yup.object().shape({
+  code: yup
+    .string()
+    .min(3, obj => {
+      if (obj.value.length === 0) {
+        return t('Name field is required')
+      } else if (obj.value.length > 0 && obj.value.length < obj.min) {
+        return t('Name must be at least 3 characters')
+      } else {
+        return ''
+      }
+    })
+    .required(),
   name: yup
     .string()
     .min(3, obj => {
@@ -59,6 +72,7 @@ const schema = yup.object().shape({
 })
 
 const defaultValues = {
+  code: '',
   name: '',
   description: '',
   type: '',
@@ -99,6 +113,7 @@ const SidebarAddClient = (props: SidebarAddClientType) => {
     setSend(true)
 
     const sendData = {
+      code: data.code,
       name: data.name,
       description: data.description,
       mail: data.mail,
@@ -155,6 +170,7 @@ const SidebarAddClient = (props: SidebarAddClientType) => {
 
   useEffect(() => {
     reset({
+      code: currentClient !== null ? currentClient?.code : '',
       name: currentClient !== null ? currentClient?.name : '',
       description: currentClient !== null ? currentClient?.description : '',
       type: currentClient !== null ? currentClient?.type : '',
@@ -193,6 +209,22 @@ const SidebarAddClient = (props: SidebarAddClientType) => {
       </Header>
       <Box sx={{ p: theme => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)} autoComplete='off'>
+          <Controller
+            name='code'
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { value, onChange } }) => (
+              <TextField
+                fullWidth
+                value={value}
+                sx={{ mb: 4 }}
+                label={t('Code')}
+                onChange={onChange}
+                error={Boolean(errors.code)}
+                {...(errors.code && { helperText: errors.code.message })}
+              />
+            )}
+          />
           <Controller
             name='name'
             control={control}

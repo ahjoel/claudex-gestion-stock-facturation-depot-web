@@ -94,7 +94,6 @@ const listeDesFacturesStockGene = () => {
   const getColumns = () => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.18,
         field: 'fournisseur',
         renderHeader: () => (
           <Tooltip title='Fournisseur'>
@@ -129,10 +128,10 @@ const listeDesFacturesStockGene = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 180
       },
       {
-        flex: 0.18,
         field: 'produit',
         renderHeader: () => (
           <Tooltip title='Produit'>
@@ -167,10 +166,10 @@ const listeDesFacturesStockGene = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 200
       },
       {
-        flex: 0.15,
         field: 'model',
         renderHeader: () => (
           <Tooltip title='Model'>
@@ -205,10 +204,10 @@ const listeDesFacturesStockGene = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 150
       },
       {
-        flex: 0.10,
         field: 'qte_stock',
         renderHeader: () => (
           <Tooltip title='Qte Stock'>
@@ -221,7 +220,7 @@ const listeDesFacturesStockGene = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Qte Stock
+              Qte Stock Initial
             </Typography>
           </Tooltip>
         ),
@@ -243,10 +242,10 @@ const listeDesFacturesStockGene = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 180
       },
       {
-        flex: 0.15,
         field: 'qte_stock_entree',
         renderHeader: () => (
           <Tooltip title='Qte Entree'>
@@ -282,10 +281,10 @@ const listeDesFacturesStockGene = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 150
       },
       {
-        flex: 0.15,
         field: 'qte_stock_vendu',
         renderHeader: () => (
           <Tooltip title='Qte Vendu'>
@@ -321,10 +320,10 @@ const listeDesFacturesStockGene = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 150
       },
       {
-        flex: 0.15,
         field: 'qte_stock_restant',
         renderHeader: () => (
           <Tooltip title='Qte Restant'>
@@ -360,10 +359,10 @@ const listeDesFacturesStockGene = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 150
       },
       {
-        flex: 0.15,
         field: 'seuil',
         renderHeader: () => (
           <Tooltip title='Stock Minimal'>
@@ -399,7 +398,8 @@ const listeDesFacturesStockGene = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 150
       }
     ]
 

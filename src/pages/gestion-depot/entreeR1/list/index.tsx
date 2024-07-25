@@ -118,7 +118,6 @@ const EntreeR1List = () => {
   const getColumns = (handleUpdateEntreeR1: (entreeR1: EntreeR1) => void) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.15,
         field: 'code',
         renderHeader: () => (
           <Tooltip title='Code'>
@@ -153,10 +152,10 @@ const EntreeR1List = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 150
       },
       {
-        flex: 0.25,
         field: 'createdAt',
         renderHeader: () => (
           <Tooltip title='Date creation'>
@@ -192,10 +191,10 @@ const EntreeR1List = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 250
       },
       {
-        flex: 0.2,
         field: 'produit',
         renderHeader: () => (
           <Tooltip title='Produit'>
@@ -231,10 +230,10 @@ const EntreeR1List = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 250
       },
       {
-        flex: 0.2,
         field: 'model',
         renderHeader: () => (
           <Tooltip title='Model'>
@@ -270,10 +269,10 @@ const EntreeR1List = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 150
       },
       {
-        flex: 0.2,
         field: 'fournisseur',
         renderHeader: () => (
           <Tooltip title='Fournisseur'>
@@ -309,10 +308,10 @@ const EntreeR1List = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 150
       },
       {
-        flex: 0.15,
         field: 'qte',
         renderHeader: () => (
           <Tooltip title='Quantité'>
@@ -348,10 +347,10 @@ const EntreeR1List = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 150
       },
       {
-        flex: 0.15,
         sortable: false,
         field: 'actions',
         renderHeader: () => (
@@ -399,7 +398,8 @@ const EntreeR1List = () => {
               </IconButton>
             </Tooltip>
           </Box>
-        )
+        ),
+        width: 150
       }
     ]
 
