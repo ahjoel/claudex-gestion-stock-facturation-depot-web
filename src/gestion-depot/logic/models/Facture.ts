@@ -9,6 +9,7 @@ export default class Facture extends MainModel {
   remise: number
   nbproduit: string
   totalfacture: string
+  etatFacture: string
 
   constructor(
     id = -1,
@@ -24,7 +25,8 @@ export default class Facture extends MainModel {
     taxe = 0,
     remise = 0,
     nbproduit = '',
-    totalfacture = ''
+    totalfacture = '',
+    etatFacture = ''
   ) {
     super(id, createdBy, createdAt, updatedBy, updatedAt, deletedBy, deletedAt)
 
@@ -35,5 +37,6 @@ export default class Facture extends MainModel {
     this.remise = remise
     this.nbproduit = nbproduit
     this.totalfacture = totalfacture
+    this.etatFacture = etatFacture
   }
 }

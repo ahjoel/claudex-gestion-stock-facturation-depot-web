@@ -13,6 +13,14 @@ interface PdfDocumentProps {
 
 const TemplateFactureImpayeePenalite: React.FC<PdfDocumentProps> = ({ data, fileName }) => {
   const generatePdf = () => {
+    // Calcul des totaux
+    const totals = data.reduce((acc, row) => {
+      acc.mt_a_payer += Number(row.mt_a_payer)
+      acc.mt_encaisse += Number(row.mt_encaisse)
+      acc.nbJour += Number(row.nbJour)
+      acc.mt_restant += Number(row.mt_restant)
+      return acc
+    }, { mt_a_payer: 0, mt_encaisse: 0, nbJour: 0,  mt_restant: 0 })
     const tableBody = [
       [
         { text: '#', style: 'tableHeader', alignment: 'center' },
@@ -31,7 +39,16 @@ const TemplateFactureImpayeePenalite: React.FC<PdfDocumentProps> = ({ data, file
         { text: row.nbJour, alignment: 'center' },
         { text: row.mt_a_payer.toString(), alignment: 'center' },
         { text: row.mt_encaisse.toString(), alignment: 'center' }
-      ])
+      ]),
+      [
+        { text: 'Total', style: 'tableTotal', colSpan: 3, alignment: 'center' },
+        {},
+        {},
+        { text: totals.mt_restant.toFixed(0).toLocaleString(), alignment: 'center' },
+        { text: totals.nbJour.toFixed(0).toLocaleString(), alignment: 'center' },
+        { text: totals.mt_a_payer.toFixed(0).toLocaleString(), alignment: 'center' },
+        { text: totals.mt_encaisse.toFixed(0).toLocaleString(), alignment: 'center' }
+      ]
     ]
 
     const documentDefinition: any = {

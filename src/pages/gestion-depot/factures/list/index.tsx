@@ -286,6 +286,7 @@ const FactureList = () => {
   const [produits, setProduits] = useState<Produit[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
   const [columns, setColumns] = useState<ColumnType[]>([]);
+  const [factureModifiee, setFactureModifiee] = useState<string>("");
   const [addFactureOpen, setAddFactureOpen] = useState<boolean>(false);
   const [addFactureDetailOpen, setAddFactureDetailOpen] =
     useState<boolean>(false);
@@ -336,12 +337,14 @@ const FactureList = () => {
   const handleOpenModalFacture = (
     arecode: string,
     etat: string,
+    modifOuPas: string,
     idFact: number
   ) => {
     setCode(arecode);
     setEtatFacture(etat);
     setIdFacture(idFact);
     setOpenFacture(true);
+    setFactureModifiee(modifOuPas)
     setDownloadCount(0);
   };
 
@@ -725,7 +728,7 @@ const FactureList = () => {
                     color: "primary.main",
                   }}
                 >
-                  {Number(totalfacture) - remise}
+                  {(Number(totalfacture) - remise)}
                 </Typography>
               </Box>
             </Box>
@@ -764,7 +767,7 @@ const FactureList = () => {
                 size="small"
                 sx={{ color: "text.primary" }}
                 onClick={() => {
-                  handleOpenModalFacture(row.code, "", row.id);
+                  handleOpenModalFacture(row.code, "", row.etatFacture, row.id);
                 }}
               >
                 <Box
@@ -777,7 +780,9 @@ const FactureList = () => {
                 </Box>
               </IconButton>
             </Tooltip>
-            <Tooltip title="Mettre à jour la facture">
+
+            
+            {(row.etatFacture === "intact") ? <Tooltip title="Mettre à jour la facture">
               <IconButton
                 size="small"
                 sx={{ color: "text.primary" }}
@@ -794,27 +799,30 @@ const FactureList = () => {
                   <Icon icon="tabler:edit" />
                 </Box>
               </IconButton>
-            </Tooltip>
+            </Tooltip> : ''}
 
-            {(profile === "SUPER-ADMIN") || (profile === "ADMINISTRATEUR") || (profile === "GERANT") ?
-              (<Tooltip title="Supprimer">
-                <IconButton
-                  size="small"
-                  sx={{ color: "text.primary" }}
-                  onClick={() => {
-                    handleDeleteFacture(row);
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      color: (theme) => theme.palette.error.main,
+            {(row.etatFacture === "intact") ? (
+              (profile === "SUPER-ADMIN") || (profile === "ADMINISTRATEUR") || (profile === "GERANT") ?
+                (<Tooltip title="Supprimer">
+                  <IconButton
+                    size="small"
+                    sx={{ color: "text.primary" }}
+                    onClick={() => {
+                      handleDeleteFacture(row);
                     }}
                   >
-                    <Icon icon="tabler:trash" />
-                  </Box>
-                </IconButton>
-              </Tooltip>) : ''
+                    <Box
+                      sx={{
+                        display: "flex",
+                        color: (theme) => theme.palette.error.main,
+                      }}
+                    >
+                      <Icon icon="tabler:trash" />
+                    </Box>
+                  </IconButton>
+                </Tooltip>) : ''
+            ) : ''
+            
             }
             
           </Box>
@@ -1139,10 +1147,13 @@ const FactureList = () => {
           facture.createdAt.toLowerCase().includes(queryLowered) ||
           facture.client.toString().toLowerCase().includes(queryLowered) ||
           facture.taxe.toString().toLowerCase().includes(queryLowered) ||
-          facture.nbproduit.toLowerCase().includes(queryLowered)
+          facture.nbproduit.toLowerCase().includes(queryLowered) ||
+          (Number(facture.totalfacture) - facture.remise).toString().toLowerCase().includes(queryLowered)
         );
       });
 
+      console.log("data fact", filteredData);
+      
       setFactures(filteredData);
       setStatusFactures(false);
       setTotal(Number(result.total));
@@ -1377,6 +1388,7 @@ const FactureList = () => {
           scroll="body"
           onClose={() => {
             setOpenFacture(false);
+            setFactureModifiee("");
           }}
         >
           <DialogContent
@@ -1396,6 +1408,7 @@ const FactureList = () => {
               size="small"
               onClick={() => {
                 setOpenFacture(false);
+                setFactureModifiee("");
               }}
               sx={{ position: "absolute", right: "1rem", top: "1rem" }}
             >
@@ -1412,7 +1425,7 @@ const FactureList = () => {
               onDownload={handleDownload}
               handleFilterDetail={handleFilterDet}
               toggle={handleAddProduitFacture}
-              etatFacture={etatFacture}
+              factureModifiee={factureModifiee}
             />
             
             <Box

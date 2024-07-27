@@ -132,7 +132,7 @@ const listeDesFacturesArchivees = () => {
             </Box>
           )
         },
-        width: 190
+        width: 300
       },
       {
         field: 'createdAt',
@@ -170,7 +170,7 @@ const listeDesFacturesArchivees = () => {
             </Box>
           )
         },
-        width: 190
+        width: 210
       },
       {
         field: 'tax',
@@ -285,7 +285,7 @@ const listeDesFacturesArchivees = () => {
             </Box>
           )
         },
-        width: 190
+        width: 200
       },
       {
         field: 'mt_encaisse',
@@ -324,7 +324,7 @@ const listeDesFacturesArchivees = () => {
             </Box>
           )
         },
-        width: 190
+        width: 200
       },
       {
         field: 'mt_restant',
@@ -363,47 +363,47 @@ const listeDesFacturesArchivees = () => {
             </Box>
           )
         },
-        width: 190
+        width: 200
       },
-      {
-        field: 'dateEcheance',
-        renderHeader: () => (
-          <Tooltip title='Statut'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Date Echeance
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { dateEcheance } = row
+      // {
+      //   field: 'dateEcheance',
+      //   renderHeader: () => (
+      //     <Tooltip title='Statut'>
+      //       <Typography
+      //         noWrap
+      //         sx={{
+      //           fontWeight: 500,
+      //           letterSpacing: '1px',
+      //           textTransform: 'uppercase',
+      //           fontSize: '0.8125rem'
+      //         }}
+      //       >
+      //         Date Echeance
+      //       </Typography>
+      //     </Tooltip>
+      //   ),
+      //   renderCell: ({ row }: CellType) => {
+      //     const { dateEcheance } = row
 
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {dateEcheance?.slice(0, -5).replace(/T/g, " ")}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        },
-        width: 190
-      }
+      //     return (
+      //       <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      //         <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+      //           <Typography
+      //             noWrap
+      //             sx={{
+      //               fontWeight: 500,
+      //               textDecoration: 'none',
+      //               color: 'primary.main'
+      //             }}
+      //           >
+      //             {dateEcheance?.slice(0, -5).replace(/T/g, " ")}
+      //           </Typography>
+      //         </Box>
+      //       </Box>
+      //     )
+      //   },
+      //   width: 190
+      // }
     ]
 
     return colArray

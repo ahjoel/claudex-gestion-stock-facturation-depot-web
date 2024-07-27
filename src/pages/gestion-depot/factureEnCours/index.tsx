@@ -55,7 +55,7 @@ interface CellType {
 interface FactureData {
   id?: number
   code: string
-  client_id: string
+  client_id: number
   remise: number
 }
 
@@ -64,17 +64,17 @@ interface ColumnType {
 }
 
 const schema = yup.object().shape({
-  client_id: yup.string().required(() => 'Le champ client est obligatoire')
+  client_id: yup.number().required(() => 'Le champ client est obligatoire')
 })
 
 const defaultValues = {
   code: '',
-  client_id: '',
+  client_id: 0,
   remise: 0
 }
 
 const schemap = yup.object().shape({
-  client_id: yup.string().required(() => 'Le champ client est obligatoire')
+  client_id: yup.number().required(() => 'Le champ client est obligatoire')
 })
 
 const defaultValuesp = {
@@ -842,26 +842,26 @@ const FactureEnCours = () => {
                 )}
               />
 
+                
               <Controller
                 name='client_id'
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
-                  <CustomTextField
-                    select
-                    sx={{ mr: 4, width: '250px' }}
-                    fullWidth
-                    error={Boolean(errors.client_id)}
-                    {...(errors.client_id && { helperText: errors.client_id.message })}
-                    SelectProps={{ value: value, onChange: e => onChange(e) }}
-                  >
-                    <MenuItem value={''}>Sélectionnez le client</MenuItem>
-                    {clients?.map(client => (
-                      <MenuItem key={client.id} value={`${client.id}-${client.name}`}>
-                        {client.code}-{client.name}
-                      </MenuItem>
-                    ))}
-                  </CustomTextField>
+                  <Autocomplete
+                    sx={{ width: 250 }}
+                    options={clients} 
+                    getOptionLabel={client => `${client.code} ${client.name}`}
+                    value={clients.find(c => c.id === value) || null} 
+                    onChange={(e, newValueClt) => onChange(newValueClt ? newValueClt.id : 0)}
+                    renderInput={params => (
+                      <CustomTextField
+                        {...params}
+                        error={Boolean(errors.client_id)}
+                        {...(errors.client_id && { helperText: errors.client_id.message })}
+                      />
+                    )}
+                  />
                 )}
               />
 

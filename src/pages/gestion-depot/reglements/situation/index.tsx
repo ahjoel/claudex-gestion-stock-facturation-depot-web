@@ -556,7 +556,7 @@ const SituationReglementList = () => {
               alignItems: "center",
             }}
           >
-            <Tooltip title="Mettre à jour un reglement">
+            <Tooltip title="Afficher détail facture">
               <IconButton
                 size="small"
                 sx={{ color: "text.primary" }}

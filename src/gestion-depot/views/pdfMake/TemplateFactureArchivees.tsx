@@ -15,17 +15,24 @@ interface PdfDocumentProps {
 
 const TemplateFactureArchivees: React.FC<PdfDocumentProps> = ({ data, fileName, date_debut, date_fin }) => {
   const generatePdf = () => {
+    // Calcul des totaux
+    const totals = data.reduce((acc, row) => {
+      acc.mt_a_payer += Number(row.mt_a_payer)
+      acc.mt_encaisse += Number(row.mt_encaisse)
+      acc.mt_restant += Number(row.mt_restant)
+      return acc
+    }, { mt_a_payer: 0, mt_encaisse: 0, mt_restant: 0 })
     const tableBody = [
       [
         { text: '#', style: 'tableHeader', alignment: 'center' },
         { text: 'Date Facture', style: 'tableHeader' },
-        { text: 'Code', style: 'tableHeader' },
+        { text: 'Code Facture', style: 'tableHeader' },
         { text: 'TVA', style: 'tableHeader' },
         { text: 'Remise', style: 'tableHeader' },
         { text: 'Montant TTC', style: 'tableHeader' },
         { text: 'Montant Encaisse', style: 'tableHeader' },
         { text: 'Montant Restant', style: 'tableHeader' },
-        { text: 'Date Echeance', style: 'tableHeader' }
+        // { text: 'Date Echeance', style: 'tableHeader' }
       ],
       ...data.map((row,index) => [
         { text: (index + 1).toString(), alignment: 'center' },
@@ -36,8 +43,18 @@ const TemplateFactureArchivees: React.FC<PdfDocumentProps> = ({ data, fileName, 
         { text: row.mt_a_payer.toString(), alignment: 'center' },
         { text: row.mt_encaisse.toString(), alignment: 'center' },
         { text: row.mt_restant.toString(), alignment: 'center' },
-        { text: row.dateEcheance?.slice(0, -5).replace(/T/g, " "), alignment: 'center', color: 'red' }
-      ])
+        // { text: row.dateEcheance?.slice(0, -5).replace(/T/g, " "), alignment: 'center', color: 'red' }
+      ]),
+      [
+        { text: 'Total', style: 'tableTotal', colSpan: 5, alignment: 'center' },
+        {},
+        {},
+        {},
+        {},
+        { text: totals.mt_a_payer.toFixed(0).toLocaleString(), alignment: 'center' },
+        { text: totals.mt_encaisse.toFixed(0).toLocaleString(), alignment: 'center' },
+        { text: totals.mt_restant.toFixed(0).toLocaleString(), alignment: 'center' },
+      ]
     ]
 
     const documentDefinition: any = {
@@ -68,7 +85,7 @@ const TemplateFactureArchivees: React.FC<PdfDocumentProps> = ({ data, fileName, 
         {
           table: {
             headerRows: 1,
-            widths: ['auto', 'auto', 'auto', '*', 'auto', 'auto', 'auto', 'auto', '*'],
+            widths: ['auto', 'auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto'],
             body: tableBody
           },
           layout: {

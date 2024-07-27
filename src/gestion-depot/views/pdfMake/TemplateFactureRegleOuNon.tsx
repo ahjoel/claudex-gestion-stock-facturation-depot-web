@@ -15,6 +15,14 @@ interface PdfDocumentProps {
 
 const TemplateFactureRegleOuNon: React.FC<PdfDocumentProps> = ({ data, fileName, date_debut, date_fin }) => {
   const generatePdf = () => {
+    // Calcul des totaux
+    const totals = data.reduce((acc, row) => {
+      acc.mt_a_payer += Number(row.mt_a_payer)
+      acc.mt_encaisse += Number(row.mt_encaisse)
+      acc.mt_restant += Number(row.mt_restant)
+      return acc
+    }, { mt_a_payer: 0, mt_encaisse: 0, mt_restant: 0 })
+    
     const tableBody = [
       [
         { text: '#', style: 'tableHeader', alignment: 'center' },
@@ -35,7 +43,17 @@ const TemplateFactureRegleOuNon: React.FC<PdfDocumentProps> = ({ data, fileName,
         { text: row.mt_encaisse.toString(), alignment: 'center' },
         { text: row.mt_restant.toString(), alignment: 'center' },
         { text: row.statut.toString(), alignment: 'center', color: 'red' }
-      ])
+      ]),
+      [
+        { text: 'Total', style: 'tableTotal', colSpan: 4, alignment: 'center' },
+        {},
+        {},
+        {},
+        { text: totals.mt_a_payer.toFixed(0).toLocaleString(), alignment: 'center' },
+        { text: totals.mt_encaisse.toFixed(0).toLocaleString(), alignment: 'center' },
+        { text: totals.mt_restant.toFixed(0).toLocaleString(), alignment: 'center' },
+        {}
+      ]
     ]
 
     const documentDefinition: any = {

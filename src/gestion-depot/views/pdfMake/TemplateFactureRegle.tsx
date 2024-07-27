@@ -120,7 +120,7 @@ const TemplateFactureRegle: React.FC<PdfDocumentProps> = ({ data, fileName, clie
       },
       {
         columns: [
-          { text: `MONTANT HT : ${totalMontant.toFixed(2)} XOF\nTAUX TVA : 0%\nMONTANT TVA : 0\nREMISE : ${remise}\nMONTANT TTC : ${(totalMontant - Number(remise)).toFixed(2)} XOF`, style: 'totals' },
+          { text: `MONTANT HT : ${totalMontant.toFixed(2).toLocaleString()} XOF\nTAUX TVA : 0%\nMONTANT TVA : 0\nREMISE : ${remise}\nMONTANT TTC : ${(totalMontant - Number(remise)).toFixed(2).toLocaleString()} XOF`, style: 'totals' },
           { text: `Récap Facture :\n${recap.map(item => `("${item.fournisseur}", "${item.modele}") - ${item.quantite} U`).join('\n')}`, style: 'totals' }
         ]
       },
@@ -157,7 +157,7 @@ const TemplateFactureRegle: React.FC<PdfDocumentProps> = ({ data, fileName, clie
       },
       {
         columns: [
-          { text: `MONTANT HT : ${totalMontant.toFixed(2)} XOF\nTAUX TVA : 0%\nMONTANT TVA : 0\nREMISE : ${remise}\nMONTANT TTC : ${(totalMontant - Number(remise)).toFixed(2)} XOF`, style: 'totals' },
+          { text: `MONTANT HT : ${totalMontant.toFixed(2).toLocaleString()} XOF\nTAUX TVA : 0%\nMONTANT TVA : 0\nREMISE : ${remise.toLocaleString()}\nMONTANT TTC : ${(totalMontant - Number(remise)).toFixed(2).toLocaleString()} XOF`, style: 'totals' },
           { text: `Récap Facture :\n${recap.map(item => `("${item.fournisseur}", "${item.modele}") - ${item.quantite} U`).join('\n')}`, style: 'totals' }
         ]
       },

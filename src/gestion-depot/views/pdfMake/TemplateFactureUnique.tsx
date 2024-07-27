@@ -104,7 +104,7 @@ const TemplateFactureUnique: React.FC<PdfDocumentProps> = ({ data, fileName, cli
         {
           columns: [
             {
-              text: `MONTANT HT : ${totalMontant.toFixed(2)} XOF\nTAUX TVA : 0%\nMONTANT TVA : 0\nREMISE : ${remise}\nMONTANT TTC : ${(totalMontant - Number(remise)).toFixed(2)} XOF`,
+              text: `MONTANT HT : ${totalMontant.toFixed(2).toLocaleString()} XOF\nTAUX TVA : 0%\nMONTANT TVA : 0\nREMISE : ${remise}\nMONTANT TTC : ${(totalMontant - Number(remise)).toFixed(2).toLocaleString()} XOF`,
               style: 'totals',
               margin: [0, 10]
             },

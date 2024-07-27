@@ -87,11 +87,11 @@ const TemplateFacture: React.FC<PdfDocumentProps> = ({ data, fileName, client, c
       },
       {
         columns: [
-          { text: `MONTANT HT : ${totalMontant.toFixed(2)} XOF\nTAUX TVA : 0%\nMONTANT TVA : 0\nREMISE : ${remise}\nMONTANT TTC : ${(totalMontant - Number(remise)).toFixed(2)} XOF`, style: 'totals' },
+          { text: `MONTANT HT : ${totalMontant.toFixed(0).toLocaleString()} XOF\nTAUX TVA : 0%\nMONTANT TVA : 0\nREMISE : ${remise.toLocaleString()}\nMONTANT TTC : ${(totalMontant - Number(remise)).toFixed(0).toLocaleString()} XOF`, style: 'totals' },
           { text: `Récap Facture :\n${recap.map(item => `("${item.fournisseur}", "${item.modele}") - ${item.quantite} U`).join('\n')}`, style: 'totals' }
         ]
       },
-      { text: `ARRÊTEE LA PRESENTE FACTURE A LA SOMME DE : ${NumberToLetter((Math.trunc(totalMontant) - Number(remise)).toFixed(2)).toUpperCase()} FRANCS CFA`, margin: [0, 10, 0, 10], alignment: 'center', style: 'footer' },
+      { text: `ARRÊTEE LA PRESENTE FACTURE A LA SOMME DE : ${NumberToLetter((Math.trunc(totalMontant) - Number(remise)).toFixed(0)).toUpperCase()} FRANCS CFA`, margin: [0, 10, 0, 10], alignment: 'center', style: 'footer' },
       { text: 'AGOE AMANDETA EPP Amandeta Face Antenne Togocom; Tel : (+228) 92 80 26 38', alignment: 'center', style: 'footer' },
       { text: `Page ${pageIndex} of ${pageCount}`, alignment: 'center', margin: [0, 10, 0, 0], style: 'pageNumber' }
     ]
@@ -116,11 +116,11 @@ const TemplateFacture: React.FC<PdfDocumentProps> = ({ data, fileName, client, c
       },
       {
         columns: [
-          { text: `MONTANT HT : ${totalMontant.toFixed(2)} XOF\nTAUX TVA : 0%\nMONTANT TVA : 0\nREMISE : ${remise}\nMONTANT TTC : ${(totalMontant - Number(remise)).toFixed(2)} XOF`, style: 'totals' },
+          { text: `MONTANT HT : ${totalMontant.toFixed(0).toLocaleString()} XOF\nTAUX TVA : 0%\nMONTANT TVA : 0\nREMISE : ${remise.toLocaleString()}\nMONTANT TTC : ${(totalMontant - Number(remise)).toFixed(0).toLocaleString()} XOF`, style: 'totals' },
           { text: `Récap Facture :\n${recap.map(item => `("${item.fournisseur}", "${item.modele}") - ${item.quantite} U`).join('\n')}`, style: 'totals' }
         ]
       },
-      { text: `ARRÊTEE LA PRESENTE FACTURE A LA SOMME DE :  ${NumberToLetter((Math.trunc(totalMontant) - Number(remise)).toFixed(2)).toUpperCase()} FRANCS CFA`, margin: [0, 10, 0, 10], alignment: 'center', style: 'footer' },
+      { text: `ARRÊTEE LA PRESENTE FACTURE A LA SOMME DE :  ${NumberToLetter((Math.trunc(totalMontant) - Number(remise)).toFixed(0)).toUpperCase()} FRANCS CFA`, margin: [0, 10, 0, 10], alignment: 'center', style: 'footer' },
       { text: 'AGOE AMANDETA EPP Amandeta Face Antenne Togocom; Tel : (+228) 92 80 26 38', alignment: 'center', style: 'footer' },
       { text: `Page ${pageIndex} of ${pageCount}`, alignment: 'center', margin: [0, 10, 0, 0], style: 'pageNumber' }
     ]

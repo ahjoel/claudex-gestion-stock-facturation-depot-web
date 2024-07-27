@@ -4,7 +4,7 @@ import SaveAltIcon from '@mui/icons-material/SaveAlt'
 
 interface TableHeaderProps {
   value: string;
-  etatFacture: string;
+  factureModifiee: string;
   onDownload: () => void
   toggle: (data: any) => void;
   handleFilterDetail: (val: string) => void;
@@ -12,7 +12,7 @@ interface TableHeaderProps {
 
 const TableHeaderDetail = (props: TableHeaderProps) => {
   // ** Props
-  const { handleFilterDetail, toggle, value, etatFacture, onDownload } = props;
+  const { handleFilterDetail, toggle, value, factureModifiee, onDownload } = props;
 
   return (
     <Box
@@ -46,13 +46,14 @@ const TableHeaderDetail = (props: TableHeaderProps) => {
           alignItems: "center",
         }}
       >
-        <Button
+
+        {factureModifiee === "intact" ? <Button
           onClick={toggle}
           variant="contained"
           sx={{ "& svg": { mr: 2 } }}
         >
           <span style={{ marginRight: "0.1rem" }}>Ajouter un produit</span>
-        </Button>
+        </Button> : ''}
         <Tooltip title="Imprimer la facture">
           <Button
             sx={{ marginLeft: "5px" }}

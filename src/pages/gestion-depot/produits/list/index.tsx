@@ -114,6 +114,7 @@ const ProduitList = () => {
   // Loading Agencies Data, Datagrid and pagination - State
   const [statusProduits, setStatusProduits] = useState<boolean>(true)
   const [produits, setProduits] = useState<Produit[]>([])
+  const [produitsPrint, setProduitsPrint] = useState<Produit[]>([])
   const [columns, setColumns] = useState<ColumnType[]>([])
   const [addProduitOpen, setAddProduitOpen] = useState<boolean>(false)
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
@@ -474,12 +475,25 @@ const ProduitList = () => {
       setProduits(filteredData)
       setStatusProduits(false)
       setTotal(Number(result.total))
+      handleLoadingProduits()
     } else {
       setOpenNotification(true)
       setTypeMessage('error')
       setMessage(result.description)
     }
   }
+
+  const handleLoadingProduits = async () => {
+    const result = await produitService.listProduitsLongue();
+
+    if (result.success) {
+      setProduitsPrint(result.data as Produit[]);
+    } else {
+      setOpenNotification(true);
+      setTypeMessage("error");
+      setMessage(result.description);
+    }
+  };
 
   const handleLoadingModels = async () => {
     const result = await modelService.readAllModels()
@@ -563,7 +577,7 @@ const ProduitList = () => {
             }}
           />
           {downloadCount > 0 && (
-            <TemplateListeDesProduits data={produits as never[]} fileName={`Liste_des_produits_${downloadCount}`} />
+            <TemplateListeDesProduits data={produitsPrint as never[]} fileName={`Liste_des_produits_${downloadCount}`} />
           )}
 
           <DataGrid

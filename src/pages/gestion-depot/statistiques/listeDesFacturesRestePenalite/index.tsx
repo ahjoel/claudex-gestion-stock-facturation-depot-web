@@ -108,7 +108,7 @@ const listeDesFacturesRestePenalite = () => {
             </Box>
           )
         },
-        width: 200
+        width: 300
       },
       {
         field: 'createdAt',
