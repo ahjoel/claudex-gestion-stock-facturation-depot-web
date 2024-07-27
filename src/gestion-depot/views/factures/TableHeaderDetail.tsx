@@ -5,6 +5,7 @@ import SaveAltIcon from '@mui/icons-material/SaveAlt'
 interface TableHeaderProps {
   value: string;
   factureModifiee: string;
+  etatFacture: string;
   onDownload: () => void
   toggle: (data: any) => void;
   handleFilterDetail: (val: string) => void;
@@ -12,7 +13,7 @@ interface TableHeaderProps {
 
 const TableHeaderDetail = (props: TableHeaderProps) => {
   // ** Props
-  const { handleFilterDetail, toggle, value, factureModifiee, onDownload } = props;
+  const { handleFilterDetail, toggle, value, etatFacture, factureModifiee, onDownload } = props;
 
   return (
     <Box

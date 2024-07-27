@@ -1425,7 +1425,7 @@ const FactureList = () => {
               onDownload={handleDownload}
               handleFilterDetail={handleFilterDet}
               toggle={handleAddProduitFacture}
-              factureModifiee={factureModifiee}
+              factureModifiee={factureModifiee} etatFacture={""}
             />
             
             <Box

@@ -1397,7 +1397,7 @@ const ReglementssList = () => {
               toggle={handleAddProduitFacture}
               etatFacture={etatFacture} onDownload={function (): void {
                 throw new Error("Function not implemented.");
-              } }            />
+              } } factureModifiee={""}            />
 
             <Box
               sx={{
