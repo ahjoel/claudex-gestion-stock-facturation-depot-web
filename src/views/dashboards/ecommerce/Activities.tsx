@@ -145,7 +145,7 @@ const Activities = () => {
 
   return (
     <Card>
-      <CardHeader title={t('Activities')} />
+      <CardHeader title={t('Récap Activités')} />
       <CardContent sx={{ pt: theme => `${theme.spacing(7)} !important` }}>
         <Grid container spacing={6}>
           <Grid item xs={6} md={3}>

@@ -158,7 +158,6 @@ const navigation = (): VerticalNavItemsType => {
   };
   facturierMode && navArray.push(stockDisponibleOnly);
   facturierMode && navArray.push(Facturation);
-  facturierMode && navArray.push(Statistiques);
 
   // CAISSIER
   caissierMode && navArray.push(Reglements);

@@ -6,7 +6,7 @@ import ReglementListe from 'src/views/dashboards/ecommerce/ReglementListe'
 
 const EcommerceDashboard = () => {
   return (
-    <ApexChartWrapper>
+    // <ApexChartWrapper>
       <Grid container spacing={6}>
         <Grid item xs={12} md={4}>
           <WelcomeUser />
@@ -18,7 +18,7 @@ const EcommerceDashboard = () => {
           <ReglementListe />
         </Grid>
       </Grid>
-    </ApexChartWrapper>
+    // </ApexChartWrapper>
   )
 }
 

@@ -483,15 +483,15 @@ const listeDesReglements = () => {
   }, [])
 
   return (
-    <Grid container spacing={6.5}>
+    <Grid container spacing={2}>
       <Grid item xs={12}>
         <Card>
           <CardHeader title='Statistique Des Ventes' sx={{ fontSize: '60px' }} />
 
           <CardContent>
             <Grid container spacing={1} justifyContent='flex-end'>
-              <Grid item>
-                <FormControl sx={{ m: 1, minWidth: 50 }} size='small'>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControl sx={{ minWidth: '80%' }} size='small'>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       label='Date début'
@@ -504,8 +504,8 @@ const listeDesReglements = () => {
                 </FormControl>
               </Grid>
 
-              <Grid item>
-                <FormControl sx={{ m: 1, minWidth: 50 }} size='small'>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControl sx={{ minWidth: '80%' }} size='small'>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       label='Date Fin'
@@ -518,7 +518,7 @@ const listeDesReglements = () => {
                 </FormControl>
               </Grid>
 
-              <Grid item lg={3} md={3} sm={3} xs={3} sx={{ marginTop: '4px', marginLeft: '10px' }}>
+              <Grid item xs={12} md={4}>
                 <Box sx={{ display: 'flex', alignItems: 'right' }}>
                   <LoadingButton
                     type='submit'

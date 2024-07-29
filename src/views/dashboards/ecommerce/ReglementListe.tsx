@@ -19,6 +19,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Grid,
   IconButton,
   Snackbar
 } from '@mui/material'
@@ -111,7 +112,6 @@ const ReglementListe = () => {
   const getColumns = (handleDeleteReglement: (reglement: Reglement) => void) => {
     const colArray: ColumnType[] = [
       {
-        flex: 0.15,
         field: 'createdAt',
         renderHeader: () => (
           <Tooltip title='Date de creation'>
@@ -146,10 +146,10 @@ const ReglementListe = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 250
       },
       {
-        flex: 0.09,
         field: 'client',
         renderHeader: () => (
           <Tooltip title='Client'>
@@ -185,10 +185,10 @@ const ReglementListe = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 250
       },
       {
-        flex: 0.2,
         field: 'code',
         renderHeader: () => (
           <Tooltip title='Code Facture'>
@@ -224,13 +224,13 @@ const ReglementListe = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 300
       },
       {
-        flex: 0.15,
         field: 'mtpayer',
         renderHeader: () => (
-          <Tooltip title='Total Facture'>
+          <Tooltip title='Montant Payé'>
             <Typography
               noWrap
               sx={{
@@ -240,7 +240,7 @@ const ReglementListe = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              Total Facture
+              Montant Payé
             </Typography>
           </Tooltip>
         ),
@@ -264,10 +264,10 @@ const ReglementListe = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 200
       },
       {
-        flex: 0.2,
         field: 'auteur',
         renderHeader: () => (
           <Tooltip title='Auteur'>
@@ -303,10 +303,10 @@ const ReglementListe = () => {
               </Box>
             </Box>
           )
-        }
+        },
+        width: 200
       },
       {
-        flex: 0.15,
         sortable: false,
         field: 'actions',
         renderHeader: () => (
@@ -350,7 +350,8 @@ const ReglementListe = () => {
               </Tooltip>
             )}
           </Box>
-        )
+        ),
+        width: 150
       }
     ]
 
@@ -402,55 +403,60 @@ const ReglementListe = () => {
   }, [paginationModel])
 
   return (
-    <Card>
-      <CardContent
-        sx={{ gap: 4, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}
-      >
-        <Typography variant='h4' sx={{ mb: 0.5 }}>
-          {t('Liste des Règlements')}
-        </Typography>
-
-        <Box sx={{ gap: 4, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-          <CustomTextField
-            value={value}
-            placeholder={t('Search') as string}
-            onChange={e => handleFilter(e.target.value)}
-          />
-
-          <Button
-            sx={{ marginLeft: '5px' }}
-            size='small'
-            variant='contained'
-            onClick={() => {
-              setValue('')
-              handleChange()
-            }}
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Card>
+          <CardContent
+            sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}
           >
-            <AutorenewIcon />
-          </Button>
-        </Box>
-      </CardContent>
+            <Typography variant='h4' sx={{ mb: 0.5 }}>
+              {t('Liste des Règlements')}
+            </Typography>
 
-      {statusReglements ? (
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '20px' }}>
-          <CircularProgress />
-        </div>
-      ) : (
-        <DataGrid
-          autoHeight
-          loading={statusReglements}
-          rowHeight={62}
-          rows={reglements as never[]}
-          columns={columns as GridColDef<never>[]}
-          disableRowSelectionOnClick
-          pageSizeOptions={[10, 25, 50]}
-          pagination
-          paginationMode='server'
-          rowCount={total}
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-        />
-      )}
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+              <CustomTextField
+                value={value}
+                placeholder={t('Search') as string}
+                onChange={e => handleFilter(e.target.value)}
+              />
+
+              <Button
+                sx={{ marginLeft: '5px' }}
+                size='small'
+                variant='contained'
+                onClick={() => {
+                  setValue('')
+                  handleChange()
+                }}
+              >
+                <AutorenewIcon />
+              </Button>
+            </Box>
+          </CardContent>
+
+          {/* {statusReglements ? (
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '20px' }}>
+              <CircularProgress />
+            </div>
+          ) :  */}
+          
+            <DataGrid
+              autoHeight
+              loading={statusReglements}
+              rowHeight={62}
+              rows={reglements as never[]}
+              columns={columns as GridColDef<never>[]}
+              disableRowSelectionOnClick
+              pageSizeOptions={[10, 25, 50]}
+              pagination
+              paginationMode='server'
+              rowCount={total}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
+            />
+          
+        </Card>
+      </Grid>
 
       {/* Notification */}
       <Snackbar
@@ -502,7 +508,7 @@ const ReglementListe = () => {
           </LoadingButton>
         </DialogActions>
       </Dialog>
-    </Card>
+    </Grid>
   )
 }
 
