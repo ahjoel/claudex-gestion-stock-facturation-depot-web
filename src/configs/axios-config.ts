@@ -3,7 +3,7 @@ import authConfig from 'src/configs/auth'
 
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
-  timeout: 5000, // Request timeout
+  timeout: 500000, // Request timeout
   headers: {
     'Content-Type': 'application/json'
   }

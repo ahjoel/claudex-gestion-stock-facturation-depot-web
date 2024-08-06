@@ -258,7 +258,7 @@ const EntreeR1List = () => {
                     color: 'primary.main'
                   }}
                 >
-                  {st_dispo}
+                  {Number(st_dispo).toFixed(2).toString()}
                 </Typography>
               </Box>
             </Box>
@@ -305,43 +305,6 @@ const EntreeR1List = () => {
         },
         width: 150
       }
-      // {
-      //   flex: 0.2,
-      //   sortable: false,
-      //   field: 'actions',
-      //   renderHeader: () => (
-      //     <Tooltip title='Actions'>
-      //       <Typography
-      //         noWrap
-      //         sx={{
-      //           fontWeight: 500,
-      //           letterSpacing: '1px',
-      //           textTransform: 'uppercase',
-      //           fontSize: '0.8125rem'
-      //         }}
-      //       >
-      //         Action
-      //       </Typography>
-      //     </Tooltip>
-      //   ),
-      //   renderCell: ({ row }: CellType) => (
-      //     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      //       <Tooltip title='Créer une facture avec ce produit du stock'>
-      //         <IconButton
-      //           size='small'
-      //           sx={{ color: 'text.primary', ':hover': 'none' }}
-      //           onClick={() => {
-      //             handleAddToCart(row)
-      //           }}
-      //         >
-      //           <Box sx={{ display: 'flex', color: theme => theme.palette.success.main }}>
-      //             <Icon icon='tabler:plus' />
-      //           </Box>
-      //         </IconButton>
-      //       </Tooltip>
-      //     </Box>
-      //   )
-      // }
     ]
 
     return colArray

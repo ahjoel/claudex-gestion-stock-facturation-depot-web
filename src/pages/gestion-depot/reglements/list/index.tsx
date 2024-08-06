@@ -337,7 +337,7 @@ const ReglementList = () => {
                     textAlign: "center",
                   }}
                 >
-                  {mtpayer}
+                  {formatNumberString(mtpayer?.toString())}
                 </Typography>
               </Box>
             </Box>
@@ -390,7 +390,7 @@ const ReglementList = () => {
                     textAlign: "center",
                   }}
                 >
-                  {mtrecu}
+                  {formatNumberString(mtrecu?.toString())}
                 </Typography>
               </Box>
             </Box>
@@ -447,7 +447,7 @@ const ReglementList = () => {
         sortable: false,
         field: "actions",
         renderHeader: () => (
-          <Tooltip title={t("Actions")}>
+          <Tooltip title={t("Action")}>
             <Typography
               noWrap
               sx={{
@@ -457,7 +457,7 @@ const ReglementList = () => {
                 fontSize: "0.8125rem",
               }}
             >
-              {t("Actions")}
+              {t("Action")}
             </Typography>
           </Tooltip>
         ),
@@ -469,7 +469,7 @@ const ReglementList = () => {
               alignItems: "center",
             }}
           >
-            <Tooltip title='Mettre à jour un reglement'>
+            {/* <Tooltip title='Mettre à jour un reglement'>
               <IconButton
                 size='small'
                 sx={{ color: 'text.primary' }}
@@ -481,7 +481,7 @@ const ReglementList = () => {
                   <Icon icon='tabler:edit' />
                 </Box>
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
 
             {(profile === "ADMINISTRATEUR" || profile === "SUPER-ADMIN" || profile === "GERANT") && (
               <Tooltip title="Supprimer le règlement">
@@ -514,6 +514,14 @@ const ReglementList = () => {
     return colArray;
   };
 
+  function formatNumberString(numberStr:string) {
+      const number = parseFloat(numberStr);
+      if (isNaN(number)) {
+          return numberStr; // Retourne la chaîne d'origine si ce n'est pas un nombre valide
+      }
+      return number.toLocaleString('fr-FR'); // Utilise la locale pour le formatage
+  }
+
   // Axios call to loading Data
   const getListReglements = async (page: number, pageSize: number) => {
     const result = await reglementService.listReglements({
@@ -544,6 +552,7 @@ const ReglementList = () => {
         );
       });
 
+      // console.log('resultat :::', filteredData);
       setReglements(filteredData);
       setStatusReglements(false);
       setTotal(Number(result.total));

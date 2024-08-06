@@ -139,6 +139,14 @@ const Activities = () => {
     // }
   }
 
+  function formatNumberString(numberStr:string) {
+      const number = parseFloat(numberStr);
+      if (isNaN(number)) {
+          return numberStr; // Retourne la chaîne d'origine si ce n'est pas un nombre valide
+      }
+      return number.toLocaleString('fr-FR'); // Utilise la locale pour le formatage
+  }
+
   useEffect(() => {
     handleLoadData()
   }, [])
@@ -176,7 +184,7 @@ const Activities = () => {
                 <Icon icon='tabler:wallet' />
               </CustomAvatar>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography variant='h6'>{reglementMoisCount || 0}</Typography>
+                <Typography variant='h6'>{formatNumberString(reglementMoisCount) || 0}</Typography>
                 <Typography variant='body2'>{t('Reglement du Mois')}</Typography>
               </Box>
             </Box>
@@ -187,7 +195,7 @@ const Activities = () => {
                 <Icon icon='tabler:wallet' />
               </CustomAvatar>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography variant='h6'>{reglementDayCount || 0}</Typography>
+                <Typography variant='h6'>{formatNumberString(reglementDayCount) || 0}</Typography>
 
                 <Typography variant='body2'>{t('Reglement du Jour')}</Typography>
               </Box>

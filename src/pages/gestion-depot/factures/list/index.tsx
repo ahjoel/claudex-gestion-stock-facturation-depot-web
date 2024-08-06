@@ -1152,7 +1152,7 @@ const FactureList = () => {
         );
       });
 
-      console.log("data fact", filteredData);
+      // console.log("data fact", filteredData);
       
       setFactures(filteredData);
       setStatusFactures(false);

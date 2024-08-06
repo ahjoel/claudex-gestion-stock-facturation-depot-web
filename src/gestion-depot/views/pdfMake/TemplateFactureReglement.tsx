@@ -62,7 +62,7 @@ const TemplateFactureReglement: React.FC<PdfDocumentProps> = ({ data, fileName, 
     const documentDefinition: any = {
       pageSize: 'A4',
       pageOrientation: 'landscape',
-      pageMargins: [40, 50, 40, 60],
+      pageMargins: [20, 50, 40, 50],
       header: {
         text: `STATISTIQUE DES VENTES`,
         alignment: 'center',
@@ -82,12 +82,12 @@ const TemplateFactureReglement: React.FC<PdfDocumentProps> = ({ data, fileName, 
           text: `Période du ${date_debut} au ${date_fin}`,
           alignment: 'center',
           fontSize: 12,
-          margin: [0, 0, 0, 15]
+          margin: [0, 0, 0, 5]
         },
         {
           table: {
             headerRows: 1,
-            widths: ['auto', 'auto', 'auto', '*', 'auto', 'auto', 'auto', 'auto', '*'],
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto', '10%', '10%', '10%', '10%'],
             body: tableBody
           },
           layout: {

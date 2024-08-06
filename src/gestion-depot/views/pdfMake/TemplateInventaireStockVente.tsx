@@ -31,10 +31,10 @@ const TemplateInventaireStockVente: React.FC<PdfDocumentProps> = ({ data, fileNa
         row.produit,
         row.model,
         { text: row.fournisseur, color: 'red', alignment: 'center' },
-        { text: row.qte_stock, alignment: 'center' },
-        { text: row.qte_stock_entree, alignment: 'center' },
-        { text: row.qte_stock_vendu, alignment: 'center' },
-        { text: row.qte_stock_restant.toString(), alignment: 'center', color: 'red' },
+        { text: parseFloat(row.qte_stock.toFixed(2)), alignment: 'center' },
+        { text: parseFloat(row.qte_stock_entree.toFixed(2)), alignment: 'center' },
+        { text: parseFloat(row.qte_stock_vendu.toFixed(2)), alignment: 'center' },
+        { text: row.qte_stock_restant.toFixed(2).toString(), alignment: 'center', color: 'red' },
         { text: row.seuil.toString(), alignment: 'center', color: 'red' }
       ])
     ]

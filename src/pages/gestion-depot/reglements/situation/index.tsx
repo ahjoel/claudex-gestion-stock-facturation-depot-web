@@ -371,7 +371,7 @@ const SituationReglementList = () => {
                     textAlign: "center",
                   }}
                 >
-                  {mt_a_payer}
+                  {formatNumberString(mt_a_payer?.toString())}
                 </Typography>
               </Box>
             </Box>
@@ -424,7 +424,7 @@ const SituationReglementList = () => {
                     textAlign: "center",
                   }}
                 >
-                  {mt_encaisse}
+                  {formatNumberString(mt_encaisse?.toString())}
                 </Typography>
               </Box>
             </Box>
@@ -477,7 +477,7 @@ const SituationReglementList = () => {
                     textAlign: "center",
                   }}
                 >
-                  {mt_restant}
+                  {formatNumberString(mt_restant?.toString())}
                 </Typography>
               </Box>
             </Box>
@@ -485,51 +485,6 @@ const SituationReglementList = () => {
         },
         width: 200
       },
-      // {
-      //   flex: 0.15,
-      //   field: "auteur",
-      //   renderHeader: () => (
-      //     <Tooltip title="Auteur">
-      //       <Typography
-      //         noWrap
-      //         sx={{
-      //           fontWeight: 500,
-      //           letterSpacing: "1px",
-      //           textTransform: "uppercase",
-      //           fontSize: "0.8125rem",
-      //         }}
-      //       >
-      //         Auteur
-      //       </Typography>
-      //     </Tooltip>
-      //   ),
-      //   renderCell: ({ row }: CellType) => {
-      //     const { auteur } = row;
-
-      //     return (
-      //       <Box sx={{ display: "flex", alignItems: "center" }}>
-      //         <Box
-      //           sx={{
-      //             display: "flex",
-      //             alignItems: "flex-start",
-      //             flexDirection: "column",
-      //           }}
-      //         >
-      //           <Typography
-      //             noWrap
-      //             sx={{
-      //               fontWeight: 500,
-      //               textDecoration: "none",
-      //               color: "primary.main",
-      //             }}
-      //           >
-      //             {auteur}
-      //           </Typography>
-      //         </Box>
-      //       </Box>
-      //     );
-      //   },
-      // },
       {
         sortable: false,
         field: "actions",
@@ -583,6 +538,14 @@ const SituationReglementList = () => {
 
     return colArray;
   };
+
+  function formatNumberString(numberStr:string) {
+    const number = parseFloat(numberStr);
+    if (isNaN(number)) {
+        return numberStr; // Retourne la chaîne d'origine si ce n'est pas un nombre valide
+    }
+    return number.toLocaleString('fr-FR'); // Utilise la locale pour le formatage
+  }
 
   const getDetailsFacture = async () => {
     let clientName;

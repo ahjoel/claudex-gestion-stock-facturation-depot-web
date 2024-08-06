@@ -207,15 +207,23 @@ const SidebarAddReglement = (props: SidebarAddReglementType) => {
     }
   };
 
+  function formatNumberString(numberStr:string) {
+    const number = parseFloat(numberStr);
+    if (isNaN(number)) {
+        return numberStr; // Retourne la chaîne d'origine si ce n'est pas un nombre valide
+    }
+    return number.toLocaleString('fr-FR'); // Utilise la locale pour le formatage
+  }
+
   const factureService = new FactureService();
   const handleLoadingFactureInfo = async (id: number) => {
     // console.log("factureChoiceId :::", Number(factureChoiceId));
     try {
-      const rep = await factureService.listFactureInfoDetail(id);
+      const rep = await factureService.listFactureInfoDetail(id ? id : 0);
 
       if (rep.success) {
         const filteredData = rep.data[0] as FactureDataInfo;
-        // console.log("client :::", filteredData.client);
+        // console.log("client :::", filteredData);
         setClient(filteredData.client);
         setMontantAPayer(filteredData.mt_a_payer.toString());
         setMontantDejaPayer(filteredData.mt_encaisse);
@@ -379,7 +387,7 @@ const SidebarAddReglement = (props: SidebarAddReglementType) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="body1">
-                    {montantAPayer + " " + "XOF"}
+                    {formatNumberString(montantAPayer) + " " + "XOF"}
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
@@ -387,7 +395,7 @@ const SidebarAddReglement = (props: SidebarAddReglementType) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="body1">
-                    {montantDejaPayer + " " + "XOF"}
+                    {formatNumberString(montantDejaPayer) + " " + "XOF"}
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
@@ -395,7 +403,7 @@ const SidebarAddReglement = (props: SidebarAddReglementType) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="body1">
-                    {montantRestant + " " + "XOF"}
+                    {formatNumberString(montantRestant) + " " + "XOF"}
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
