@@ -12,6 +12,7 @@ export default class StatFactureArchivee extends MainModel {
   mt_a_payer: string
   mt_encaisse: string
   mt_restant: string
+  mt_regle: string
   mtrecu: number
   mtpayer: number
   statut: string
@@ -30,6 +31,7 @@ export default class StatFactureArchivee extends MainModel {
     code = '',
     client = '',
     dateEcheance = '',
+    mt_regle = '',
     created_at = '',
     statut = '',
     tax = '',
@@ -52,6 +54,7 @@ export default class StatFactureArchivee extends MainModel {
     this.dateEcheance = dateEcheance
     this.mt_encaisse = mt_encaisse
     this.mt_restant = mt_restant
+    this.mt_regle = mt_regle
     this.mtrecu = mtrecu
     this.mtpayer = mtpayer
     this.statut = statut
