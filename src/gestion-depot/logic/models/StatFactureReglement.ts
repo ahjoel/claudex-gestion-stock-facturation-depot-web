@@ -10,6 +10,7 @@ export default class StatFactureReglement extends MainModel {
   mt_a_payer: string
   mt_encaisse: string
   mt_restant: string
+  mt_regle: string
   mtrecu: number
   mtpayer: number
   statut: string
@@ -30,6 +31,7 @@ export default class StatFactureReglement extends MainModel {
     created_at = '',
     statut = '',
     mt_a_payer = '',
+    mt_regle = '',
     mt_encaisse = '',
     mt_restant = '',
     mtrecu = 0,
@@ -47,6 +49,7 @@ export default class StatFactureReglement extends MainModel {
     this.mt_encaisse = mt_encaisse
     this.mt_restant = mt_restant
     this.mtrecu = mtrecu
+    this.mt_regle = mt_regle
     this.mtpayer = mtpayer
     this.statut = statut
   }

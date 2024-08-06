@@ -44,7 +44,7 @@ const TemplateInventaireStockVente: React.FC<PdfDocumentProps> = ({ data, fileNa
       pageOrientation: 'landscape',
       pageMargins: [40, 60, 40, 60],
       header: {
-        text: `INVENTAIRE DU STOCK DE VENTE`,
+        text: `INVENTAIRE DU STOCK`,
         alignment: 'center',
         margin: [0, 10, 0, 10],
         fontSize: 18,

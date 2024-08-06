@@ -17,11 +17,11 @@ const TemplateFactureReglement: React.FC<PdfDocumentProps> = ({ data, fileName, 
   const generatePdf = () => {
     // Calcul des totaux
     const totals = data.reduce((acc, row) => {
-      acc.mt_a_payer += Number(row.mt_a_payer)
+      acc.mt_tot += Number(row.mt_regle)
       acc.mt_encaisse += Number(row.mt_encaisse)
       acc.mt_restant += Number(row.mt_restant)
       return acc
-    }, { mt_a_payer: 0, mt_encaisse: 0, mt_restant: 0 })
+    }, { mt_tot: 0, mt_encaisse: 0, mt_restant: 0 })
 
     const tableBody = [
       [
@@ -30,10 +30,7 @@ const TemplateFactureReglement: React.FC<PdfDocumentProps> = ({ data, fileName, 
         { text: 'Code', style: 'tableHeader' },
         { text: 'Date Reglement', style: 'tableHeader' },
         { text: 'Client', style: 'tableHeader' },
-        { text: 'Montant TTC', style: 'tableHeader' },
-        { text: 'Montant Encaisse', style: 'tableHeader' },
-        { text: 'Montant Restant', style: 'tableHeader' },
-        { text: 'Statut', style: 'tableHeader' }
+        { text: 'Montant Reglé', style: 'tableHeader' }
       ],
       ...data.map((row,index) => [
         { text: (index + 1).toString(), alignment: 'center' },
@@ -41,10 +38,7 @@ const TemplateFactureReglement: React.FC<PdfDocumentProps> = ({ data, fileName, 
         { text: row.code, alignment: 'center' },
         { text: row.createdAtReg?.slice(0, -5).replace(/T/g, " "), alignment: 'center' },
         { text: row.client, color: 'red', alignment: 'center' },
-        { text: row.mt_a_payer.toString(), alignment: 'center' },
-        { text: row.mt_encaisse.toString(), alignment: 'center' },
-        { text: row.mt_restant.toString(), alignment: 'center' },
-        { text: row.statut.toString(), alignment: 'center', color: 'red' }
+        { text: row.mt_regle.toString(), alignment: 'center' }
       ]),
       [
         { text: 'Total', style: 'tableTotal', colSpan: 5, alignment: 'center' },
@@ -52,17 +46,14 @@ const TemplateFactureReglement: React.FC<PdfDocumentProps> = ({ data, fileName, 
         {},
         {},
         {},
-        { text: totals.mt_a_payer.toFixed(0).toLocaleString(), alignment: 'center' },
-        { text: totals.mt_encaisse.toFixed(0).toLocaleString(), alignment: 'center' },
-        { text: totals.mt_restant.toFixed(0).toLocaleString(), alignment: 'center' },
-        {}
+        { text: totals.mt_tot.toFixed(0).toLocaleString(), alignment: 'center' }
       ]
     ]
 
     const documentDefinition: any = {
       pageSize: 'A4',
       pageOrientation: 'landscape',
-      pageMargins: [20, 50, 40, 50],
+      pageMargins: [40, 60, 40, 60],
       header: {
         text: `STATISTIQUE DES VENTES`,
         alignment: 'center',
@@ -87,7 +78,7 @@ const TemplateFactureReglement: React.FC<PdfDocumentProps> = ({ data, fileName, 
         {
           table: {
             headerRows: 1,
-            widths: ['auto', 'auto', 'auto', 'auto', 'auto', '10%', '10%', '10%', '10%'],
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', '10%'],
             body: tableBody
           },
           layout: {

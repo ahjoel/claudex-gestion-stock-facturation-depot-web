@@ -237,7 +237,7 @@ const listeDesFacturesStockGene = () => {
                     textDecoration: 'none'
                   }}
                 >
-                  {qte_stock}
+                  {formatNumberString(qte_stock.toFixed(2).toString())}
                 </Typography>
               </Box>
             </Box>
@@ -276,7 +276,7 @@ const listeDesFacturesStockGene = () => {
                     color: 'primary.main'
                   }}
                 >
-                  {qte_stock_entree}
+                  {formatNumberString(qte_stock_entree.toFixed(2).toString())}
                 </Typography>
               </Box>
             </Box>
@@ -315,7 +315,7 @@ const listeDesFacturesStockGene = () => {
                     color: 'primary.main'
                   }}
                 >
-                  {qte_stock_vendu}
+                  {formatNumberString(qte_stock_vendu.toFixed(2).toString())}
                 </Typography>
               </Box>
             </Box>
@@ -354,7 +354,7 @@ const listeDesFacturesStockGene = () => {
                     color: 'primary.main'
                   }}
                 >
-                  {qte_stock_restant}
+                  {formatNumberString(qte_stock_restant.toFixed(2).toString())}
                 </Typography>
               </Box>
             </Box>
@@ -393,7 +393,7 @@ const listeDesFacturesStockGene = () => {
                     color: 'primary.main'
                   }}
                 >
-                  {seuil}
+                  {formatNumberString(seuil.toFixed(2).toString())}
                 </Typography>
               </Box>
             </Box>
@@ -435,6 +435,14 @@ const listeDesFacturesStockGene = () => {
     }
   }
 
+  function formatNumberString(numberStr:string) {
+    const number = parseFloat(numberStr);
+    if (isNaN(number)) {
+        return numberStr; // Retourne la chaîne d'origine si ce n'est pas un nombre valide
+    }
+    return number.toLocaleString('fr-FR'); // Utilise la locale pour le formatage
+  }
+
   // Control search data in datagrid
   useEffect(() => {
     getListDatas('', '')
@@ -445,7 +453,7 @@ const listeDesFacturesStockGene = () => {
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='Inventaire Stock General - Vente' sx={{ fontSize: '60px' }} />
+          <CardHeader title='Inventaire Stock General' sx={{ fontSize: '60px' }} />
 
           <CardContent>
             <Grid container spacing={1} justifyContent='flex-end'>

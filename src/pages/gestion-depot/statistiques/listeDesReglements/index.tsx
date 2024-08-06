@@ -130,7 +130,7 @@ const listeDesReglements = () => {
             </Box>
           )
         },
-        width: 190
+        width: 250
       },
       {
         field: 'createdAt',
@@ -168,7 +168,7 @@ const listeDesReglements = () => {
             </Box>
           )
         },
-        width: 170
+        width: 250
       },
       {
         field: 'createdAtReg',
@@ -206,7 +206,7 @@ const listeDesReglements = () => {
             </Box>
           )
         },
-        width: 170
+        width: 250
       },
       {
         field: 'client',
@@ -245,12 +245,12 @@ const listeDesReglements = () => {
             </Box>
           )
         },
-        width: 170
+        width: 250
       },
       {
-        field: 'mt_a_payer',
+        field: 'mt_regle',
         renderHeader: () => (
-          <Tooltip title='Montant TTC'>
+          <Tooltip title='Montant Reglé'>
             <Typography
               noWrap
               sx={{
@@ -260,12 +260,12 @@ const listeDesReglements = () => {
                 fontSize: '0.8125rem'
               }}
             >
-              MONTANT TTC
+              Montant Reglé
             </Typography>
           </Tooltip>
         ),
         renderCell: ({ row }: CellType) => {
-          const { mt_a_payer } = row
+          const { mt_regle } = row
 
           return (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -278,136 +278,18 @@ const listeDesReglements = () => {
                     color: 'primary.main'
                   }}
                 >
-                  {mt_a_payer}
+                  {mt_regle}
                 </Typography>
               </Box>
             </Box>
           )
         },
-        width: 170
+        width: 200
       },
-      {
-        field: 'mt_encaisse',
-        renderHeader: () => (
-          <Tooltip title='Montant Encaisse'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Montant Encaisse
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { mt_encaisse } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {mt_encaisse}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        },
-        width: 180
-      },
-      {
-        field: 'mt_restant',
-        renderHeader: () => (
-          <Tooltip title='Montant Restant'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Montant Restant
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { mt_restant } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {mt_restant}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        },
-        width: 170
-      },
-      {
-        field: 'statut',
-        renderHeader: () => (
-          <Tooltip title='Statut'>
-            <Typography
-              noWrap
-              sx={{
-                fontWeight: 500,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                fontSize: '0.8125rem'
-              }}
-            >
-              Qte Restant
-            </Typography>
-          </Tooltip>
-        ),
-        renderCell: ({ row }: CellType) => {
-          const { statut } = row
-
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    color: 'primary.main'
-                  }}
-                >
-                  {statut}
-                </Typography>
-              </Box>
-            </Box>
-          )
-        },
-        width: 170
-      }
       // {
-      //   flex: 0.15,
-      //   field: 'seuil',
+      //   field: 'statut',
       //   renderHeader: () => (
-      //     <Tooltip title='Stock Minimal'>
+      //     <Tooltip title='Statut'>
       //       <Typography
       //         noWrap
       //         sx={{
@@ -417,12 +299,12 @@ const listeDesReglements = () => {
       //           fontSize: '0.8125rem'
       //         }}
       //       >
-      //         Stock Minimal
+      //         Qte Restant
       //       </Typography>
       //     </Tooltip>
       //   ),
       //   renderCell: ({ row }: CellType) => {
-      //     const { seuil } = row
+      //     const { statut } = row
 
       //     return (
       //       <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -435,12 +317,13 @@ const listeDesReglements = () => {
       //               color: 'primary.main'
       //             }}
       //           >
-      //             {seuil}
+      //             {statut}
       //           </Typography>
       //         </Box>
       //       </Box>
       //     )
-      //   }
+      //   },
+      //   width: 170
       // }
     ]
 

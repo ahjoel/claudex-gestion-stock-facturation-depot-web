@@ -104,7 +104,7 @@ const navigation = (): VerticalNavItemsType => {
         path: "/gestion-depot/statistiques/listeDesFacturesRestePenalite/",
       },
       {
-        title: "Invent. stock vente",
+        title: "Invent. stock",
         path: "/gestion-depot/statistiques/listeDesFacturesStockGene/",
       },
       {
