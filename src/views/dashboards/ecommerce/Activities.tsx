@@ -71,7 +71,7 @@ const Activities = () => {
       })
 
       if (response.data.data) {
-        setFactureCount(response.data.data.factureNb || 0)
+        setFactureCount(response.data.data?.factureNb)
       }
     } catch (error) {
       console.error('Error submitting form:', error)
