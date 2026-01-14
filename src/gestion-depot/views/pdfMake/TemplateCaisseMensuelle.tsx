@@ -4,8 +4,9 @@ import pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
 import StatCaisse from 'src/gestion-depot/logic/models/StatCaisse'
 import StatReglementPerMonth from 'src/gestion-depot/logic/models/StatReglementPerMonth'
+import 'pdfmake/build/vfs_fonts'
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs
+// pdfMake.vfs = pdfFonts.pdfMake.vfs
 
 interface PdfDocumentProps {
   data: StatReglementPerMonth[]

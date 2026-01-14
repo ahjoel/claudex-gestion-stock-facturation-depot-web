@@ -3,8 +3,9 @@ import React, { useEffect } from 'react'
 import pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
 import StatParProducteur from 'src/gestion-depot/logic/models/StatParProducteur'
+import 'pdfmake/build/vfs_fonts'
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs
+// pdfMake.vfs = pdfFonts.pdfMake.vfs
 
 interface PdfDocumentProps {
   data: StatParProducteur[]

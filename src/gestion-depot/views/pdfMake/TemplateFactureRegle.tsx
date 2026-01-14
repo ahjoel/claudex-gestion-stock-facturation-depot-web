@@ -3,8 +3,10 @@ import React, { useEffect } from 'react'
 import pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
 import FactureDetail from 'src/gestion-depot/logic/models/FactureDetail'
+import 'pdfmake/build/vfs_fonts'
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs
+// pdfMake.vfs = pdfFonts.pdfMake.vfs
+
 import { NumberToLetter } from 'convertir-nombre-lettre';
 
 interface PdfDocumentProps {

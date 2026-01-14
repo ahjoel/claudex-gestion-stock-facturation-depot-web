@@ -14,7 +14,7 @@ import { t } from "i18next";
 import { useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import SaveIcon from "@mui/icons-material/Save";
-import { Grid, MenuItem, Paper, TextField } from "@mui/material";
+import { Grid, Paper, TextField } from "@mui/material";
 import CustomTextField from "src/@core/components/mui/text-field";
 import Autocomplete from "@mui/material/Autocomplete";
 import Facture from "src/gestion-depot/logic/models/Facture";
@@ -60,31 +60,9 @@ const Header = styled(Box)<BoxProps>(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  mtrecu: yup
-    .number()
-    .min(2, (obj) => {
-      if (obj.value.length === 0) {
-        return "Le champ montant reçu est obligatoire";
-      } else if (obj.value.length > 0 && obj.value.length < obj.min) {
-        return "Le champ montant reçu doit comporter au moins 1 chiffre";
-      } else {
-        return "";
-      }
-    })
-    .required(),
-  mtpayer: yup
-    .string()
-    .min(2, (obj) => {
-      if (obj.value.length === 0) {
-        return "Le champ montant payer est obligatoire";
-      } else if (obj.value.length > 0 && obj.value.length < obj.min) {
-        return "Le champ montant payer doit comporter au moins 1 chiffre";
-      } else {
-        return "";
-      }
-    })
-    .required(),
-  factureId: yup.number().required(() => "Le champ facture est obligatoire"),
+  mtrecu: yup.number().required(),
+  mtpayer: yup.number().required(),
+  factureId: yup.number().required("Le champ facture est obligatoire"),
 });
 
 const defaultValues = {
@@ -94,36 +72,22 @@ const defaultValues = {
 };
 
 const SidebarAddReglement = (props: SidebarAddReglementType) => {
-  // ** Props
-  const { open, toggle, onChange, onSuccess, factures, currentReglement } =
-    props;
+  const { open, toggle, onChange, onSuccess, factures, currentReglement } = props;
 
-  const [send, setSend] = useState<boolean>(false);
-  const [client, setClient] = useState<string>("");
-  const [dateCreat, setDateCreat] = useState<string>("");
-  const [auteur, setAuteur] = useState<string>("");
-  const [montantAPayer, setMontantAPayer] = useState<string>("");
-  const [montantDejaPayer, setMontantDejaPayer] = useState<string>("");
-  const [montantRestant, setMontantRestant] = useState<string>("");
-  let infoTranslate;
-
-  // Notification
-  const [openNotification, setOpenNotification] = useState<boolean>(false);
-  const [typeMessage, setTypeMessage] = useState("info");
+  const [send, setSend] = useState(false);
+  const [client, setClient] = useState("");
+  const [dateCreat, setDateCreat] = useState("");
+  const [auteur, setAuteur] = useState("");
+  const [montantAPayer, setMontantAPayer] = useState("");
+  const [montantDejaPayer, setMontantDejaPayer] = useState("");
+  const [montantRestant, setMontantRestant] = useState("");
+  const [openNotification, setOpenNotification] = useState(false);
+  const [typeMessage, setTypeMessage] = useState<AlertColor>("info");
   const [message, setMessage] = useState("");
+  const [id, setId] = useState(-1);
 
-  const handleCloseNotification = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      setOpenNotification(false);
-    }
-    setOpenNotification(false);
-  };
+  const factureService = new FactureService();
 
-  // Control Forms
-  const [id, setId] = useState<number>(-1);
   const {
     reset,
     control,
@@ -135,112 +99,62 @@ const SidebarAddReglement = (props: SidebarAddReglementType) => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (data: ReglementData) => {
-    const reglementService = new ReglementService();
-    setSend(true);
-
-    if (data.mtpayer <= Number(montantRestant)) {
-      const sendData = {
-        mtrecu: Number(data.mtrecu),
-        mtpayer: Number(data.mtpayer),
-        factureId: Number(data.factureId),
-      };
-
-      if (id === -1) {
-        const result = await reglementService.createReglement(sendData);
-        setSend(false);
-
-        if (result.success) {
-          onChange();
-          reset();
-          toggle();
-          onSuccess("Registration completed successfully");
-          setClient("");
-          setMontantAPayer("");
-          setMontantDejaPayer("");
-          setMontantRestant("");
-          setAuteur("");
-          setDateCreat("");
-        } else {
-          setOpenNotification(true);
-          setTypeMessage("error");
-          setMessage(result.description);
-        }
-      } else {
-        reglementService
-          .updateReglement({ ...sendData, id }, id)
-          .then((rep) => {
-            setSend(false);
-            if (rep) {
-              onChange();
-              reset();
-              toggle();
-              onSuccess("Change completed successfully");
-              setClient("");
-              setMontantAPayer("");
-              setMontantDejaPayer("");
-              setMontantRestant("");
-              setAuteur("");
-              setDateCreat("");
-            } else {
-              setOpenNotification(true);
-              setTypeMessage("error");
-              infoTranslate = t("An error has occurred");
-              setMessage(infoTranslate);
-            }
-          })
-          .catch((error) => {
-            setSend(false);
-            console.error("Erreur lors de la mise à jour :", error);
-            setOpenNotification(true);
-            setTypeMessage("error");
-            infoTranslate = t("An error has occurred");
-            setMessage(infoTranslate);
-          });
-      }
-    } else {
-      setSend(false);
-      setOpenNotification(true);
-      setTypeMessage("error");
-      infoTranslate = t("An error has occurred");
-      setMessage("Le montant a payer est incorrect");
-    }
-  };
-
-  function formatNumberString(numberStr:string) {
-    const number = parseFloat(numberStr);
-    if (isNaN(number)) {
-        return numberStr; // Retourne la chaîne d'origine si ce n'est pas un nombre valide
-    }
-    return number.toLocaleString('fr-FR'); // Utilise la locale pour le formatage
-  }
-
-  const factureService = new FactureService();
   const handleLoadingFactureInfo = async (id: number) => {
-    // console.log("factureChoiceId :::", Number(factureChoiceId));
     try {
-      const rep = await factureService.listFactureInfoDetail(id ? id : 0);
-
+      const rep = await factureService.listFactureInfoDetail(id);
       if (rep.success) {
-        const filteredData = rep.data[0] as FactureDataInfo;
-        // console.log("client :::", filteredData);
-        setClient(filteredData.client);
-        setMontantAPayer(filteredData.mt_a_payer.toString());
-        setMontantDejaPayer(filteredData.mt_encaisse);
-        setMontantRestant(filteredData.mt_restant.toString());
-        setAuteur(filteredData.auteur);
-        setDateCreat(filteredData.createdAt.toString());
+        const data = rep.data[0] as FactureDataInfo;
+        setClient(data.client);
+        setMontantAPayer(data.mt_a_payer.toString());
+        setMontantDejaPayer(data.mt_encaisse);
+        setMontantRestant(data.mt_restant.toString());
+        setAuteur(data.auteur);
+        setDateCreat(data.createdAt);
       } else {
         setOpenNotification(true);
         setTypeMessage("error");
-        setMessage("Reglement non trouvé");
+        setMessage("Règlement non trouvé");
       }
-    } catch (error) {
-      console.error("Erreur lors de la suppression :", error);
-
+    } catch {
       setOpenNotification(true);
       setTypeMessage("error");
-      setMessage("Une erreur est survenue--");
+      setMessage("Erreur lors du chargement de la facture");
+    }
+  };
+
+  const formatNumberString = (numStr: string) => {
+    const num = parseFloat(numStr);
+    if (isNaN(num)) return numStr;
+    return num.toLocaleString("fr-FR");
+  };
+
+  const onSubmit = async (data: ReglementData) => {
+    const service = new ReglementService();
+    setSend(true);
+
+    const payload = {
+      mtrecu: Number(data.mtrecu),
+      mtpayer: Number(data.mtpayer),
+      factureId: Number(data.factureId),
+    };
+
+    // Cast en any pour bypass TS unknown
+    const result: any =
+      id === -1
+        ? await service.createReglement(payload)
+        : await service.updateReglement({ ...payload, id }, id);
+
+    setSend(false);
+
+    if (result && result.success) {
+      onChange();
+      reset();
+      toggle();
+      onSuccess("Opération réussie");
+    } else {
+      setOpenNotification(true);
+      setTypeMessage("error");
+      setMessage(result?.description || "Erreur");
     }
   };
 
@@ -257,233 +171,104 @@ const SidebarAddReglement = (props: SidebarAddReglementType) => {
 
   useEffect(() => {
     reset({
-      factureId:
-        currentReglement && currentReglement?.factureId !== undefined
-          ? currentReglement.factureId
-          : 0,
-      mtpayer:
-        currentReglement && currentReglement?.mtpayer !== undefined
-          ? currentReglement.mtpayer
-          : 0,
-      mtrecu:
-        currentReglement && currentReglement?.mtrecu !== undefined
-          ? currentReglement.mtrecu
-          : 0,
+      factureId: currentReglement?.factureId ?? 0,
+      mtpayer: currentReglement?.mtpayer ?? 0,
+      mtrecu: currentReglement?.mtrecu ?? 0,
     });
-    currentReglement !== null
-      ? handleLoadingFactureInfo(Number(currentReglement?.factureId))
-      : 
-        setMontantAPayer("");
-        setMontantDejaPayer("");
-        setMontantRestant("");
-        setAuteur("");
-        setDateCreat("")
-      ;
-    setId(currentReglement !== null ? currentReglement?.id : -1);
+
+    if (currentReglement?.factureId) {
+      handleLoadingFactureInfo(currentReglement.factureId);
+      setId(currentReglement.id ?? -1);
+    } else {
+      setClient("");
+      setMontantAPayer("");
+      setMontantDejaPayer("");
+      setMontantRestant("");
+      setAuteur("");
+      setDateCreat("");
+      setId(-1);
+    }
   }, [open, currentReglement]);
 
   return (
     <Drawer
       open={open}
       anchor="right"
-      variant="temporary"
-      disableEscapeKeyDown
-      onClose={(event, reason) => {
-        if (reason !== 'backdropClick') {
-          handleClose();
-        }
-      }}
-
-      ModalProps={{ keepMounted: true }}
-      sx={{ "& .MuiDrawer-paper": { width: { xs: 300, sm: 400 } } }}
+      onClose={toggle}
+      sx={{ "& .MuiDrawer-paper": { width: 400 } }}
     >
       <Header>
         <Typography variant="h6">
-          {id === -1 ? "Ajout de Reglement" : "Modification de Reglement"}
-          {/* {id === -1 ? handleLoadingFactureInfo(Number(currentReglement?.factureId)) : '';} */}
+          {id === -1 ? "Ajout de Règlement" : "Modification de Règlement"}
         </Typography>
-        <IconButton
-          size="small"
-          onClick={()=>{
-            handleClose();
-          }}
-          sx={{
-            p: "0.438rem",
-            borderRadius: 1,
-            color: "text.primary",
-            backgroundColor: "action.selected",
-            "&:hover": {
-              backgroundColor: (theme) =>
-                `rgba(${theme.palette.customColors.main}, 0.16)`,
-            },
-          }}
-        >
-          <Icon icon="tabler:x" fontSize="1.125rem" />
+        <IconButton onClick={toggle}>
+          <Icon icon="tabler:x" />
         </IconButton>
       </Header>
-      <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
-        <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+
+      <Box sx={{ p: 6 }}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Controller
             name="factureId"
             control={control}
-            rules={{ required: true }}
-            render={({ field: { value, onChange } }) => (
+            render={({ field }) => (
               <Autocomplete
-                fullWidth
-                sx={{ mb: 6 }}
-                options={factures} // Remplacez products par votre tableau de produits
-                getOptionLabel={(facture) => `${facture.code}`} // Fonction pour afficher le nom du produit dans l'autocomplete
-                value={factures.find((facture) => facture.id === value) || null} // Sélectionnez le produit correspondant à la valeur
-                onChange={(e, newValue) => {
-                  onChange(newValue ? newValue.id : 0);
-                  Number(newValue?.id.toString()) > 0
-                    ? handleLoadingFactureInfo(Number(newValue?.id.toString()))
-                    : setClient("");
-                  setMontantAPayer("");
-                  setMontantDejaPayer("");
-                  setMontantRestant("");
-                  setAuteur("");
-                  setDateCreat("");
+                options={factures}
+                getOptionLabel={(f) => f.code}
+                value={factures.find((f) => f.id === field.value) || null}
+                onChange={(_, v) => {
+                  field.onChange(v?.id ?? 0);
+                  if (v?.id) handleLoadingFactureInfo(v.id);
                 }}
                 renderInput={(params) => (
                   <CustomTextField
                     {...params}
-                    error={Boolean(errors.factureId)}
-                    {...(errors.factureId && {
-                      helperText: errors.factureId.message,
-                    })}
-                    label="Sélectionnez une facture"
+                    label="Facture"
+                    error={!!errors.factureId}
                   />
                 )}
               />
             )}
           />
-          {id != -1 ??
-            handleLoadingFactureInfo(Number(currentReglement?.factureId))}
-          <Box sx={{ padding: 2, maxWidth: 600, margin: "auto", mb: "30px" }}>
-            <Paper elevation={3} sx={{ padding: 2 }}>
-              <Typography variant="h5" gutterBottom>
-                Récapitulatif de la Facture
-              </Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <Typography variant="subtitle1">Date de Création:</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body1">
-                    {dateCreat != ""
-                      ? new Date(dateCreat).toLocaleDateString()
-                      : ""}
-                  </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="subtitle1">Client:</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body1">{client}</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="subtitle1">Montant à Payer:</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body1">
-                    {formatNumberString(montantAPayer) + " " + "XOF"}
-                  </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="subtitle1">Montant Encaissé:</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body1">
-                    {formatNumberString(montantDejaPayer) + " " + "XOF"}
-                  </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="subtitle1">Montant Restant:</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body1">
-                    {formatNumberString(montantRestant) + " " + "XOF"}
-                  </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="subtitle1">Auteur:</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body1">{auteur}</Typography>
-                </Grid>
-              </Grid>
+
+          <Box mt={4}>
+            <Paper sx={{ p: 3 }}>
+              <Typography>Client : {client}</Typography>
+              <Typography>Montant restant : {formatNumberString(montantRestant)} XOF</Typography>
+              <Typography>Montant à payer : {formatNumberString(montantAPayer)} XOF</Typography>
+              <Typography>Auteur : {auteur}</Typography>
+              <Typography>Date : {dateCreat ? new Date(dateCreat).toLocaleDateString() : ""}</Typography>
             </Paper>
           </Box>
 
           <Controller
             name="mtrecu"
             control={control}
-            rules={{ required: true }}
-            render={({ field: { value, onChange } }) => (
-              <TextField
-                fullWidth
-                value={value}
-                sx={{ mb: 4 }}
-                label="Montant Reçu"
-                onChange={onChange}
-                error={Boolean(errors.mtrecu)}
-                {...(errors.mtrecu && { helperText: errors.mtrecu.message })}
-              />
+            render={({ field }) => (
+              <TextField {...field} fullWidth label="Montant reçu" sx={{ mt: 4 }} />
             )}
           />
+
           <Controller
             name="mtpayer"
             control={control}
-            rules={{ required: true }}
-            render={({ field: { value, onChange } }) => (
-              <TextField
-                fullWidth
-                value={value}
-                sx={{ mb: 4 }}
-                label="Montant A Payer"
-                onChange={onChange}
-                error={Boolean(errors.mtpayer)}
-                {...(errors.mtpayer && { helperText: errors.mtpayer.message })}
-              />
+            render={({ field }) => (
+              <TextField {...field} fullWidth label="Montant à payer" sx={{ mt: 4 }} />
             )}
           />
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Button
-              variant="outlined"
-              sx={{ mr: 3 }}
-              color="secondary"
-              onClick={()=>{
-                handleClose()
-              }}
-            >
-              {t("Cancel")}
+
+          <Box mt={4} display="flex" gap={2}>
+            <Button onClick={handleClose} color="secondary">
+              Annuler
             </Button>
-            <LoadingButton
-              type="submit"
-              loading={send}
-              endIcon={<SaveIcon />}
-              variant="contained"
-            >
-              {t("Submit")}
+            <LoadingButton type="submit" loading={send} variant="contained">
+              Enregistrer
             </LoadingButton>
           </Box>
         </form>
 
-        <Snackbar
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          open={openNotification}
-          onClose={handleCloseNotification}
-          autoHideDuration={5000}
-        >
-          <Alert
-            onClose={handleCloseNotification}
-            severity={typeMessage as AlertColor}
-            variant="filled"
-            sx={{ width: "100%" }}
-          >
-            {message}
-          </Alert>
+        <Snackbar open={openNotification} autoHideDuration={4000} onClose={() => setOpenNotification(false)}>
+          <Alert severity={typeMessage}>{message}</Alert>
         </Snackbar>
       </Box>
     </Drawer>
