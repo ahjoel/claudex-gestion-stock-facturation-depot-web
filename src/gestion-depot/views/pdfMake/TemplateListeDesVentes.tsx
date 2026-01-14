@@ -5,7 +5,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts'
 import Reglement from 'src/gestion-depot/logic/models/Reglement'
 import 'pdfmake/build/vfs_fonts'
 
-// pdfMake.vfs = pdfFonts.pdfMake.vfs
+pdfMake.vfs = pdfFonts.pdfMake.vfs
 
 interface PdfDocumentProps {
   data: Reglement[]

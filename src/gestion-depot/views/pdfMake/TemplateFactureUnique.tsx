@@ -5,7 +5,7 @@ import { NumberToLetter } from 'convertir-nombre-lettre';
 import FactureDetail from 'src/gestion-depot/logic/models/FactureDetail';
 import 'pdfmake/build/vfs_fonts'
 
-// pdfMake.vfs = pdfFonts.pdfMake.vfs;
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 interface PdfDocumentProps {
   data: FactureDetail[];

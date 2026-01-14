@@ -5,7 +5,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts'
 import StatFacturePenalite from 'src/gestion-depot/logic/models/StatFacturePenalite'
 import 'pdfmake/build/vfs_fonts'
 
-// pdfMake.vfs = pdfFonts.pdfMake.vfs
+pdfMake.vfs = pdfFonts.pdfMake.vfs
 
 interface PdfDocumentProps {
   data: StatFacturePenalite[]

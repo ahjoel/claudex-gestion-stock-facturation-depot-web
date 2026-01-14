@@ -4,7 +4,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts'
 import StatInventaireStockVente from 'src/gestion-depot/logic/models/StatInventaireStockVente'
 import 'pdfmake/build/vfs_fonts'
 
-// pdfMake.vfs = pdfFonts.pdfMake.vfs
+pdfMake.vfs = pdfFonts.pdfMake.vfs
 
 interface PdfDocumentProps {
   data: StatInventaireStockVente[]

@@ -5,7 +5,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts'
 import StatFactureRegleNonRegle from 'src/gestion-depot/logic/models/StatFactureRegleNonRegle'
 import 'pdfmake/build/vfs_fonts'
 
-// pdfMake.vfs = pdfFonts.pdfMake.vfs
+pdfMake.vfs = pdfFonts.pdfMake.vfs
 
 interface PdfDocumentProps {
   data: StatFactureRegleNonRegle[]
